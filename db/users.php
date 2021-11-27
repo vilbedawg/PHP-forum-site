@@ -4,8 +4,8 @@
         private $id;
         private $name;
         private $email;
-        private $password;
-        private $img;
+        private $pwd;
+        private $pwd2;
         private $loginStatus;
         private $lastLogin;
         private $dbConn;
@@ -21,15 +21,12 @@
         function setEmail($email){ $this->email = $email; }
         function getEmail(){ return $this->email; }
 
-        function setPassword($password){ $this->password = $password; }
-        function getPassword(){ return $this->password; }
+        function setpwd($pwd){ $this->pwd = $pwd; }
+        function getpwd(){ return $this->pwd; }
 
-        function setPassword2($password2){ $this->password2 = $password2; }
-        function getPassword2(){ return $this->password2; }
-        
-        function setImg($img) { $this->img = $img; }
-        function getImg() { return $this->img; }
-
+        function setpwd2($pwd2){ $this->pwd2 = $pwd2; }
+        function getpwd2(){ return $this->pwd2; }
+    
         function setLoginStatus($loginStatus){ $this->loginStatus = $loginStatus; }
         function getLoginStatus(){ return $this->loginStatus; }
 
@@ -42,16 +39,14 @@
             $db = new DbConnect();
             $this->dbConn = $db->connect();
         }
+
         public function save() { 
-           
-            $sql = "INSERT INTO `users` (`name`, `email`, `password` `img` `login_status`, 
-            `last_login`) VALUES (:name, :email, :password, :img, :loginStatus, :lastLogin)";
+            $sql = "INSERT INTO `users` (`name`, `email`, `password`, `login_status`, 
+            `last_login`) VALUES (:name, :email, :password, :loginStatus, :lastLogin)";
             $stmt = $this->dbConn->prepare($sql);
             $stmt->bindParam(":name", $this->name);
             $stmt->bindParam(":email", $this->email);
-            $stmt->bindParam(":password", $this->password);
-            $stmt->bindParam(":password2", $this->password2);
-            $stmt->bindParam(":img", $this->img);
+            $stmt->bindParam(":password", $this->pwd);
             $stmt->bindParam(":loginStatus", $this->loginStatus);
             $stmt->bindParam(":lastLogin", $this->lastLogin);
             try {
