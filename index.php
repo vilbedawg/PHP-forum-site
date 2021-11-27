@@ -2,18 +2,20 @@
 include_once "header.php";
 
 if(isset($_POST['submit'])) {
-    require("db/users.php");
-    $objUser = new users;
-    $objUser->setEmail($_POST['email']);
-    $objUser->setName($_POST['name']);
-    $objUser->setpwd($_POST['password']);
-    $objUser->setLoginStatus(1);
-    $objUser->setLastLogin(date('Y-m-d h:i:s'));
-    if($objUser->save()) {
-        echo "Saved...";
-    }else{
-        echo"Failed...";
-    }
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $pwd = $_POST["password"];
+    $pwd2 = $_POST["password2"];
+    $loginStatus = "";
+    $lastLogin = "";
+
+    include "classes/database.php";
+    include "classes/signup-classes.php";
+    include "classes/signup-contr.php";
+    $signup = new SignupContr($name, $pwd, $pwd2, $email, $loginStatus, $lastLogin);
+
+    $signup->signupUser();
+    echo"success";
 }
 
 ?>
@@ -22,7 +24,11 @@ if(isset($_POST['submit'])) {
         <section class="form signup">
             <header>Chat App</header>
             <form action="" method="post">
-                <div class="error-txt"></div>
+                <div class="error-txt">
+                    <?php
+                    echo "$result";
+                    ?>
+                </div>
                 <div class="field input">
                     <label>Nimi</label>
                     <input type="text" name="name" id="name" placeholder="Etunimi" >
@@ -47,5 +53,8 @@ if(isset($_POST['submit'])) {
             <div class="link">Rekisteröitynyt jo?<a href="#"> Kirjaudu</a></div>
         </section>
     </div>
+
+    <script src="./src/js/pass-show-hide.js"></script>
+    <script src="./src/js/signup.js"></script>
     </body>
     </html>
