@@ -21,7 +21,7 @@
         public function signupUser() {
             if($this->emptyInput() == false)
             {
-                header("location: index.php?error=emptyinput");
+                header("location: index.php?error=emptyinput&name=$this->name&email=$this->email");
                 exit();
             }
             if($this->invalidName() == false)
