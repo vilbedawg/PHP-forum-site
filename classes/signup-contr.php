@@ -26,27 +26,27 @@
             }
             if($this->invalidName() == false)
             {
-                header("location: index.php?error=invalidName");
+                header("location: index.php?error=invalidName&name=$this->name&email=$this->email");
                 exit();
             }
             if($this->invalidEmail() == false)
             {
-                header("location: index.php?error=invalidEmail");
+                header("location: index.php?error=invalidEmail&name=$this->name&email=$this->email");
                 exit();
             }
             if($this->pwdMatch() == false)
             {
-                header("location: index.php?error=pwdmatch");
+                header("location: index.php?error=pwdmatch&name=$this->name&email=$this->email");
                 exit();
             }
             if($this->pwdLength() == false)
             {
-                header("location: index.php?error=pwdlen");
+                header("location: index.php?error=pwdlen&name=$this->name&email=$this->email");
                 exit();
             }
             if($this->checkTaken() == false)
             {
-                header("location: index.php?error=usernameoremailtaken");
+                header("location: index.php?error=usernameoremailtaken&name=$this->name&email=$this->email");
                 exit();
             }
             

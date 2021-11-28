@@ -32,7 +32,6 @@ if(isset($_POST['submit'])) {
                     }
                     else{
                         $signupCheck = $_GET['error'];
-                        
 
                         if ($signupCheck == "emptyinput") {
                             echo "<p>Täytä kaikki kohdat</p>";
@@ -59,11 +58,28 @@ if(isset($_POST['submit'])) {
                 </div>
                 <div class="field input">
                     <label>Nimi</label>
-                    <input type="text" name="name" id="name" placeholder="Etunimi" value="<?php "'.$signupCheck.'" ?>" >
+                    <?php
+                     if(isset($_GET['name'])) {
+                         $formName = $_GET['name'];
+                    
+                        echo '<input type="text" name="name" id="name" placeholder="Etunimi" value="'.$formName.'">';
+                    } else {
+                        echo '<input type="text" name="name" id="name" placeholder="Etunimi">';
+                    }
+                    ?>
                 </div>
                 <div class="field input">
                     <label>Sähköposti</label>
-                    <input type="text" name="email" id="email" placeholder="Sähköposti" >
+                    <?php
+                    if(isset($_GET['email'])) {
+                        $formEmail= $_GET['email'];
+                   
+                       echo '<input type="text" name="email" id="email" placeholder="Sähköposti" value="'.$formEmail.'">';
+                   } else {
+                       echo '<input type="text" name="email" id="email" placeholder="Sähköposti">';
+                   }
+                   ?>
+                    
                 </div>
                 <div class="field input">
                     <label>Salasana</label>
