@@ -11,7 +11,7 @@ class Dbh {
             return $dbh;
         } catch(PDOException $e) {
             echo "Jokin meni pieleen :(" . $e->getMessage();
-            die();
+            exit();
         }
     }
 }
