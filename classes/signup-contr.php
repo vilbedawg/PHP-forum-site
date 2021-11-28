@@ -7,6 +7,7 @@
         private $pwd2;
         private $loginStatus;
         private $lastLogin;
+        
        
         public function __construct($name, $pwd, $pwd2, $email, $loginStatus, $lastLogin) {
             $this->name = $name;
@@ -20,33 +21,33 @@
         public function signupUser() {
             if($this->emptyInput() == false)
             {
-                echo "Täytä kaikki kohdat";
-                
+                header("location: index.php?error=emptyinput");
+                exit();
             }
             if($this->invalidName() == false)
             {
-                echo "Väärän muotoinen nimi";
-                
+                header("location: index.php?error=invalidName");
+                exit();
             }
             if($this->invalidEmail() == false)
             {
-                echo "Väärän muotoinen sähköposti";
-               
+                header("location: index.php?error=invalidEmail");
+                exit();
             }
             if($this->pwdMatch() == false)
             {
-                echo "Salasana ei täsmää";
-          
+                header("location: index.php?error=pwdmatch");
+                exit();
             }
             if($this->pwdLength() == false)
             {
-                echo "Salasanan täytyy olla yli 4 merkkiä";
-         
+                header("location: index.php?error=pwdlen");
+                exit();
             }
             if($this->checkTaken() == false)
             {
-                echo "Käyttäjänimi tai sähköposti on jo valittu";
-          
+                header("location: index.php?error=usernameoremailtaken");
+                exit();
             }
             
             $this->setUser($this->name, $this->email, $this->pwd, $this->loginStatus, $this->lastLogin);
