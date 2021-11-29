@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once "header.php";
 
 
@@ -16,7 +17,7 @@ if(isset($_POST['submit'])) {
     $signup = new SignupContr($name, $pwd, $pwd2, $email, $loginStatus, $lastLogin);
 
     $signup->signupUser();
-    header("location: index.php?error=none");
+    header("location: users.php");
 }
 
 ?>
@@ -60,14 +61,14 @@ if(isset($_POST['submit'])) {
                 ?>
                 </div>
                 <div class="field input">
-                    <label>Nimi</label>
+                    <label>Käyttäjänimi</label>
                     <?php
                      if(isset($_GET['name'])) {
                          $formName = $_GET['name'];
                     
-                        echo '<input type="text" name="name" id="name" placeholder="Etunimi" value="'.$formName.'">';
+                        echo '<input type="text" name="name" id="name" placeholder="Käyttäjänimi" value="'.$formName.'">';
                     } else {
-                        echo '<input type="text" name="name" id="name" placeholder="Etunimi">';
+                        echo '<input type="text" name="name" id="name" placeholder="Käyttäjänimi">';
                     }
                     ?>
                 </div>
@@ -97,11 +98,10 @@ if(isset($_POST['submit'])) {
                     <input type="submit" name="submit" value="Jatka" id="submit">
                 </div>
             </form>
-            <div class="link">Rekisteröitynyt jo?<a href="#"> Kirjaudu</a></div>
+            <div class="link">Rekisteröitynyt jo?<a href="login.php"> Kirjaudu</a></div>
         </section>
     </div>
 
     <script src="js\pass-show-hide.js"></script>
-    <script src="js\signupForm.js"></script>
     </body>
     </html>
