@@ -8,8 +8,7 @@ if(isset($_POST['submit'])) {
     $email = $_POST["email"];
     $pwd = $_POST["password"];
     $pwd2 = $_POST["password2"];
-    $loginStatus = "";
-    $lastLogin = "";
+
 
     include "classes/database.php";
     include "classes/signup-classes.php";

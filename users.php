@@ -1,6 +1,6 @@
 <?php
-include_once "header.php";
 session_start();
+include_once "header.php";
 ?>
 <body>
     <div class="wrapper">
@@ -13,7 +13,11 @@ session_start();
                 {
             ?>
                 <span><?php echo $_SESSION["name"] ?></span>
-                <p><?php echo $_SESSION["login"] ?></p>
+                <p><?php if($_SESSION["login"] == 1){
+                     echo "Online";
+                    } else {
+                         echo"Offline";
+                         } ?></p>
             <?php
                 }
                 else{
@@ -32,7 +36,7 @@ session_start();
         </div>
          <div class="users-list">
 
-            
+            <a href="chatroom.php">chatroom</a>
 
          </div>
         </section>

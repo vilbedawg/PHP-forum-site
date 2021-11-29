@@ -5,17 +5,18 @@ include_once "header.php";
 if(isset($_POST['submit'])) {
     $name = $_POST["name"];
     $pwd = $_POST["password"]; 
-    $loginStatus = "";
-    $lastLogin = "";
 
     include "classes/database.php";
     include "classes/login-classes.php";
     include "classes/login-contr.php";
     $login = new loginContr($name, $pwd, $loginStatus, $lastLogin);
 
+    
     $login->loginUser();
     header("location: users.php");
 }
+
+
 
 ?>
 

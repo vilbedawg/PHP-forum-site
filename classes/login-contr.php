@@ -21,6 +21,8 @@
                 exit();
             }
 
+            
+
             $this->getUser($this->name, $this->pwd, $this->loginStatus, $this->lastLogin);
             
         }
@@ -34,6 +36,8 @@
             }
             return $result;
         }
+
+        
         
     }
 ?>

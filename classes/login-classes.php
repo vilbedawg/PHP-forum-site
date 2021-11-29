@@ -2,6 +2,7 @@
 
 class Login extends Dbh {
 
+ 
     protected function getUser($name, $pwd) {
         $stmt = $this->connect()->prepare('SELECT * FROM users WHERE name = ? OR email = ?;');
 
@@ -49,10 +50,25 @@ class Login extends Dbh {
             }
 
             $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
             session_start();
             $_SESSION["userid"] = $user[0]["user_id"];
             $_SESSION["name"] = $user[0]["name"];
             $_SESSION["login"] = $user[0]["login_status"];
+            $_SESSION["email"] = $user[0]["email"];
+            $online = 1;
+
+            $sql = 'UPDATE users SET login_status = :login_status WHERE user_id = :userid;';
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':login_status', $online);
+            $stmt->bindParam(':userid', $_SESSION["userid"]);
+    
+            if(!$stmt->execute())  
+            {
+                $stmt = null;
+                header("location: login.php?error=stmtfailed");
+                exit();
+            } 
             $stmt = null;
         }
 
