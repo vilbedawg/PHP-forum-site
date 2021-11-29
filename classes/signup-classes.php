@@ -21,10 +21,28 @@ class Signup extends Dbh {
 
 
 
-    protected function checkUser($name, $email) {
-        $stmt = $this->connect()->prepare('SELECT name FROM users WHERE name = ? OR email = ?;');
+    protected function checkUser($name) {
+        $stmt = $this->connect()->prepare('SELECT name FROM users WHERE name = ?;');
 
-        if(!$stmt->execute(array($name, $email)))  {
+        if(!$stmt->execute(array($name)))  {
+            $stmt = null;
+            header("location: index.php?error=stmtfailed");
+            exit();
+        }     
+
+        $resultCheck = 0;
+        if($stmt->rowCount() > 0) {
+            $resultCheck = false;
+        }else {
+            $resultCheck = true;
+        }
+        return $resultCheck;
+    }
+
+    protected function checkEmail($email) {
+        $stmt = $this->connect()->prepare('SELECT email FROM users WHERE email = ?;');
+
+        if(!$stmt->execute(array($email)))  {
             $stmt = null;
             header("location: index.php?error=stmtfailed");
             exit();

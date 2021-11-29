@@ -48,8 +48,11 @@ if(isset($_POST['submit'])) {
                         else if ($signupCheck == "pwdlen"){
                             echo "<p>Salasana vähintään 4 merkkiä</p>";
                         }
-                        else if ($signupCheck == "usernameoremailtaken"){
-                            echo "<p>Käyttäjänimi tai sähköposti käytössä</p>";
+                        else if ($signupCheck == "usernameTaken"){
+                            echo "<p>Käyttäjänimi käytössä</p>";
+                        }
+                        else if ($signupCheck == "emailTaken"){
+                            echo "<p>Sähköposti käytössä</p>";
                         }
                         
                     }

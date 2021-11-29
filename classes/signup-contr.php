@@ -44,9 +44,15 @@
                 header("location: index.php?error=pwdlen&name=$this->name&email=$this->email");
                 exit();
             }
-            if($this->checkTaken() == false)
+            if($this->checkNameTaken() == false)
             {
-                header("location: index.php?error=usernameoremailtaken&name=$this->name&email=$this->email");
+                header("location: index.php?error=usernameTaken&name=$this->name&email=$this->email");
+                exit();
+            }
+
+            if($this->checkEmailTaken() == false)
+            {
+                header("location: index.php?error=emailTaken&name=$this->name&email=$this->email");
                 exit();
             }
             
@@ -88,7 +94,7 @@
 
         private function pwdLength() {
             $result = 0;
-            if(strlen($this->pwd) > 4 )
+            if(strlen($this->pwd) < 4 )
             {
                 $result = false;
             } else {
@@ -107,9 +113,20 @@
             return $result;
         }
 
-        private function checkTaken() {
+        private function checkNameTaken() {
             $result = 0;
-            if(!$this->checkUser($this->name, $this->email))
+            if(!$this->checkUser($this->name))
+            {
+                $result = false;
+            } else {
+                $result = true;
+            }
+            return $result;
+        }
+
+        private function checkEmailTaken() {
+            $result = 0;
+            if(!$this->checkEmail($this->email))
             {
                 $result = false;
             } else {
