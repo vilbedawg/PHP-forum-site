@@ -34,25 +34,25 @@ if(isset($_POST['submit'])) {
                         $signupCheck = $_GET['error'];
 
                         if ($signupCheck == "emptyinput") {
-                            echo "<p>Täytä kaikki kohdat</p>";
+                            echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
                         }
                         else if($signupCheck  == "invalidName") {
-                            echo "<p>Väärä muotoinen nimi</p>";
+                            echo "<div class='error-texti'><p>Väärä muotoinen nimi</p></div>";
                         }
                         else if ($signupCheck == "invalidEmail"){
-                            echo "<p>Väärä muotoinen sähköposti</p>";
+                            echo "<div class='error-texti'><p>Väärä muotoinen sähköposti</p></div>";
                         }
                         else if ($signupCheck == "pwdmatch"){
-                            echo "<p>Salasana ei täsmää</p>";
+                            echo "<div class='error-texti'><p>Salasana ei täsmää</p></div>";
                         }
                         else if ($signupCheck == "pwdlen"){
-                            echo "<p>Salasana vähintään 4 merkkiä</p>";
+                            echo "<div class='error-texti'><p>Salasana vähintään 4 merkkiä</p></div>";
                         }
                         else if ($signupCheck == "usernameTaken"){
-                            echo "<p>Käyttäjänimi käytössä</p>";
+                            echo "<div class='error-texti'><p>Käyttäjänimi käytössä</p></div>";
                         }
                         else if ($signupCheck == "emailTaken"){
-                            echo "<p>Sähköposti käytössä</p>";
+                            echo "<div class='error-texti'><p>Sähköposti käytössä</p></div>";
                         }
                         
                     }

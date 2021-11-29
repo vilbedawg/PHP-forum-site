@@ -35,25 +35,20 @@ body {
 .form form {
     margin: 20px 0;
 }
-.form form .error-txt {
-    color: #ff0019;
+
+
+.form form .error-texti {
+    color: #721c24;
+    background: #f8d7da;
+    padding: 8px 10px;
     text-align: center;
     border-radius: 5px;
     margin-bottom: 10px;
+    border: 1px solid #f5c4c8;
 
 }
 
 
-.form form .name-details {
-    display: flex;
-
-}
-.form form .name-details .field:first-child{
-    margin-right:  10px;
-}
-.form form .name-details .field:last-child{
-    margin-left:  10px;
-}
 
 .form form .field {
     display: flex;
