@@ -55,7 +55,7 @@
                 header("location: index.php?error=emailTaken&name=$this->name&email=$this->email");
                 exit();
             }
-            
+
             $this->setUser($this->name, $this->email, $this->pwd, $this->loginStatus, $this->lastLogin); 
         }
         

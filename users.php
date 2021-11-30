@@ -1,5 +1,9 @@
 <?php
 session_start();
+if(!isset($_SESSION["userid"])) {
+    header("location: login.php");
+    exit(); 
+}
 include_once "header.php";
 ?>
 <body>
@@ -8,23 +12,12 @@ include_once "header.php";
            <header>
                <div class="content">
                 <div class="details">
-            <?php
-                if(isset($_SESSION["userid"]))
-                {
-            ?>
                 <span><?php echo $_SESSION["name"] ?></span>
                 <p><?php if($_SESSION["login"] == 1){
-                     echo "Online";
+                    echo "Online";
                     } else {
-                         echo"Offline";
-                         } ?></p>
-            <?php
-                }
-                else{
-                header("location: login.php");
-                exit();  
-                }
-            ?>
+                    echo"Offline";
+                    } ?></p>
                </div>
             </div>
             <a href="logout.php" class="logout">Kirjaudu ulos</a>

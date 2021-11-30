@@ -7,7 +7,8 @@ if(isset($_POST['submit'])) {
     $email = $_POST["email"];
     $pwd = $_POST["password"];
     $pwd2 = $_POST["password2"];
-
+    $loginStatus = "";
+    $lastLogin = "";
 
     include "classes/database.php";
     include "classes/signup-classes.php";
@@ -15,7 +16,7 @@ if(isset($_POST['submit'])) {
     $signup = new SignupContr($name, $pwd, $pwd2, $email, $loginStatus, $lastLogin);
 
     $signup->signupUser();
-    header("location: login.php");
+    header("location: users.php");
 }
 
 ?>
