@@ -14,6 +14,7 @@ if(isset($_POST['submit'])) {
     
     $login->loginUser();
     header("location: users.php");
+  
 }
 
 

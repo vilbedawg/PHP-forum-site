@@ -16,7 +16,7 @@ include_once "header.php";
                 <p><?php if($_SESSION["login"] == 1){
                     echo "Online";
                     } else {
-                    echo"Offline";
+                    echo "Offline";
                     } ?></p>
                </div>
             </div>

@@ -17,7 +17,11 @@ class Signup extends Dbh {
   
         $stmt = $this->connect()->prepare('SELECT * FROM users WHERE name = ?;');
         $stmt->bindParam('?', $name);
-        $stmt->execute(array($name));
+        if(!$stmt->execute(array($name))) {
+            $stmt = null;
+            header("location: login.php?error=stmtfailed");
+            exit();
+        }
         $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
         session_start();
         $_SESSION["userid"] = $user[0]["user_id"];
