@@ -1,5 +1,4 @@
 <?php
-session_start();
 include_once "header.php";
 
 
@@ -16,7 +15,7 @@ if(isset($_POST['submit'])) {
     $signup = new SignupContr($name, $pwd, $pwd2, $email, $loginStatus, $lastLogin);
 
     $signup->signupUser();
-    header("location: users.php");
+    header("location: login.php");
 }
 
 ?>

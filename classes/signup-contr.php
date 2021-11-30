@@ -56,8 +56,7 @@
                 exit();
             }
             
-            $this->setUser($this->name, $this->email, $this->pwd, $this->loginStatus, $this->lastLogin);
-            
+            $this->setUser($this->name, $this->email, $this->pwd, $this->loginStatus, $this->lastLogin); 
         }
         
         private function emptyInput() {

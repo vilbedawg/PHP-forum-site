@@ -1,20 +1,23 @@
 <?php
 session_start();
-print_r($_SESSION);
 include_once "header.php";
+if(!isset($_SESSION["login"])) {
+    header("location: login.php");
+    exit(); 
+}
 ?>
 
 <body>
     <div class="wrapper">
         <section class="chat-area">
             <header>
-                <a href="#" class="back-icon"><i class="fas fa-arrow-left"></i></a>
-                <img src="./src/img/ninja.png" alt="">
+                <a href="users.php" class="back-icon"><i class="fas fa-arrow-left"></i></a>
                 <div class="details">
                 <span><?php echo $_SESSION["name"] ?></span>
                 <p><?php if($_SESSION["login"] == 1) {
-                     echo "online"; }else {
-                        echo "offline";
+                     echo "online"; 
+                    }else {
+                        echo $_SESSION["login"];
                      } ?></p>
                 </div>
             </header>
