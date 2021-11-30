@@ -312,6 +312,8 @@ body {
 
 .chat-box .outgoing {
     display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     
 }
 

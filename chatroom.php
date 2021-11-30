@@ -5,6 +5,7 @@ if(!isset($_SESSION["login"])) {
     header("location: login.php");
     exit(); 
 }
+date_default_timezone_set('Europe/Helsinki');
 ?>
 
 <body>
@@ -26,10 +27,17 @@ if(!isset($_SESSION["login"])) {
                     <div class="details">
                         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.epudie!empore.</p>
                     </div>
+                    <div class="Message sent">
+                        <p><?php echo date('h:i a', time());; ?></p>
+                    </div>
+                    
                 </div>
                 <div class="chat incoming">
                     <div class="details">
                         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.epudie!empore.</p>
+                    </div>
+                    <div class="Message sent">
+                        <p><?php echo date('h:i a', time());; ?></p>
                     </div>
                 </div>
             </div>

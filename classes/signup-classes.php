@@ -7,7 +7,7 @@ class Signup extends Dbh {
         VALUES (?, ?, ?, ?, ?);');
 
         $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
-        
+        date_default_timezone_set('Europe/Helsinki');
 
         if(!$stmt->execute(array($name, $email, $hashedPwd, 1, date('Y-m-d h:i:s'))))  {
             $stmt = null;
