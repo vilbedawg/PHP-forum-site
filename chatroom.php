@@ -42,12 +42,29 @@ date_default_timezone_set('Europe/Helsinki');
                 </div>
             </div>
             <form action="#" class="typing-area">
-                <input type="text" placeholder="Kirjoita viesti...">
+                <input type="text"  id="send" placeholder="Kirjoita viesti...">
                 <button><i class="fab fa-telegram-plane"></i></button>
             </form>
         </section>
     </div>
 
 </body>
+
+<script src="text/javascript">
+    $(document).ready(function(){
+        var conn = new WebSocket('ws://localhost:8080');
+        conn.onopen = function(e) {
+            console.log("Connection established!");
+        };
+
+        conn.onmessage = function(e) {
+            console.log(e.data);
+        };
+
+        $("#send").click(function(){
+            var msg = $("#msg").val();
+        });
+    });
+</script>
 
 </html>

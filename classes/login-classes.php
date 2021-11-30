@@ -78,6 +78,7 @@ class Login extends Dbh {
             $_SESSION["name"] = $user[0]["name"];
             $_SESSION["email"] = $user[0]["email"];
             $_SESSION["login"] = $user[0]["login_status"];
+            $_SESSION["last_login"] = $user[0]["last_login"];
             $stmt = null;
         }
 

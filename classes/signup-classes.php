@@ -26,8 +26,9 @@ class Signup extends Dbh {
         session_start();
         $_SESSION["userid"] = $user[0]["user_id"];
         $_SESSION["name"] = $user[0]["name"];
-        $_SESSION["login"] = $user[0]["login_status"];
         $_SESSION["email"] = $user[0]["email"];
+        $_SESSION["login"] = $user[0]["login_status"];
+        $_SESSION["last_login"] = $user[0]["last_login"];
         $stmt = null;
     }
 
