@@ -64,25 +64,22 @@ include_once "header.php";
 
 
     </body>
-    <script type="text/javascript">
-    $(document).ready(function(){
-        var conn = new WebSocket('ws://localhost:8080');
-        conn.onopen = function(e) {
-            console.log("Connection established!");
-        };
-        conn.onmessage = function(e) {
-            console.log(e.data);
-        };
+    <script src='//cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.4/socket.io.min.js'></script>
+    <script>
+        var socket = io.connect('//127.0.0.1:3001');
 
-        $("#send").click(function(){
-            var userid = $("#userid").val();
-            var msg = $("#msg").val();
-            var data = {
-                userid: userid,
-                msg: msg
-            };
-            conn.send(JSON.stringify(data));
-        });
-    });
-</script>
+        socket.on('connect', function () {
+            console.log('connected');
+
+            socket.on('broadcast', function (data) {
+                //console.log(data);
+                //socket.emit("broadcast", data);
+                alert(data.text);
+            });
+
+            socket.on('disconnect', function () {
+                console.log('disconnected');
+            });
+        }); 
+    </script>
     </html>
