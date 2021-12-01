@@ -66,7 +66,7 @@ include_once "header.php";
     </body>
     <script type="text/javascript">
     $(document).ready(function(){
-        var conn = new WebSocket('ws://localhost:8888');
+        var conn = new WebSocket('ws://localhost:8080');
         conn.onopen = function(e) {
             console.log("Connection established!");
         };
