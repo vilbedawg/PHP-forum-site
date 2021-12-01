@@ -1,7 +1,7 @@
 <?php
 session_start();
 require("classes/database.php");
-require("classes/GetUsers.php");
+require("classes/users-classes.php");
 $objUser = new Users;
 $users = $objUser->GetAllUsers();
 
@@ -20,7 +20,7 @@ include_once "header.php";
         <section class="users">
            <header>
                <div class="content">
-                <div class="details">
+                <div class="current-user">
                 <span><?php echo $_SESSION["name"] ?></span>
                 <p><?php if($_SESSION["login"] == 1){
                     echo "Online";
@@ -39,18 +39,24 @@ include_once "header.php";
          <div class="users-list">
             <?php
                 foreach ($users as $key => $user) {
-                    echo  "Jatketaan tästä huomenna";
-                    // if($user['login_status'] == 1) {
-                    //     $color = "background-color: green";
-                    //     echo "<tr><td>". " " .$user['name']. "<td>";
-                    //     echo "<td><span class='status' style=".$color."><i class='fas fa-circle'></i></span></td>";
-                    // } else {
-                    //     $color = "color: red";
-                    //     echo "<td> <br>". " " .$user['name'] . " Last logged in " . $user['last_login']."</td></tr>";
-                    // }
+                    if($user['login_status'] == 1) {
+                        echo "<div class='content'>
+                        <div class = 'details'>
+                        <span input type='hidden' name='userid' id='userid' value" .$key. ">" .$user['name']. "</span>
+                        <div class='status-dot'><i class='fas fa-circle'></i></div>
+                        </div></div><hr/>";
+                    } else {
+                        echo "<div class='content'>
+                        <div class = 'details'>
+                        <span>" .$user['name']. "</span>
+                        <div class='status-dot offline'><i class='fas fa-circle'></i></div>
+                        </div></div><hr/>";
+                    }
+                    
                 }
+                echo "<a href='chatroom.php'>chatroom</a>";
             ?>
-            <a href="chatroom.php">chatroom</a>
+            
 
          </div>
         </section>
@@ -58,4 +64,25 @@ include_once "header.php";
 
 
     </body>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        var conn = new WebSocket('ws://localhost:8888');
+        conn.onopen = function(e) {
+            console.log("Connection established!");
+        };
+        conn.onmessage = function(e) {
+            console.log(e.data);
+        };
+
+        $("#send").click(function(){
+            var userid = $("#userid").val();
+            var msg = $("#msg").val();
+            var data = {
+                userid: userid,
+                msg: msg
+            };
+            conn.send(JSON.stringify(data));
+        });
+    });
+</script>
     </html>

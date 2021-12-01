@@ -16,28 +16,28 @@ date_default_timezone_set('Europe/Helsinki');
                 <div class="details">
                 <span><?php echo $_SESSION["name"] ?></span>
                 <p><?php if($_SESSION["login"] == 1) {
-                     echo "online"; 
+                     echo "Online"; 
                     }else {
-                        echo $_SESSION["login"];
+                        echo "Offline";
                      } ?></p>
                 </div>
             </header>
             <div class="chat-box">
                 <div class="chat outgoing">
                     <div class="details">
-                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.epudie!empore.</p>
+                        
                     </div>
                     <div class="Message sent">
-                        <p><?php echo date('h:i a', time());; ?></p>
+                        
                     </div>
                     
                 </div>
                 <div class="chat incoming">
                     <div class="details">
-                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.epudie!empore.</p>
+                        
                     </div>
                     <div class="Message sent">
-                        <p><?php echo date('h:i a', time());; ?></p>
+                        
                     </div>
                 </div>
             </div>
@@ -49,22 +49,5 @@ date_default_timezone_set('Europe/Helsinki');
     </div>
 
 </body>
-
-<script src="text/javascript">
-    $(document).ready(function(){
-        var conn = new WebSocket('ws://localhost:8080');
-        conn.onopen = function(e) {
-            console.log("Connection established!");
-        };
-
-        conn.onmessage = function(e) {
-            console.log(e.data);
-        };
-
-        $("#send").click(function(){
-            var msg = $("#msg").val();
-        });
-    });
-</script>
 
 </html>
