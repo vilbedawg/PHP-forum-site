@@ -66,7 +66,8 @@ include_once "header.php";
     </body>
     <script src='//cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.4/socket.io.min.js'></script>
     <script>
-        var socket = io.connect('//127.0.0.1:3001');
+        var socket = io.connect('https://site.test:436');
+        console.log(socket);
 
         socket.on('connect', function () {
             console.log('connected');
