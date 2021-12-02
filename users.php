@@ -62,6 +62,15 @@ include_once "header.php";
         </section>
         </div>
 
+        <script>var conn = new WebSocket('ws://localhost:8081');
+            conn.onopen = function(e) {
+                console.log("Connection established!");
+            };
 
+            conn.onmessage = function(e) {
+                console.log(e.data);
+            };
+
+        </script>
     </body>
     </html>
