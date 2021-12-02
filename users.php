@@ -64,7 +64,4 @@ include_once "header.php";
 
 
     </body>
-    <script>
-       
-    </script>
     </html>

@@ -1,7 +1,5 @@
 <?php
 include_once "header.php";
-
-
 if(isset($_POST['submit'])) {
     $name = $_POST["name"];
     $email = $_POST["email"];
@@ -102,5 +100,15 @@ if(isset($_POST['submit'])) {
     </div>
 
     <script src="js\pass-show-hide.js"></script>
+    <script>var conn = new WebSocket('ws://localhost:8081');
+            conn.onopen = function(e) {
+                console.log("Connection established!");
+            };
+
+            conn.onmessage = function(e) {
+                console.log(e.data);
+            };
+
+    </script>
     </body>
     </html>
