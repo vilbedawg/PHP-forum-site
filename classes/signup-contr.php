@@ -5,8 +5,6 @@
         private $email;
         private $pwd;
         private $pwd2;
-        private $loginStatus;
-        private $lastLogin;
         
        
         public function __construct($name, $pwd, $pwd2, $email, $loginStatus, $lastLogin) {
@@ -56,7 +54,7 @@
                 exit();
             }
 
-            $this->setUser($this->name, $this->email, $this->pwd, $this->loginStatus, $this->lastLogin); 
+            $this->setUser($this->name, $this->email, $this->pwd); 
         }
         
         private function emptyInput() {

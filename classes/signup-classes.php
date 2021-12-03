@@ -3,13 +3,15 @@
 class Signup extends Dbh {
 
     protected function setUser($name, $email, $pwd) {
-        $stmt = $this->connect()->prepare('INSERT INTO users (name, email, password, login_status, last_login) 
-        VALUES (?, ?, ?, ?, ?);');
+        $user_token = md5(uniqid());
+
+        $stmt = $this->connect()->prepare('INSERT INTO users (name, email, password, login_status, last_login, user_token) 
+        VALUES (?, ?, ?, ?, ?, ?);');
 
         $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
         date_default_timezone_set('Europe/Helsinki');
 
-        if(!$stmt->execute(array($name, $email, $hashedPwd, 1, date('Y-m-d h:i:s'))))  {
+        if(!$stmt->execute(array($name, $email, $hashedPwd, 1, date('Y-m-d h:i:s'), $user_token)))  {
             $stmt = null;
             header("location: index.php?error=stmtfailed");
             exit();
@@ -17,6 +19,7 @@ class Signup extends Dbh {
   
         $stmt = $this->connect()->prepare('SELECT * FROM users WHERE name = ?;');
         $stmt->bindParam('?', $name);
+
         if(!$stmt->execute(array($name))) {
             $stmt = null;
             header("location: login.php?error=stmtfailed");

@@ -1,11 +1,17 @@
 <?php
 session_start();
+date_default_timezone_set('Europe/Helsinki');
 include_once "header.php";
+include "classes/database.php";
+include "classes/users-classes.php";
 if(!isset($_SESSION["login"])) {
     header("location: login.php");
     exit(); 
 }
-date_default_timezone_set('Europe/Helsinki');
+
+
+
+
 ?>
 
 <body>

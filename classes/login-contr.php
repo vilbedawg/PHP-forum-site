@@ -3,15 +3,11 @@
     class loginContr extends Login {
         private $name;
         private $pwd;
-        private $loginStatus;
-        private $lastLogin;
         
        
-        public function __construct($name, $pwd, $loginStatus, $lastLogin) {
+        public function __construct($name, $pwd) {
             $this->name = $name;
             $this->pwd = $pwd;
-            $this->loginStatus = $loginStatus;
-            $this->lastLogin = $lastLogin;
         }
 
         public function loginUser() {
@@ -23,7 +19,7 @@
 
             
 
-            $this->getUser($this->name, $this->pwd, $this->loginStatus, $this->lastLogin);
+            $this->getUser($this->name, $this->pwd);
             
         }
         

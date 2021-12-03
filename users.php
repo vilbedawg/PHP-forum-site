@@ -2,18 +2,14 @@
 session_start();
 require("classes/database.php");
 require("classes/users-classes.php");
+include_once "header.php";
 $objUser = new Users;
 $users = $objUser->GetAllUsers();
-
-
-
-
 
 if(!isset($_SESSION["userid"])) {
     header("location: login.php");
     exit(); 
 }
-include_once "header.php";
 ?>
 <body>
     <div class="wrapper">
@@ -38,7 +34,9 @@ include_once "header.php";
         </div>
          <div class="users-list">
             <?php
-                foreach ($users as $key => $user) {
+                foreach ($users as $key => $user)
+                {
+                    $token = $user['user_token'];
                     if($user['login_status'] == 1) {
                         echo "<div class='content'>
                         <div class = 'details'>
@@ -54,7 +52,7 @@ include_once "header.php";
                     }
                     
                 }
-                echo "<a href='chatroom.php'>chatroom</a>";
+                echo "<a href='chatroom.php'>chatroom?token=<?php echo $token?></a>";
             ?>
             
 
@@ -62,13 +60,18 @@ include_once "header.php";
         </section>
         </div>
 
-        <script>var conn = new WebSocket('ws://localhost:8081');
+        <script>
+        var conn = new WebSocket('ws://localhost:8081?token=<?php echo $token; ?>');
             conn.onopen = function(e) {
                 console.log("Connection established!");
             };
 
             conn.onmessage = function(e) {
                 console.log(e.data);
+            };
+
+            conn.onclose = function(e) {
+                console.log('connection closed');
             };
 
         </script>
