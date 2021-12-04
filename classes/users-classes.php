@@ -91,6 +91,22 @@
             $stmt->bindParam(':user_token', $this->user_token);
 
             $stmt->execute();
+
+        }
+
+        
+        public function GetUserByToken() {
+            $session = $_SESSION['user_token'];
+            $stmt = $this->connect()->prepare('SELECT * FROM users WHERE user_token != :token;');
+            $stmt->bindParam(':token', $session);
+            if(!$stmt->execute()){
+                $stmt = null;
+                header("location: login.php?error=stmtfailed");
+                exit();
+            }
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $users;
+            
         }
 
     }

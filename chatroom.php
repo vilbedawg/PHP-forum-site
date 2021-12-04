@@ -9,7 +9,7 @@ if(!isset($_SESSION["login"])) {
     exit(); 
 }
 
-
+echo $_SESSION['user_token'];
 
 
 ?>
@@ -53,7 +53,21 @@ if(!isset($_SESSION["login"])) {
             </form>
         </section>
     </div>
+    <script>
+        var conn = new WebSocket('ws://localhost:8081?token=<?php echo $_SESSION['user_token']; ?>');
+            conn.onopen = function(e) {
+                console.log("Connection established!");
+            };
 
+            conn.onmessage = function(e) {
+                console.log(e.data);
+            };
+
+            conn.onclose = function(e) {
+                console.log('connection closed');
+            };
+
+        </script>
 </body>
 
 </html>

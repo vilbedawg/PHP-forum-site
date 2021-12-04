@@ -43,6 +43,9 @@ if(!isset($_SESSION["userid"])) {
                         <span input type='hidden' name='userid' id='userid' value" .$key. ">" .$user['name']. "</span>
                         <div class='status-dot'><i class='fas fa-circle'></i></div>
                         </div></div><hr/>";
+                        echo "<a href='chatroom.php?token='<?php echo $token?>chatroom</a>";
+                        echo $token;
+                        
                     } else {
                         echo "<div class='content'>
                         <div class = 'details'>
@@ -52,7 +55,7 @@ if(!isset($_SESSION["userid"])) {
                     }
                     
                 }
-                echo "<a href='chatroom.php'>chatroom?token=<?php echo $token?></a>";
+               
             ?>
             
 
@@ -60,20 +63,27 @@ if(!isset($_SESSION["userid"])) {
         </section>
         </div>
 
-        <script>
-        var conn = new WebSocket('ws://localhost:8081?token=<?php echo $token; ?>');
+                
+        <script type="text/javascript">
+           var conn = new WebSocket('ws://172.16.23.26:8080?token=<?php echo !empty($_SESSION['user']['token']) ? $_SESSION['user']['token'] : ''; ?>');    
             conn.onopen = function(e) {
                 console.log("Connection established!");
             };
 
-            conn.onmessage = function(e) {
-                console.log(e.data);
-            };
-
-            conn.onclose = function(e) {
-                console.log('connection closed');
-            };
-
+            $("#conversation").on('click', '#ButtionID', function () {
+                var userId      = $("#userId").val();
+                var msg         = $("#msg").val();         
+                var receiverId  = $("#receiverId").val();
+            if ( userId  != null &&  msg  != null ){
+                var data = {
+                    userId: userId,
+                    msg: msg,
+                    receiverId: receiverId
+                };
+                conn.send(JSON.stringify(data));
+                $("#msg").val("");  
+            }                 
+            });
         </script>
     </body>
     </html>
