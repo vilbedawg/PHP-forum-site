@@ -1,7 +1,7 @@
 <?php
 class post extends Dbh
 {
-    protected function PostToDB($subject, $content) {
+    protected function PostToDB($subject, $content) { 
         $stmt =  $this->connect()->prepare('INSERT INTO posts (email, user_id, date, title, content)
         VALUES (?, ?, ?, ?, ?);');
 

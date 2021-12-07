@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require 'classes/database.php';
 require 'includes/autoload-classes.php';
 
@@ -129,7 +130,9 @@ if(isset($_POST['post'])) {
             }
         ?>
     </div>
+<script src="js/users.js"></script>
 <script src="js/timeout.js">
+
 
 </script>
 </body>
