@@ -2,7 +2,8 @@
 namespace MyApp;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
-
+require_once ('C:\xampp\htdocs\php\Harkka\classes\database.php');
+require_once ('C:\xampp\htdocs\php\Harkka\classes\users-classes.php');
 class Chat implements MessageComponentInterface {
     protected $clients;
 
@@ -12,13 +13,8 @@ class Chat implements MessageComponentInterface {
     }
 
     public function onOpen(ConnectionInterface $conn) {
-
-
-
         // Store the new connection to send messages to later
         $this->clients->attach($conn);
-
-
         echo "New connection! ({$conn->resourceId})\n";
     }
 

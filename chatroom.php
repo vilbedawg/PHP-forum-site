@@ -8,10 +8,6 @@ if(!isset($_SESSION["login"])) {
     header("location: login.php");
     exit(); 
 }
-
-echo $_SESSION['user_token'];
-
-
 ?>
 
 <body>
