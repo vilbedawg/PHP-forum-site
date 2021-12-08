@@ -3,12 +3,13 @@
     {
         private $subject;
         private $content;
+        private $category;
 
-
-        public function __construct($subject, $content)
+        public function __construct($subject, $content, $category)
         {
             $this->subject = $subject;
             $this->content = $content;
+            $this->category = $category;
         }
 
        public function PostContent() {
@@ -17,12 +18,12 @@
                 header("location: create.php?error=emptyinput");
                 exit();
             }
-            $this->PostToDB($this->subject, $this->content);
+            $this->PostToDB($this->subject, $this->content, $this->category);
        }
 
        private function emptyInput() {
         $result = 0;
-        if(empty($this->subject) || empty($this->content)) {
+        if(empty($this->subject) || empty($this->content) || empty($this->category)) {
             $result = false;
         } else {
             $result = true;

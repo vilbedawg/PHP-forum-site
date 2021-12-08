@@ -9,9 +9,6 @@ include_once "header.php";
 $objUser = new Users;
 $users = $objUser->GetAllUsers();
 
-// kaikki postaukset 
-$objPost = new PostedContent();
-$allPosts = $objPost->getAllPostsByDate();
 
 
 if (!isset($_SESSION["userid"])) {
@@ -19,31 +16,29 @@ if (!isset($_SESSION["userid"])) {
     exit();
 }
 
-
 ?>
 
 <body>
-</div>
-    
     <div class="navbar">
-        <a href="logout.php" class="logout">Kirjaudu ulos</a>
-        <a href="create.php" class="create">Luo uusi</a>
+        <div class="current-user-parent">
+            <div class="current-user">
+                <span><?php echo $_SESSION["name"] ?></span>
+                <p><?php if ($_SESSION["login"] == 1) {
+                        echo "Online";
+                    } else {
+                        echo "Offline";
+                    } ?></p>
+            </div>
+        </div>
+        <div class="buttons">
+           <button class="create"><a href="create.php">Luo uusi</a></button>
+            <button class="logout"><a href="logout.php">Kirjaudu ulos</a></button>
+        </div>
     </div>
     <div class="home">
         <div class="wrapper">
             <section class="users">
-                <header>
-                    <div class="content">
-                        <div class="current-user">
-                            <span><?php echo $_SESSION["name"] ?></span>
-                            <p><?php if ($_SESSION["login"] == 1) {
-                                    echo "Online";
-                                } else {
-                                    echo "Offline";
-                                } ?></p>
-                        </div>
-                    </div>
-                </header>
+
                 <div class="search" id="search">
                     <span class="text">Etsi käyttäjä</span>
                     <input type="text" placeholder="Anna nimi...">
@@ -72,28 +67,32 @@ if (!isset($_SESSION["userid"])) {
             </section>
         </div>
         <div class="discussion-page">
-        <?php 
-            foreach ($allPosts as $key => $userPost) {
-                $mysqldate = strtotime($userPost['date']); 
-                $phpdate = date('Y/m/d G:i A', $mysqldate);
-                echo "<div class='discussion-wrapper'>
-                <div class='discussion'>
-                <div class='title'> " . $userPost['title'] . " </div>
-                <div class='content'> " . $userPost['content'] . " </div>
-                </div>
-                <div class='date'>
-                    <p>Aloitettu</p>
-                    <p>" . $phpdate . "</p>
-                </div>
-            </div>";
-                    
-            }
-        ?>
-    </div>
-<script src="js/timeout.js">
+            <div class="room python">
+            <h1>Python Room</h1>
+            </div>
+            <div class="room PHP">
+            <h1>PHP Room</h1>
+            </div>
+            <div class="room C">
+            <h1>C# Room</h1>
+            </div>
+        </div>
+        <script src="js/timeout.js"></script>
+        <script>
+            $('.room.python').on('click', () => {
+                location.href = 'room-1.php'
+            });
 
+            $('.room.PHP').on('click', () => {
+                location.href = 'room-2.php'
+            });
 
-</script>
+            $('.room.C').on('click', () => {
+                location.href = 'room-3.php'
+            });
+
+            
+        </script>
 </body>
 
 </html>

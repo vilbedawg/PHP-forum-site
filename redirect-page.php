@@ -1,13 +1,15 @@
 <?php
 session_start();
 include_once "header.php";
-
+if (!isset($_SESSION["userid"])) {
+    header("location: login.php");
+    exit();
+}
 ?>
 
 <body>
     <div class="success">
-        <h1>Julkaisu onnistui</h1>
-        <h3>Sinut ohjataan takaisin</h3>
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <a href="users.php" class="redirect">Takaisin</a>
     </div>
     <script>
