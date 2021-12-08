@@ -14,7 +14,7 @@
        public function PostContent() {
             if($this->emptyInput() == false)
             {
-                header("location: users.php?error=emptyinput");
+                header("location: create.php?error=emptyinput");
                 exit();
             }
             $this->PostToDB($this->subject, $this->content);

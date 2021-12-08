@@ -19,9 +19,10 @@ if(isset($_POST['submit'])) {
 
 ?>
 <body>
-    <div class="wrapper">
+    <div class="hero">
+    <div class="wrapper-login">
         <section class="form signup">
-            <header>Chat App</header>
+            <header>Rekisteröidy</header>
             <form action="" method="post">
                 <div class="error-txt">
                 <?php
@@ -98,6 +99,8 @@ if(isset($_POST['submit'])) {
             <div class="link">Rekisteröitynyt jo?<a href="login.php"> Kirjaudu</a></div>
         </section>
     </div>
+
+</div>
 
     <script src="js\pass-show-hide.js"></script>
     </body>

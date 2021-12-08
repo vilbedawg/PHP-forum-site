@@ -7,8 +7,8 @@
 }
 
 body {
-    
     background-image: radial-gradient(circle at 32% 72%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 8%,transparent 8%, transparent 92%),radial-gradient(circle at 61% 40%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 8%,transparent 8%, transparent 92%),radial-gradient(circle at 64% 48%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 6%,transparent 6%, transparent 94%),radial-gradient(circle at 37% 25%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 6%,transparent 6%, transparent 94%),radial-gradient(circle at 43% 50%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 6%,transparent 6%, transparent 94%),radial-gradient(circle at 80% 92%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 6%,transparent 6%, transparent 94%),radial-gradient(circle at 9% 7%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 6%,transparent 6%, transparent 94%),radial-gradient(circle at 12% 82%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 4%,transparent 4%, transparent 96%),radial-gradient(circle at 71% 65%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 4%,transparent 4%, transparent 96%),radial-gradient(circle at 7% 10%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 4%,transparent 4%, transparent 96%),radial-gradient(circle at 50% 25%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.03) 4%,transparent 4%, transparent 96%),linear-gradient(90deg, rgb(46, 139, 242),rgb(106, 43, 159));
+    background-size: cover;
 }
 
 
@@ -19,56 +19,110 @@ body {
     align-items: center;
     font-size: 20px;
     width: 100%;
+    margin-top: 20px;
+}
+
+.create-form {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .form-post {
-    margin-top: 1%;
-    width: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    height: 800px;
+    color: black;
+    background: #fff;
+    padding: 2%;
+    border-radius: 1%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+
+.form-post .form-group-upper {
+    padding-bottom: 5%;
+    width: 100%;
+    height: 15%;
+    font-size: 24px;
+}
+
+.form-post .form-group {
+    width: 100%;
+    height: 70%;
+    font-size: 24px ;
+    margin-bottom: 5%;
+}
+
 .form-post input {
     width: 100%;
+    height: 100%;
+
 }
 
 .form-post textarea {
     width: 100%;
+    height: 100%;
     resize: none;
 }
 
-.form-post .field input {
-    height: 25px;
-}
 
 .post-topic-button {
-    width: 50%;
-    text-align: center;
+    width: 20%;
 }
 
-.post-topic-button {
-    margin: auto;
-}
 .post-topic-button input {
-    margin-top: 15px;
-    height: 40px;
+
     border: none;
     font-size: 17px;
     font-weight: 500;
     color: #fff;
-    background: #4895ef;
+    background: #333;
     border-radius: 5px;
     cursor: pointer;
+    width: 100%;
+    padding: 7px 15px;
+}
+.create {
+    color: #fff;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 7px 15px;
+    background: #333;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5%;
+}
+
+.logout{
+    color: #fff;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 7px 15px;
+    background: #333;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+:is(.create:hover , .logout:hover) {
+    opacity: .8;
 }
 
 
 .home {
     display: flex;
     justify-content: space-around;
-    padding: 1rem;
-    
+    padding: 5rem 1rem;
+    width: 100%;
 }
 
 .discussion-page{
     overflow-y: scroll;
     height: 600px;
+    width: 30%;
+    margin-left: 10%;
 }
 .discussion-page::-webkit-scrollbar {
     display: none;
@@ -86,9 +140,9 @@ body {
 
 .discussion-wrapper {
     background: #fff;
-    width: 450px;
     border-radius: 16px;
     margin-bottom: 5px;
+    overflow-x: hidden;
 }
 
 .title {
@@ -98,10 +152,25 @@ body {
 
 .wrapper {
     background: #fff;
-    width: 450px;
-    height: 600px;
+    width: 30%;
     border-radius: 16px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+
+.wrapper-login {
+    background: #fff;
+    width: 450px;
+    border-radius: 16px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    margin: auto;
+}
+
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .form {
@@ -266,14 +335,6 @@ body {
 }
 
 
-
-.users header .logout{
-    color: #fff;
-    font-size: 15px;
-    padding: 7px 15px;
-    background: #333;
-    border-radius: 5px;
-}
 
 .users .search{
     margin: 20px 0;
@@ -479,3 +540,25 @@ body {
     width: 100%;
 }
 
+.success {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+.redirect {
+    margin-top: 15px;
+    border: none;
+    font-weight: 500;
+    color: #fff;
+    background: #4895ef;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px 15px;
+}
+.redirect:hover {
+    opacity: .5;
+}
