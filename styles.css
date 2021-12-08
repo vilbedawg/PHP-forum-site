@@ -10,7 +10,7 @@
 body {
     background-color: #f9fcff;
     background-image: linear-gradient(147deg, #f9fcff 0%, #dee4ea 74%);
-    height: 100vh;
+    background-repeat: no-repeat;
 }
 
 
@@ -39,7 +39,8 @@ body {
 }
 
 .create-form {
-    min-height: 100vh;
+    margin-top: 100px;
+    margin-bottom: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -49,12 +50,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 60%;
+    width: 30%;
     height: 80%;
     color: black;
     background: #fff;
     padding: 2%;
-    border-radius: 1%;
+    border-radius: 4%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
@@ -120,14 +121,13 @@ input[type="radio"] {
     height: 100%;
     resize: none;
     outline: none;
-    font-size: 18px;
+    font-size: 20px;
     border: 1px solid #333;
+    padding: 20px;
+    margin-top: 10px;
 }
 
 
-.post-topic-button {
-    width: 20%;
-}
 
 .post-topic-button input:hover {
     background-color: #4895ef;
@@ -140,9 +140,16 @@ input[type="radio"] {
     text-align: center;
     border-radius: 5px;
     margin-bottom: 10px;
-    border: 1px solid #f5c4c8;
 }
 
+.form-post .success-texti {
+    color: rgb(0, 0, 0);
+    background: #76ff94;
+    padding: 8px 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
 
 .post-topic-button input {
 
@@ -197,6 +204,7 @@ input[type="radio"] {
     justify-content: space-around;
     padding: 5rem 1rem;
     width: 100%;
+    height: 100vh;
 }
 
 .discussion-page{
@@ -258,6 +266,7 @@ input[type="radio"] {
 .wrapper {
     background: #fff;
     width: 30%;
+    height: 80%;
     border-radius: 16px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }
@@ -390,6 +399,7 @@ input[type="radio"] {
 
 .users {
     padding: 60px 30px;
+    width: 100%;
 }
 
 .users header,
@@ -406,10 +416,6 @@ input[type="radio"] {
     width: 50px;
 }
 
-.wrapper img{
-    object-fit: cover;
-    border-radius: 50%;
-}
 
 :is(.users, .users-list,) .content{
     display: flex;
@@ -451,7 +457,13 @@ input[type="radio"] {
     align-items: center;
     justify-content: space-between;
     position: relative;
+    border-bottom: 1px transparent;
 }
+.users .search:hover{
+    border-bottom: 1px solid #333;
+    transition: .5s ease-in-out;
+}
+
 
 .users .search .text {
     font-size: 18px;
@@ -758,11 +770,11 @@ input[type="radio"] {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-top: 20px;
+    margin-bottom: 20px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
     cursor: pointer;
     width: 100%;
-    height: 100%;
+    height: 30%;
     background-color: #fff;
     margin-right: 10px;
     border-radius: 10px;

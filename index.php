@@ -10,7 +10,7 @@ if(isset($_POST['submit'])) {
 
     include "classes/database.php";
     include "classes/signup-classes.php";
-    include "classes/signup-contr.php";
+    include "controllers/signup-contr.php";
     $signup = new SignupContr($name, $pwd, $pwd2, $email, $loginStatus, $lastLogin);
 
     $signup->signupUser();

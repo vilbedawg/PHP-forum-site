@@ -2,17 +2,10 @@
 
 class PostedContent extends Dbh
 {
-    private $post_id;
-    private $email;
-    private $user_id;
-    private $date;
-    private $title;
-    private $content;
-
     
     public function getAllPythonPostsByDate(){
         $category = ["Python"];
-        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date desc;");
+        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date ASC;");
         if(!$stmt->execute($category)){
             $stmt = null;
             header("location: login.php?error=stmtfailed");
@@ -24,7 +17,7 @@ class PostedContent extends Dbh
 
     public function getAllPHPPostsByDate(){
         $category = ["PHP"];
-        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date desc;");
+        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date ASC;");
         if(!$stmt->execute($category)){
             $stmt = null;
             header("location: login.php?error=stmtfailed");
@@ -36,7 +29,7 @@ class PostedContent extends Dbh
 
     public function getAllCsharpPostsByDate(){
         $category = ["c#"];
-        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date desc;");
+        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date ASC;");
         if(!$stmt->execute($category)){
             $stmt = null;
             header("location: login.php?error=stmtfailed");

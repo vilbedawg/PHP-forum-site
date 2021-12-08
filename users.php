@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-require 'classes/database.php';
-require 'includes/autoload-classes.php';
+require_once 'classes/database.php';
+require_once 'includes/autoload-classes.php';
 
 
 include_once "header.php";
@@ -31,7 +31,6 @@ if (!isset($_SESSION["userid"])) {
             </div>
         </div>
         <div class="buttons">
-           <button class="create"><a href="create.php">Luo uusi</a></button>
             <button class="logout"><a href="logout.php">Kirjaudu ulos</a></button>
         </div>
     </div>

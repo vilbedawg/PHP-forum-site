@@ -8,7 +8,7 @@ if(isset($_POST['submit'])) {
 
     include "classes/database.php";
     include "classes/login-classes.php";
-    include "classes/login-contr.php";
+    include "controllers/login-contr.php";
     $login = new loginContr($name, $pwd, $loginStatus, $lastLogin);
 
     
