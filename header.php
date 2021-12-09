@@ -11,4 +11,5 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
     <title>Chat App</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <?php date_default_timezone_set('Europe/Helsinki'); ?>
 </head>

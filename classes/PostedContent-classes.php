@@ -39,6 +39,28 @@ class PostedContent extends Dbh
         return $allPythonPosts;
     }
 
+    public function getAllPostsByOldest(){
+        $stmt = $this->connect()->prepare("SELECT * FROM posts ORDER BY date ASC;");
+        if(!$stmt->execute()) {
+            $stmt = null;
+            header("location: login.php?error=stmtfailed");
+            exit();
+        }
+        $allPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $allPosts;
+    }
+
+    public function getAllPostsByNewest(){
+        $stmt = $this->connect()->prepare("SELECT * FROM posts ORDER BY date DESC;");
+        if(!$stmt->execute()) {
+            $stmt = null;
+            header("location: login.php?error=stmtfailed");
+            exit();
+        }
+        $allPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $allPosts;
+    }
+
 }
 
 ?>

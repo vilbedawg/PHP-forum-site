@@ -27,19 +27,14 @@ if(!isset($_SESSION["login"])) {
             <div class="chat-box">
                 <div class="chat outgoing">
                     <div class="details">
-                        
                     </div>
                     <div class="Message sent">
-                        
                     </div>
-                    
                 </div>
                 <div class="chat incoming">
                     <div class="details">
-                        
                     </div>
-                    <div class="Message sent">
-                        
+                    <div class="Message sent">   
                     </div>
                 </div>
             </div>

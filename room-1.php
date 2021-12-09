@@ -2,12 +2,24 @@
 session_start();
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
-
 include_once "header.php";
+if (!isset($_SESSION["userid"])) {
+    header("location: login.php");
+    exit();
+}
 // kaikki postaukset 
 $objPost = new PostedContent();
 $allPosts = $objPost->getAllPythonPostsByDate();
 
+//Postauksen koodi
+if(isset($_POST['post'])) {
+    include_once "controllers/posts-contr.php";
+    $content = $_POST['content'];
+    $category = 'Python';
+    $post = new PostsContr($content, $category, $title);
+    $post->PostComment();
+    header("Location: room-1.php?error=none");
+}
 ?>
 
 <body>
@@ -51,17 +63,6 @@ $allPosts = $objPost->getAllPythonPostsByDate();
         }
         ?>
     </div>
-    <?php
-    //Postauksen koodi
-    if(isset($_POST['post'])) {
-        include_once "controllers/posts-contr.php";
-        $content = $_POST['content'];
-        $category = 'Python';
-        $post = new PostsContr($content, $category);
-        $post->PostContent();
-        header("Location: room-1.php?error=none");
-    }
-    ?>
     <div class="create-form">
         <form class="form-post" method="POST">
             <?php
