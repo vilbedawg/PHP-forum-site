@@ -304,13 +304,35 @@ input[type="radio"] {
     display: flex;
     padding: 5rem 1rem;
     width: 100%;
+    justify-content: space-around;
+    
 }
 
 .discussion-page{
     width: 40%;
     display: flex;
     flex-direction: column;
-    margin-left: 10%;
+}
+
+.create-post-block{
+    width: 30%;
+    height: 500px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.create-post-block-filler {
+    background-color: #333;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.create-post-block-filler h2 {
+    color: #fff;
+    margin-left: 10px;
 }
 
 .room-container {
@@ -371,6 +393,7 @@ input[type="radio"] {
 
 .date-users {  
     display: flex;
+    margin-top: 5px;
 }   
 
 .username-users {

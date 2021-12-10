@@ -34,7 +34,6 @@ if (!isset($_SESSION["userid"])) {
                 <button><i class="fas fa-search"></i></button>
                 <input type="text" placeholder="Etsi julkaisu...">
             </div>
-            <a href="create.php"><button class="create">Luo uusi</button></a>
         </div>
     <div class="home">
         <div class="discussion-page">
@@ -66,14 +65,18 @@ if (!isset($_SESSION["userid"])) {
                     }
             ?>
         </div>
+        <div class="create-post-block">
+            <div class="create-post-block-filler">
+                <h2>Tästä sivusta</h2>
+            </div>
+            <div><p>Tältä sivulta löydät kaikki muiden julkaisemat julkaisut</p></div>
+            <a href="create.php"><button class="create">Luo uusi</button></a>
+        </div>
         <script src="js/timeout.js"></script>
         <script>
-        
             $('.room').on('click', () => {
-                location.href = 'room-1.php?room="<?php $post['category'] ?>"'; 
+                location.href = 'room-1.php?room=<?php "asd" ?>'; 
             });
-
-
         </script>
         <script src="js/users.js"></script>
 </body>
