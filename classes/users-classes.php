@@ -82,23 +82,12 @@
             
         }
 
-        public function update_user_connection_id()
-        {
-            $query = "UPDATE users SET user_connection_id = :user_connection_id WHERE user_token = :user_token";
-            $stmt = $this->connect->prepare($query);
-            $stmt->bindParam(':user_connection_id', $this->user_connection_id);
-
-            $stmt->bindParam(':user_token', $this->user_token);
-
-            $stmt->execute();
-
-        }
-
-        
-        public function GetUserByToken() {
-            $session = $_SESSION['user_token'];
-            $stmt = $this->connect()->prepare('SELECT * FROM users WHERE user_token != :token;');
-            $stmt->bindParam(':token', $session);
+        public function GetAllOnliners() {
+            $session = $_SESSION['userid'];
+            $online = 1;
+            $stmt = $this->connect()->prepare('SELECT * FROM users WHERE user_id != :userid AND login_status = :login_status;');
+            $stmt->bindParam(':userid', $session);
+            $stmt->bindParam(':login_status', $online);
             if(!$stmt->execute()){
                 $stmt = null;
                 header("location: login.php?error=stmtfailed");
@@ -108,6 +97,9 @@
             return $users;
             
         }
+
+
+    
 
 
     }

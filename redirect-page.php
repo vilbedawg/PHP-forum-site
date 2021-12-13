@@ -12,7 +12,7 @@ if (!isset($_SESSION["userid"])) {
     <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         <a href="users.php" class="redirect">Takaisin</a>
     </div>
-    <script>
+    <script type="text/javascript">
         setTimeout(function() {
             window.location.href = 'users.php';
         }, 1000); // 1 sekuntia

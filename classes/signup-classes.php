@@ -3,15 +3,15 @@
 class Signup extends Dbh {
 
     protected function setUser($name, $email, $pwd) {
-        $user_token = md5(uniqid());
+        
 
-        $stmt = $this->connect()->prepare('INSERT INTO users (name, email, password, login_status, last_login, user_token) 
+        $stmt = $this->connect()->prepare('INSERT INTO users (name, email, password, login_status, last_login, image) 
         VALUES (?, ?, ?, ?, ?, ?);');
 
         $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
         date_default_timezone_set('Europe/Helsinki');
 
-        if(!$stmt->execute(array($name, $email, $hashedPwd, 1, date('Y-m-d h:i:s'), $user_token)))  {
+        if(!$stmt->execute(array($name, $email, $hashedPwd, 1, date('Y-m-d h:i:s'), )))  {
             $stmt = null;
             header("location: index.php?error=stmtfailed");
             exit();

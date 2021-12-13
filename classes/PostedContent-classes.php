@@ -3,7 +3,7 @@
 class PostedContent extends Dbh
 {
     public function getAllPostsByRoomID($roomNum){
-        $roomarray = str_split($roomNum);
+        $roomarray = str_split($roomNum, 100);
         $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE post_id = ? ORDER BY date ASC;");
         if(!$stmt->execute($roomarray)){
             $stmt = null;
@@ -38,7 +38,7 @@ class PostedContent extends Dbh
     }
 
     public function getAllComments($roomNum){
-        $roomNum = str_split($roomNum);
+        $roomNum = str_split($roomNum, 100);
         $stmt = $this->connect()->prepare("SELECT * FROM comments WHERE post_id = ? ORDER BY date ASC;");
         if(!$stmt->execute($roomNum)){
             $stmt = null;

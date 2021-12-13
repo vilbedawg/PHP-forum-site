@@ -8,17 +8,34 @@ $('.create').click(function() {
     modal.show();
 });
 
-
 $('.modal-close').click(function() {
     modal.hide();
 });
 
 
-//piilota div kun painetaan ulkopuolelta
-$(document).mouseup(function (e) {
-    if ($(e.target).closest(".modal-content").length
-                === 0) {
-        $(modal).hide();
-    }
+
+
+//maximi kuvan suuruus
+$( document ).ready(function() {
+    $('.bodytext img').css({'height' : 'auto',
+                            'max-width' : '100%'
+    });
 });
+
+
+$( document ).ready(function() {
+    $('.bodytext-users img').css({'height' : 'auto',
+                            'max-width' : '100%'                        
+    });
+});
+
+$( document ).ready(function() {
+    $('.date-and-users img').css({'height' : 'auto',
+                            'max-width' : '100%'
+                            
+    });
+});
+
+
+
 

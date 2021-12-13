@@ -7,12 +7,24 @@
 }
 
 body {
-    background-color: #d3d3d3;
+    background-color: #CEE3F8;
+}
 
+.all-comments {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top: 150px;
+    width: 100%;
+}
+
+.all-content {
+    display: flex;
 }
 
 .navbar {
-    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
     position: absolute;
     top: 100px;
     width: 100%;
@@ -61,7 +73,7 @@ body {
     display: flex;
     align-items: center;
     margin: 0;
-    width: 70%;
+    width: 90%;
     margin-bottom: 50px;
 }
 
@@ -72,6 +84,7 @@ body {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    position: relative;
 }
 
 
@@ -153,7 +166,7 @@ body {
 
 .home-filler{
     height: 100px;
-    background-color: #333;
+    background-color: #293241;
     width: 100%;
 }
 
@@ -183,7 +196,7 @@ body {
     font-size: 16px ;
     margin-bottom: 2%;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     flex-direction: column;
 }
@@ -285,9 +298,6 @@ input[type="radio"] {
     background-color: #4895ef;
 }
 
-.post-comment {
-    align-self: flex-end;
-}
 
 .post-comment input {
     border: none;
@@ -308,7 +318,7 @@ input[type="radio"] {
     font-size: 17px;
     font-weight: 500;
     padding: 7px 15px;
-    background: #216abd;
+    background: #ee6c4d;
     border-radius: 5px;
     cursor: pointer;
     border: 0;
@@ -322,11 +332,12 @@ input[type="radio"] {
     font-size: 17px;
     font-weight: 500;
     padding: 7px 15px;
-    background: #333;
+    background: #3d5a80;
     border-radius: 5px;
     cursor: pointer;
     border: 0;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    margin-right: 10px;
 }
 
 .back {
@@ -334,7 +345,7 @@ input[type="radio"] {
     font-size: 17px;
     font-weight: 500;
     padding: 7px 15px;
-    background: #333;
+    background: #3d5a80;
     border-radius: 5px;
     cursor: pointer;
     border: 0;
@@ -350,24 +361,25 @@ input[type="radio"] {
 
 .home {
     display: flex;
+    justify-content: center;
     padding: 5rem 1rem;
     width: 100%;
+    position: absolute;
+    top: 300px;
 }
 
 .discussion-page{
-    width: 40%;
+    width: 800px;
     display: flex;
     flex-direction: column;
-    margin-left: 10%;
     color: black;
 }
 
 
 .room-container {
     width: 100%;
-    height: 400px;
     padding-left: 25px;
-    background-color: #dcdcdc;
+    background-color: #e6e4e4;
     margin-bottom: 20px;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
@@ -382,7 +394,6 @@ input[type="radio"] {
     flex-direction: column;
     cursor: pointer;
     width: 100%;
-    height: 400px;
     background-color: #fff;
     margin: auto;
     border-top-right-radius: 5px;
@@ -399,18 +410,18 @@ input[type="radio"] {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 50px;
+      font-size: 30px;
   }
+
+  
 
   .room-header {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      align-items: left;
       background-color: #fff;
-      padding: 100px;
-      width: 80%;
-      margin: auto;
+      padding: 20px;
+      width: 800px;
   }
 
 .sort-comments {
@@ -435,7 +446,7 @@ input[type="radio"] {
 
   .room-header-h1 {
       font-size: 22px;
-      margin-bottom: 40px;
+      margin-bottom: 15px;
 
   }
 
@@ -445,7 +456,7 @@ input[type="radio"] {
 
   .post-toolbar {
       display: flex;
-      font-size: 18px;
+      font-size: 14px;
       margin-left: 10px;
   }
 
@@ -460,7 +471,18 @@ input[type="radio"] {
     justify-content: space-between;
     height: 20%;
     align-self: flex-start;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.date-and-post{
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    justify-content: space-between;
+    height: 20%;
+    align-self: flex-start;
+    margin-bottom: 10px;
 }
 
 .date-users {  
@@ -476,22 +498,23 @@ input[type="radio"] {
 
 .user-post {
     margin-top: 20px;
+    font-size: 22px;
 }
 
 .hashtag {
     align-self: flex-end;
-    margin-bottom: 10px;
-    margin-right: 5%;
+    margin-bottom: 5px;
+    margin-right: 5px;
 }
 
 
 .bodytext-users{
-    max-width: 90%;  
-    font-size: 24px;
-    height: 70%;
     align-self: flex-start;
-    margin-left: 10px;
+    width: 100%;
+    margin-bottom: 10px;
 }
+
+
 
 .bodytext-users p {
     overflow: hidden;
@@ -499,7 +522,10 @@ input[type="radio"] {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    margin-left: 10px;
+    font-size: 16px;
 }
+
 
 
 .date {
@@ -521,9 +547,11 @@ input[type="radio"] {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 80%;
+    width: 800px;
     background-color: #fff;
-    margin: auto;
+    margin-bottom: 50px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .discussion-wrapper {
@@ -546,6 +574,7 @@ input[type="radio"] {
     word-wrap: break-word;
     max-width: 100%;  
     font-size: 16px;
+    overflow-x: hidden ;
 }
 
 .wrapper {
@@ -1081,3 +1110,79 @@ input[type="radio"] {
         font-size: 50px;
         cursor: pointer;
     }
+
+
+    .scrollup {
+        width: 60px;
+        height: 60px;
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        text-align: center;
+        padding: 10px;
+        z-index: 100;
+        display: none;
+      }
+
+      .profile {
+          width: 400px;
+          height: 400px;
+          background-color: #fff;
+          margin-left: 40px;
+          border-radius: 5px;
+          position: relative;
+      }
+
+      .profile-status {
+        width: 400px;
+        height: 50px;
+        background-color: #333;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .profile-status h1 {
+          color: white;
+          margin-left: 10px;
+          font-size: 20px;
+      }
+
+      .users-link {
+        margin: 15px 0 15px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .about {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          height: 100px;
+      }
+
+      .member-amount, .members-online {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .amount {
+        font-weight: 500;
+        font-size: 20px;
+      }
+
+      .profile hr {
+        border: 0;
+        height: 1px;
+        background: #ccc;
+        width: 95%;
+        margin: auto;
+      }
+
+    
+    

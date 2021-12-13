@@ -16,7 +16,6 @@ if (!isset($_SESSION["userid"])) {
 
 $roomNum = $_GET['room'];
 
-
 // Kaikki kommentit
 $objPost = new PostedContent();
 $allPosts = $objPost->getAllComments($roomNum);
@@ -39,21 +38,21 @@ $currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum);
 <div class="home-filler">
         </div>
     <div class="navbar">
+    <div class="navbar-menu">
         <div class="current-user-parent">
-            <div class="current-user">
-                <span><?php echo $_SESSION["name"] ?></span>
-                <p><?php if ($_SESSION["login"] == 1) {
-                        echo "Online";
-                    } else {
-                        echo "Offline";
-                    } ?></p>
-            </div>
+            <h1>Epic Blog</h1>
         </div>
         <div class="buttons">
-            <a href="users.php"><button class="back">Takaisin</button></a>
-            <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
+        <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
+        <a href="users.php"><button class="create">Home</button></a>
         </div>
     </div>
+        </div> 
+    <div class="all-content">
+
+    
+
+    <div class="all-comments">
     <div class="room-header">
         <div class='date-and-users'>
             <div class='date'>
@@ -93,7 +92,7 @@ $currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum);
             ?>
             <div class="form-group">
                 <a id="comment"></a>
-                <textarea id="editor" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7"></textarea>
+                <textarea class="tinymce" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7"></textarea>
             </div>
             <div class="post-comment">
                 <input type="submit" name="post" value="Kommentoi" id="post">
@@ -123,28 +122,22 @@ $currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum);
         
         ?>
     </div>
-    <script src="https://cdn.ckeditor.com/ckeditor5/31.0.0/classic/ckeditor.js"></script>
+    <a href="" class="scrollup">
+    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#4895ef" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z"/></svg>
+    </a>
+    </div>  
+    </div>
     <script>
-        ClassicEditor
-                .create( document.querySelector( '#editor' ) )
-                .then( editor => {
-                        console.log( editor );
-                } )
-                .catch( error => {
-                        console.error( error );
-                } );
-
-                CKEDITOR.replace( 'editor', {
-                
-} );
-                
+    setTimeout(function(){
+        $('.success-texti').fadeOut(500, function() {
+            $(this).remove();
+        });
+        }, 2000);
     </script>
-    
-        <script>
-        setTimeout(function(){
-            $('.success-texti').fadeOut(500, function() {
-                $(this).remove();
-            });
-            }, 2000);
-        </script>
+    <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
+    <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
+    <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
+    <script src="js/timeout.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/modal.js"></script>
 </body>
