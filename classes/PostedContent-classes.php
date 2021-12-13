@@ -2,42 +2,18 @@
 
 class PostedContent extends Dbh
 {
-    
-    public function getAllPythonPostsByDate(){
-        $category = ["Python"];
-        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date ASC;");
-        if(!$stmt->execute($category)){
+    public function getAllPostsByRoomID($roomNum){
+        $roomarray = str_split($roomNum);
+        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE post_id = ? ORDER BY date ASC;");
+        if(!$stmt->execute($roomarray)){
             $stmt = null;
             header("location: login.php?error=stmtfailed");
             exit();
         }
-        $allPythonPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $allPythonPosts;
+        $allPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $allPosts;
     }
 
-    public function getAllPHPPostsByDate(){
-        $category = ["PHP"];
-        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date ASC;");
-        if(!$stmt->execute($category)){
-            $stmt = null;
-            header("location: login.php?error=stmtfailed");
-            exit();
-        }
-        $allPythonPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $allPythonPosts;
-    }
-
-    public function getAllCsharpPostsByDate(){
-        $category = ["c#"];
-        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date ASC;");
-        if(!$stmt->execute($category)){
-            $stmt = null;
-            header("location: login.php?error=stmtfailed");
-            exit();
-        }
-        $allPythonPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $allPythonPosts;
-    }
 
     public function getAllPostsByOldest(){
         $stmt = $this->connect()->prepare("SELECT * FROM posts ORDER BY date ASC;");
@@ -46,8 +22,8 @@ class PostedContent extends Dbh
             header("location: login.php?error=stmtfailed");
             exit();
         }
-        $allPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $allPosts;
+        $allPostsOldest = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $allPostsOldest;
     }
 
     public function getAllPostsByNewest(){
@@ -57,10 +33,24 @@ class PostedContent extends Dbh
             header("location: login.php?error=stmtfailed");
             exit();
         }
-        $allPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $allPosts;
+        $allPostsNewest = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $allPostsNewest;
+    }
+
+    public function getAllComments($roomNum){
+        $roomNum = str_split($roomNum);
+        $stmt = $this->connect()->prepare("SELECT * FROM comments WHERE post_id = ? ORDER BY date ASC;");
+        if(!$stmt->execute($roomNum)){
+            $stmt = null;
+            header("location: login.php?error=stmtfailed");
+            exit();
+        }
+        $allComments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $allComments;
     }
 
 }
+
+
 
 ?>

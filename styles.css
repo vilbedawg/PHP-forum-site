@@ -11,9 +11,22 @@ body {
 
 }
 
-
-
 .navbar {
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    position: absolute;
+    top: 100px;
+    width: 100%;
+    z-index: 5;
+}
+
+.fixed {
+    position:fixed;
+    top:0;
+    width: 100%;
+}
+
+
+.navbar-menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,7 +34,6 @@ body {
     width: 100%;
     height: 100px;
     background-color: rgb(31, 31, 31);
-    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
 .current-user-parent{
@@ -37,11 +49,20 @@ body {
 }
 
 .create-form {
-    margin-top: 100px;
-    margin-bottom: 100px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    margin: auto;
+    width: 70%;
+    padding: 50px;
+}
+
+.comment-form {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    width: 70%;
+    margin-bottom: 50px;
 }
 
 .search-toolbar {
@@ -140,30 +161,37 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
-    height: 80%;
-    color: black;
-    background: #fff;
-    padding: 2%;
-    border-radius: 4%;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width: 100%;
+   
 }
+
 
 .form-post .form-group-upper {
     padding-bottom: 5%;
     width: 100%;
-    height: 15%;
-    font-size: 28px;
-    
+    height: 30%;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
 }
 
 
 
 .form-post .form-group {
     width: 100%;
-    height: 70%;
-    font-size: 28px ;
-    margin-bottom: 5%;
+    font-size: 16px ;
+    margin-bottom: 2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.form-post .form-group label {
+    align-self: flex-start;
+    font-size: 20px ;
 }
 
 .form-post .form-group-upper input {
@@ -174,6 +202,7 @@ body {
     font-weight: 500;
     border: 0;
     border-bottom: 1px solid #333;
+    margin-top: 10px;
 
 }
 
@@ -181,7 +210,7 @@ body {
     padding-bottom: 5%;
     width: 100%;
     height: 30%;
-    font-size: 28px;
+    font-size: 20px;
     display: flex;
     flex-direction: column;
     justify-content: left;
@@ -191,7 +220,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    font-size: 20px ;
+    font-size: 16px ;
     margin-top: 1%;
 }
 
@@ -208,9 +237,8 @@ input[type="radio"] {
 
 .form-post textarea {
     width: 100%;
-    height: 100%;
     resize: none;
-    font-size: 20px;
+    font-size: 16px;
     border: 1px solid #333;
     padding: 15px;
     margin-top: 10px;
@@ -236,7 +264,9 @@ input[type="radio"] {
     text-align: center;
     border-radius: 5px;
     margin-bottom: 10px;
+    transition: 1s ease-in-out;
 }
+
 
 .post-topic-button input {
 
@@ -247,13 +277,31 @@ input[type="radio"] {
     background: #333;
     border-radius: 5px;
     cursor: pointer;
-    width: 100%;
     padding: 7px 15px;
     margin-top: 20px;
 }
 
 .post-topic-button input:hover {
     background-color: #4895ef;
+}
+
+.post-comment {
+    align-self: flex-end;
+}
+
+.post-comment input {
+    border: none;
+    font-size: 17px;
+    font-weight: 500;
+    color: #fff;
+    background: #333;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 7px 15px;
+}
+
+.ck {
+    height: 200px;
 }
 
 .create {
@@ -312,28 +360,10 @@ input[type="radio"] {
     width: 40%;
     display: flex;
     flex-direction: column;
+    margin-left: 10%;
+    color: black;
 }
 
-.create-post-block{
-    width: 30%;
-    height: 500px;
-    background-color: #fff;
-    border-radius: 5px;
-}
-
-.create-post-block-filler {
-    background-color: #333;
-    height: 10%;
-    display: flex;
-    align-items: center;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-
-.create-post-block-filler h2 {
-    color: #fff;
-    margin-left: 10px;
-}
 
 .room-container {
     width: 100%;
@@ -376,10 +406,53 @@ input[type="radio"] {
 
   .room-header {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 50px;
-      font-size: 30px;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: left;
+      background-color: #fff;
+      padding: 100px;
+      width: 80%;
+      margin: auto;
+  }
+
+.sort-comments {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 80%;
+    font-weight: 500;
+}
+.sort-comments a {
+    cursor: pointer;
+}
+
+  .post-hr {
+    border: 0;
+    height: 1px;
+    background: #333;
+    width: 80%;
+    background-image: linear-gradient(to right, #ccc, #333, #ccc);
+    margin-bottom: 50px; 
+  }
+
+  .room-header-h1 {
+      font-size: 22px;
+      margin-bottom: 40px;
+
+  }
+
+  .room-header-p {
+      font-size: 18px;
+  }
+
+  .post-toolbar {
+      display: flex;
+      font-size: 18px;
+      margin-left: 10px;
+  }
+
+  .post-toolbar i {
+      margin-right: 5px;
   }
 
 .date-and-users{
@@ -389,17 +462,18 @@ input[type="radio"] {
     justify-content: space-between;
     height: 20%;
     align-self: flex-start;
+    margin-bottom: 50px;
 }
 
 .date-users {  
     display: flex;
-    margin-top: 5px;
+    font-size: 14px;
 }   
 
 .username-users {
     margin-right: 10px;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 14px;
 } 
 
 .user-post {
@@ -435,12 +509,13 @@ input[type="radio"] {
     text-align: left;
     display: flex;
     margin-bottom: 20px;
+    font-size: 12px;
 }
 
 .username {
     margin-right: 10px;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 12px;
 }
 
 .discussion-section {
@@ -448,11 +523,13 @@ input[type="radio"] {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 100%;
+    width: 80%;
+    background-color: #fff;
+    margin: auto;
 }
 
 .discussion-wrapper {
-    width: 80%;
+    width: 90%;
     border-left: 2px solid #333;
     display: flex;
     justify-content: space-between;
@@ -470,7 +547,7 @@ input[type="radio"] {
 .bodytext p{
     word-wrap: break-word;
     max-width: 100%;  
-    font-size: 24px;
+    font-size: 16px;
 }
 
 .wrapper {
@@ -973,3 +1050,36 @@ input[type="radio"] {
   }
 
  
+
+  /*  Modal section  */
+  .bg-modal {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      position: fixed;
+      top: 0;
+      z-index: 10;
+      justify-content: center;
+      align-items: center;
+      display: none;
+  }
+
+  .modal-content {
+      width: 80%;
+      height: 80%;
+      background-color: #fff;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-y: scroll;
+      position: relative;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 24px;
+        font-size: 50px;
+        cursor: pointer;
+    }

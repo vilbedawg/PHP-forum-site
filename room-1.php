@@ -2,27 +2,42 @@
 session_start();
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
+require_once 'controllers/comment-contr.php';
+
 include_once "header.php";
 if (!isset($_SESSION["userid"])) {
     header("location: login.php");
     exit();
 }
+
+
+
 // kaikki postaukset 
+
+$roomNum = $_GET['room'];
+
+
+// Kaikki kommentit
 $objPost = new PostedContent();
-$allPosts = $objPost->getAllPythonPostsByDate();
+$allPosts = $objPost->getAllComments($roomNum);
 
 //Postauksen koodi
 if(isset($_POST['post'])) {
-    include_once "controllers/posts-contr.php";
     $content = $_POST['content'];
-    $category = 'Python';
-    $post = new PostsContr($content, $category, $title);
+    $post = new commentContr($content, $roomNum);
     $post->PostComment();
-    header("Location: room-1.php?error=none");
+    header("Location: room-1.php?room=$roomNum&error=none");
 }
+
+
+$getCurrentRoom = new PostedContent();
+$currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum); 
+
 ?>
 
 <body>
+<div class="home-filler">
+        </div>
     <div class="navbar">
         <div class="current-user-parent">
             <div class="current-user">
@@ -35,14 +50,58 @@ if(isset($_POST['post'])) {
             </div>
         </div>
         <div class="buttons">
-            <button class="create"><a href="users.php">Takaisin</a></button>
-            <button class="logout"><a href="logout.php">Kirjaudu ulos</a></button>
+            <a href="users.php"><button class="back">Takaisin</button></a>
+            <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
         </div>
     </div>
-    <div class="room-header python">
-        <h1>Python Room</h1>
+    <div class="room-header">
+        <div class='date-and-users'>
+            <div class='date'>
+                <p class='username'><?php echo $currentRoom[0]['name']; ?></p>
+                <p><?php echo $currentRoom[0]['date']; ?></p>
+            </div>
+        <h1 class='room-header-h1'><?php echo $currentRoom[0]['title']; ?></h1>
+        <p class='room-header-p'> <?php echo $currentRoom[0]['topic']; ?> </p>
     </div>
+    <div class='post-toolbar'>
+        <i class='far fa-comment-alt'></i>
+        <?php $roomAmount = count($allPosts);
+            echo "<p>". $roomAmount ." kommenttia</p>"?>
+    </div>
+    </div>
+                
+    
+   
+
     <div class="discussion-section">
+
+    <div class="comment-form">
+        <form class="form-post" method="POST">
+            <?php
+            if (!isset($_GET['error'])) {
+                echo "";
+            } else {
+                $signupCheck = $_GET['error'];
+
+                if ($signupCheck == "emptyinput") {
+                    echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
+                }
+                if ($signupCheck == "none") {
+                    echo "<div class='success-texti'><p>Kommenttisi on julkaistu</p></div>";
+                }
+            }
+            ?>
+            <div class="form-group">
+                <a id="comment"></a>
+                <textarea id="editor" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7"></textarea>
+            </div>
+            <div class="post-comment">
+                <input type="submit" name="post" value="Kommentoi" id="post">
+            </div>
+        </form>
+        </div>
+       
+        <span class="post-hr"><hr></span>
         <?php
         if (count($allPosts) == 0) {
             echo "<div class='empty-room'><p>Täällä on tyhjää</p></div>";
@@ -61,31 +120,31 @@ if(isset($_POST['post'])) {
                 </div>";
             }
         }
+        
         ?>
     </div>
-    <div class="create-form">
-        <form class="form-post" method="POST">
-            <?php
-            if (!isset($_GET['error'])) {
-                echo "";
-            } else {
-                $signupCheck = $_GET['error'];
+    <script src="https://cdn.ckeditor.com/ckeditor5/31.0.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+                .create( document.querySelector( '#editor' ) )
+                .then( editor => {
+                        console.log( editor );
+                } )
+                .catch( error => {
+                        console.error( error );
+                } );
 
-                if ($signupCheck == "emptyinput") {
-                    echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
-                }
-                if ($signupCheck == "none") {
-                    echo "<div class='success-texti'><p>Kommenttisi on julkaistu</p></div>";
-                }
-            }
-            ?>
-            <div class="form-group">
-                <a id="comment"></a>
-                <label>Aihe</label>
-                <textarea class="form-control" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7"></textarea>
-            </div>
-            <div class="post-topic-button">
-                <input type="submit" name="post" value="Kommentoi" id="post">
-            </div>
-        </form>
+                CKEDITOR.replace( 'editor', {
+                
+} );
+                
+    </script>
+    
+        <script>
+        setTimeout(function(){
+            $('.success-texti').fadeOut(500, function() {
+                $(this).remove();
+            });
+            }, 2000);
+        </script>
 </body>
