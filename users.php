@@ -139,13 +139,6 @@ if (isset($_POST['post'])) {
                     }
             ?>
         </div>
-        <div class="create-post-block">
-            <div class="create-post-block-filler">
-                <h2>Tästä sivusta</h2>
-            </div>
-            <div><p>Tältä sivulta löydät kaikki muiden julkaisemat julkaisut</p></div>
-            <a href="create.php"><button class="create">Luo uusi</button></a>
-        </div>
         <script src="js/timeout.js"></script>
         <script src="js/users.js"></script>
         <script src="js/modal.js"></script>
