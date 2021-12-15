@@ -6,8 +6,7 @@ if (!isset($_SESSION["userid"])) {
 }
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
-require 'includes/user-info.php';
-include_once "header.php";
+include_once "includes/header.php";
 
 $objUser = new Users;
 $users = $objUser->GetAllUsers();
@@ -198,9 +197,7 @@ $onliners = $objUser->GetAllOnliners();
             <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z" />
         </svg>
     </a>
-    <script src="js/pass-show-hide.js"></script>
-    <script src="js/timeout.js"></script>
-    <script src="js/modal.js"></script>
+    <script src="js/app.js"></script>
     <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\init-tinymce.js"></script>

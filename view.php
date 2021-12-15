@@ -4,7 +4,7 @@ require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
 require_once 'controllers/comment-contr.php';
 
-include_once "header.php";
+include_once "includes/header.php";
 if (!isset($_SESSION["userid"])) {
     header("location: login.php");
     exit();
@@ -39,7 +39,7 @@ $currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum);
     <div class="navbar-other">
     <div class="navbar-menu">
         <div class="current-user-parent">
-            <h1>Epic Blog</h1>
+            <h1>Rawr</h1>
         </div>
         <div class="buttons">
         <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>

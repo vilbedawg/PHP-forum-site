@@ -5,7 +5,7 @@ require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
 
 
-include_once "header.php";
+include_once "includes/header.php";
 $objUser = new Users;
 $users = $objUser->GetAllUsers();
 
@@ -36,7 +36,6 @@ if (!isset($_SESSION["userid"])) {
                 $category = $_POST['category'];
                 $post = new PostsContr($title, $topic, $category);
                 $post->PostTopic();
-                header("location: redirect-page.php");
             }
 
             ?>
@@ -125,7 +124,7 @@ if (!isset($_SESSION["userid"])) {
                 $mysqldate = strtotime($post['date']);
                 $phpdate = date('Y/m/d G:i A', $mysqldate);
 
-                echo "<a href='room-1.php?room=" . $post['post_id'] . "'style='color: black; display: block;'><div class='room-container'>
+                echo "<a href='view.php?room=" . $post['post_id'] . "'style='color: black; display: block;'><div class='room-container'>
                         <div class='room'>
                                 <div class='date-and-post'>
                                     <div class='date-users'>
@@ -162,10 +161,7 @@ if (!isset($_SESSION["userid"])) {
         <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#4895ef" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z"/></svg>
         </a>
 
-        <script src="js/timeout.js"></script>
-        <script src="js/users.js"></script>
-        <script src="js/modal.js"></script>
-        <script src="js/navbar.js"></script>
+        <script src="js/app.js"></script>
         <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
         <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
         <script type="text/javascript" src="tinymce\init-tinymce.js"></script>

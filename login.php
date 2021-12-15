@@ -1,14 +1,14 @@
 <?php
-include_once "header.php";
-
+include_once "includes/header.php";
+include "classes/database.php";
+include_once 'includes/autoload-classes.php';
+include "controllers/login-contr.php";
 
 if(isset($_POST['submit'])) {
     $name = $_POST["name"];
     $pwd = $_POST["password"]; 
 
-    include "classes/database.php";
-    include "classes/login-classes.php";
-    include "controllers/login-contr.php";
+
     $login = new loginContr($name, $pwd, $loginStatus, $lastLogin);
 
     

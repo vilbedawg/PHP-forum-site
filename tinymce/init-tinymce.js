@@ -16,7 +16,7 @@ tinymce.init({
         var image_size = blobInfo.blob().size / 1000;  // image size in kbytes
         var max_size   =  1000;// max size in kbytes
         if( image_size  > max_size ){        
-            failure('Kuva on liian iso( '+ image_size  + ') , Max:' + max_size + ' kB');
+            failure('Kuva on liian iso(' + image_size  + ') , Max: ' + max_size + ' kB');
             return;      
     }else {
 
