@@ -23,7 +23,7 @@ if(isset($_POST['submit'])) {
     <div class="wrapper-login">
         <section class="form signup">
             <header>Rekisteröidy</header>
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
                 <div class="error-txt">
                 <?php
                     if(!isset($_GET['error'])) {

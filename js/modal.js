@@ -12,6 +12,14 @@ $('.modal-close').click(function() {
     modal.hide();
 });
 
+$(document).ready(function() {
+    if (window.location.href.indexOf("error") > -1) {
+        $(modal).css('display', 'flex');
+        modal.show();
+    }
+});
+
+
 
 
 
@@ -35,6 +43,8 @@ $( document ).ready(function() {
                             
     });
 });
+
+
 
 
 

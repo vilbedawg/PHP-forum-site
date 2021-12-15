@@ -24,6 +24,13 @@ body {
     display: flex;
 }
 
+.navbar-other {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 5;
+}
+
 .navbar {
     position: absolute;
     top: 100px;
@@ -168,6 +175,7 @@ body {
     height: 100px;
     background-color: #293241;
     width: 100%;
+    position: relative;
 }
 
 .form-post {
@@ -180,7 +188,7 @@ body {
 
 
 .form-post .form-group-upper {
-    padding-bottom: 5%;
+    margin-bottom: 15px;
     width: 100%;
     height: 30%;
     font-size: 20px;
@@ -220,7 +228,7 @@ body {
 }
 
 .form-post .form-group-middle {
-    padding-bottom: 5%;
+    margin-bottom: 20px;
     width: 100%;
     height: 30%;
     font-size: 20px;
@@ -258,7 +266,24 @@ input[type="radio"] {
 }
 
 
+.error-texti {
+    color: #721c24;
+    background: #f8d7da;
+    padding: 8px 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
 
+.success-texti {
+    color: rgb(0, 0, 0);
+    background: #76ff94;
+    padding: 8px 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: 1s ease-in-out;
+}
 
 
 .form-post .error-texti {
@@ -366,6 +391,14 @@ input[type="radio"] {
     width: 100%;
     position: absolute;
     top: 300px;
+}
+
+.home-other {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    width: 100%;
+    margin-top: 100px;
 }
 
 .discussion-page{
@@ -627,8 +660,6 @@ input[type="radio"] {
     border: 1px solid #f5c4c8;
 }
 
-
-
 .form form .field {
     display: flex;
     flex-direction: column;
@@ -636,13 +667,9 @@ input[type="radio"] {
     position: relative;
 }
 
-
 .form form .field input {
     outline: none;
 }
-
-
-
 
 .form form .input input {
     height: 40px;
@@ -709,155 +736,6 @@ input[type="radio"] {
     opacity: .5;
 }
 
-/* KÄYTTÄJÄ ALUE */
-
-.users {
-    padding: 60px 30px;
-    width: 100%;
-}
-
-.users header,
-.users-list a {
-    display: flex;
-    align-items: center;
-    padding-bottom: 20px;
-    justify-content: space-between;
-    border-bottom: 1px solid #e6e6e6;
-}
-
-.users header .content img{
-    height: 50px;
-    width: 50px;
-}
-
-
-:is(.users, .users-list,) .content{
-    display: flex;
-    align-items: center;
-}
-
-:is(.users, .users-list) .details{
-    color: #000;
-    display: inline-flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 80px;
-    width: 100%;
-}
-
-:is(.users, .users-list) hr {
-    border: 0;
-    height: 1px;
-    background: #333;
-    opacity: .2;
-}
-
-
-:is(.users, .users-list) .details span{
-    font-size: 18px;
-    font-weight: 500;
-}
-
-.current-user span{
-    font-size: 28px;
-    font-weight: 500;
-}
-
-
-
-.users .search{
-    margin: 20px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-}
-
-
-.users .search .text {
-    font-size: 18px;
-}
-
-.users .search input {
-    position: absolute;
-    height: 42px;
-    width: calc(100% - 50px);
-    border: 1px solid #ccc;
-    padding: 0 13px;
-    font-size: 16px;
-    border-radius: 5px;
-    outline: none;
-    opacity: 0;
-    pointer-events: none;
-}
-
-
-.users .search input.active{
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.users .search button{
-    width: 47px;
-    height: 42px;
-    border: none;
-    outline: none;
-    color: #4895ef;
-    background: #fff;
-    cursor: pointer;
-    font-size: 17px;
-    border-radius: 5px ;
-    transition: .2s ease;
-}
-.users .search button:hover{
-    background-color: #333;
-}
-.users .search button.active {
-    color: #fff;
-    background: #4895ef;
-}
-
-.users .search button.active i::before {
-    content: "\f00d";
-}
-.users .search button.active:hover {
-    background-color: #333;
-}
-
-
-.users-list {
-    max-height: 350px;
-    overflow-y: auto;
-}
-
-:is(.chat-box, .users-list)::-webkit-scrollbar{
-    width: 0px;
-}
-.users-list a {
-    padding-right: 15px;
-    margin-bottom: 10px;
-    page-break-after: 10px;
-    border-bottom-color: #f1f1f1;
-}
-.users-list a:last-child{
-    border: none;
-    margin-bottom: 0px;
-}
-
-.users-list a .content img{
-    height: 40px;
-    width: 40px;
-}
-
-.users-list a .content p {
-    color: #67676a;
-}
-
-.users-list .status-dot {
-    font-size: 12px;
-    color: rgb(10, 153, 65);
-    margin-right: 15px;
-}
 
 /*CODE FOR PHP*/
 .users-list .status-dot.offline {
@@ -866,119 +744,6 @@ input[type="radio"] {
     margin-right: 15px;
 }
 
-
-/* Chat Area*/
-
-.chat-area header {
-    display: flex;
-    align-items: center;
-    padding: 18px 30px;
-}
-
-.chat-area header .back-icon {
-    font-size: 18px;
-    color: #333;
-}
-
-.chat-area header img {
-    height: 45px;
-    width: 45px;
-    margin: 0 15px;
-}
-
-.chat-area header span {
-    font-size: 17px;
-    font-weight: 500;
-}
-
-.chat-box .chat {
-    margin: 15px 0;
-}
-
-.chat-box {
-    height: 500px;
-    overflow-y: auto;
-    background: #f7f7f7;
-    padding: 10px 30px 20px 30px;
-    box-shadow: rgba(0, 0, 0, .1) 0px -50px 36px -28px inset;
-}
-.chat-box .chat p{
-    padding: 8px 16px;
-    word-wrap: break-word;
-}
-
-.chat-box .outgoing {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    
-}
-
-.outgoing .details {
-    margin-left: auto;
-    max-width: calc(100% - 130px);
-}
-
-.outgoing .details p {
-    background: #333;
-    color: #fff;
-    border-radius: 18px 18px 0 18px;
-}
-
-
-
-.incoming .details {
-    margin-right: auto;
-    max-width: calc(100% - 130px);
-}
-
-.incoming .details p {
-    background: rgb(233, 233, 233);
-    color: #333;
-    
-    border-radius: 18px 18px 18px 0;
-}
-
-.chat-area .typing-area {
-    padding: 18px 30px;
-    display: flex;
-    justify-content: space-between;
-    
-}
-
-.typing-area input {
-    height: 45px;
-    width: calc(100% - 58px);
-    font-size: 17px;
-    border: 1px solid #ccc;
-    padding: 0 13px;
-    border-radius: 5px 0 0 5px;
-    outline: none;
-}
-
-.typing-area button {
-    width: 55px;
-    border: none;
-    outline: none;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-    background: #333;
-    font-size: 19px;
-    color: #fff;
-}
-
-.discussion-area {
-    width: 100%;
-}
-
-.success {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-}
 
 .redirect {
     margin-top: 15px;
@@ -1184,5 +949,123 @@ input[type="radio"] {
         margin: auto;
       }
 
+    .user-managment {
+        width: 800px;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .user-managment img {
+        max-width: 300px;
+        height: auto;
+        margin-top: 20px;
+        border-radius: 50%;
+    }
+
     
-    
+
+.form {
+    padding: 25px 30px;
+}
+
+.user-managment header {
+    font-size: 25px;
+    font-weight: 600;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+
+
+.user-managment form {
+    margin: 20px 0;
+}
+
+
+.user-managment form .error-texti {
+    color: #721c24;
+    background: #f8d7da;
+    padding: 8px 10px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #f5c4c8;
+}
+
+.user-managment form .field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.user-managment form .field input {
+    outline: none;
+}
+
+.user-managment form .input input {
+    height: 40px;
+    width: 100%;
+    font-size: 16px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+
+.user-managment form .field label {
+    margin-bottom: 2px;
+}
+
+.user-managment form .field .image input {
+    font-size: 17px;
+}
+
+
+
+.user-managment form .button input {
+    margin-top: 15px;
+    height: 40px;
+    border: none;
+    font-size: 17px;
+    font-weight: 500;
+    color: #fff;
+    background: #4895ef;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.user-managment form .button input:hover {
+    background-color: #333;
+}
+
+.user-managment form .field i {
+    position: absolute;
+    right: 15px;
+    color: #ccc;
+    transform: translateY(-50%);
+    top: 70%;
+    cursor: pointer;
+}
+
+.user-managment form .field i.active::before{
+    content: "\f070";
+    color: #333;
+}
+
+.table {
+    height: 800px;
+}
+
+.all-user-info {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+}

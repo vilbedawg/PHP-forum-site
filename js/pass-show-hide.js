@@ -1,6 +1,6 @@
 const pswField = document.getElementById("Password"),
 pswFieldVerify = document.getElementById("PasswordVerify"),
-toggleBtn = document.querySelector(".form .field i");
+toggleBtn = document.querySelector(".field i");
 
 toggleBtn.onclick = () => {
     if(pswField.type === "password"){

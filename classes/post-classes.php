@@ -10,6 +10,8 @@ class post extends Dbh
             header("location: index.php?error=stmtfailed");
             exit();
         }
+
+        
     }
     
 

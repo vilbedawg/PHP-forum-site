@@ -20,6 +20,7 @@ $roomNum = $_GET['room'];
 $objPost = new PostedContent();
 $allPosts = $objPost->getAllComments($roomNum);
 
+
 //Postauksen koodi
 if(isset($_POST['post'])) {
     $content = $_POST['content'];
@@ -35,9 +36,7 @@ $currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum);
 ?>
 
 <body>
-<div class="home-filler">
-        </div>
-    <div class="navbar">
+    <div class="navbar-other">
     <div class="navbar-menu">
         <div class="current-user-parent">
             <h1>Epic Blog</h1>
@@ -138,6 +137,5 @@ $currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum);
     <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
     <script src="js/timeout.js"></script>
-    <script src="js/navbar.js"></script>
     <script src="js/modal.js"></script>
 </body>

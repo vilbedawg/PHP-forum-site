@@ -3,7 +3,7 @@
 class Signup extends Dbh {
 
     protected function setUser($name, $email, $pwd) {
-        
+        $defaultImg = 'profile_images/default.jpg';
 
         $stmt = $this->connect()->prepare('INSERT INTO users (name, email, password, login_status, last_login, image) 
         VALUES (?, ?, ?, ?, ?, ?);');
@@ -11,7 +11,7 @@ class Signup extends Dbh {
         $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
         date_default_timezone_set('Europe/Helsinki');
 
-        if(!$stmt->execute(array($name, $email, $hashedPwd, 1, date('Y-m-d h:i:s'), )))  {
+        if(!$stmt->execute(array($name, $email, $hashedPwd, 1, date('Y-m-d h:i:s'), $defaultImg)))  {
             $stmt = null;
             header("location: index.php?error=stmtfailed");
             exit();
@@ -32,6 +32,7 @@ class Signup extends Dbh {
         $_SESSION["email"] = $user[0]["email"];
         $_SESSION["login"] = $user[0]["login_status"];
         $_SESSION["last_login"] = $user[0]["last_login"];
+        $_SESSION["image"] = $user[0]["image"];
         $stmt = null;
     }
 

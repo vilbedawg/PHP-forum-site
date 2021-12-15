@@ -20,6 +20,8 @@ if (!isset($_SESSION["userid"])) {
 ?>
 
 <body>
+
+
     <!--Modal section-->
     <div class="bg-modal">
         <div class="modal-content">
@@ -38,24 +40,21 @@ if (!isset($_SESSION["userid"])) {
             }
 
             ?>
-
+            
             <div class="create-form">
                 <form class="form-post" method="POST">
-                    <div class="error-text">
-                        <?php
-                        if (!isset($_GET['error'])) {
-                            echo "";
-                        } else {
-                            $signupCheck = $_GET['error'];
-                            if ($signupCheck == "emptyinput") {
-                                echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
-                            }
-                            if ($signupCheck == "none") {
-                                echo "<div class='success-texti'><p>Kommenttisi on julkaistu</p></div>";
-                            }
+                <div class="error-text">
+                    <?php
+                    if (!isset($_GET['error'])) {
+                        echo "";
+                    } else {
+                        $signupCheck = $_GET['error'];
+                        if ($signupCheck == "emptyinput") {
+                            echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
                         }
-                        ?>
-                    </div>
+                    }
+                    ?>
+                </div>
                     <div class="form-group-upper">
                         <label>Otsikko</label>
                         <input type="text" name="subject" id="subject"></input>
@@ -111,7 +110,7 @@ if (!isset($_SESSION["userid"])) {
         </div>
     </div>
 
-    
+   
 
     <div class="home">                        
         <div class="discussion-page">
@@ -156,6 +155,7 @@ if (!isset($_SESSION["userid"])) {
             <div class="users-link"><button class="create">Luo uusi</button></div>
             <hr>
             <p><?php echo $_SESSION['name']?></p>
+            <a href="userslist.php"><div class="users-link"><button class="create">Käyttäjätiedot</button></div><a>
         </div>
         </div>
         <a href="" class="scrollup">
