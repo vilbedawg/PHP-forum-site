@@ -1,17 +1,15 @@
 <?php
-include_once "header.php";
+include_once "includes/header.php";
 if(isset($_POST['submit'])) {
     $name = $_POST["name"];
     $email = $_POST["email"];
     $pwd = $_POST["password"];
     $pwd2 = $_POST["password2"];
-    $loginStatus = "";
-    $lastLogin = "";
 
     include "classes/database.php";
     include "classes/signup-classes.php";
     include "controllers/signup-contr.php";
-    $signup = new SignupContr($name, $pwd, $pwd2, $email, $loginStatus, $lastLogin);
+    $signup = new SignupContr($name, $pwd, $pwd2, $email);
 
     $signup->signupUser();
     header("location: users.php");

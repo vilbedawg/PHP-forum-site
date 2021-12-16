@@ -13,9 +13,7 @@ class post extends Dbh
 
         
     }
-    
 
-    
     protected function PostCommentToDB($content, $roomNum) { 
         $stmt =  $this->connect()->prepare('INSERT INTO comments (post_id, user_id, name, date, content)
         VALUES (?, ?, ?, ?, ?);');

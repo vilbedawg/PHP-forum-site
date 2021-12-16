@@ -154,7 +154,7 @@ if (!isset($_SESSION["userid"])) {
             <div class="users-link"><button class="create">Luo uusi</button></div>
             <hr>
             <p><?php echo $_SESSION['name']?></p>
-            <a href="userslist.php"><div class="users-link"><button class="create">Käyttäjätiedot</button></div><a>
+            <a href="profile.php?user=<?php echo $_SESSION['userid'] ?>"><div class="users-link"><button class="create">Käyttäjätiedot</button></div><a>
         </div>
         </div>
         <a href="" class="scrollup">

@@ -45,6 +45,9 @@ if(isset($_POST['submit'])) {
                         elseif ($signupCheck == "usernotfound") {
                             echo "<div class='error-texti'><p>Käyttäjää ei löydy</p></div>";
                         }   
+                        elseif ($signupCheck == "banned") {
+                            echo "<div class='error-texti'><p>Banned</p></div>";
+                        }  
                     }
                
                 ?>

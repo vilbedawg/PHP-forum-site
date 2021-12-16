@@ -31,8 +31,80 @@ if(isset($_POST['post'])) {
 
 
 $getCurrentRoom = new PostedContent();
-$currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum); 
+$currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum); 
 
+
+if(isset($_GET['edit'])){
+    $currentPostData = $getCurrentRoom->getCurrentPostData($_GET['room']);?>
+
+
+    <div class="bg-modal">
+    <div class="modal-content">
+        <div class="modal-close"><i class="fas fa-times"></i>
+        </div>
+
+        <?php
+        if (isset($_POST['edit'])) {
+            include_once "controllers/posts-contr.php";
+            $title = $_POST['subject'];
+            $topic = $_POST['topic'];
+            $category = $_POST['category'];
+            $updatePost = new PostedContent();
+            
+        }
+
+        ?>
+        
+        <div class="create-form">
+            <form class="form-post" method="POST">
+            <div class="error-text">
+                <?php
+                if (!isset($_GET['error'])) {
+                    echo "";
+                } else {
+                    $signupCheck = $_GET['error'];
+                    if ($signupCheck == "emptyinput") {
+                        echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
+                    }
+                }
+                ?>
+            </div>
+                <div class="form-group-upper">
+                    <label>Otsikko</label>
+                    <input type="text" name="subject" id="subject" value=" <?php echo $currentPostData[0]['title'] ?>"></input>
+                </div>
+                <div class="form-group-middle">
+                    <label>Kategoria</label>
+                    <div class="radio-buttons">
+                        <div class="radio1">
+                            <input type="radio" name="category" id="select1" value="Python"></input>
+                            <label>Python</label>
+                        </div>
+                        <div class="radio2">
+                            <input type="radio" name="category" id="select2" value="PHP"></input>
+                            <label>PHP</label>
+                        </div>
+                        <div class="radio3">
+                            <input type="radio" name="category" id="select3" value="C#"></input>
+                            <label>C#</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Aihe</label>
+                    <textarea class="tinymce" name="topic" id="topic" rows="7" ><?php echo $currentPostData[0]['topic'] ?></textarea>
+                    <div class="post-topic-button">
+                        <input type="submit" name="edit" value="Julkaise" id="post">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+     <?php
+}
+?>   
+} 
 ?>
 
 <body>
@@ -42,6 +114,7 @@ $currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum);
             <h1>Rawr</h1>
         </div>
         <div class="buttons">
+        <button class="create">Luo uusi</button>
         <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
         <a href="users.php"><button class="create">Home</button></a>
         </div>
@@ -136,6 +209,5 @@ $currentRoom = $getCurrentRoom->getAllPostsByRoomID($roomNum);
     <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
-    <script src="js/timeout.js"></script>
-    <script src="js/modal.js"></script>
+    <script src="js/app.js"></script>
 </body>

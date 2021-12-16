@@ -50,24 +50,7 @@
             $this->lastLogin = $lastLogin;
         }
 
-        public function setUserToken($user_token) {
-            $this->user_token = $user_token;
-        }
-
-        public function getUserToken() {
-            return $this->user_token;
-        }
-
-        public function setUserConnectionId($user_connection_id) {
-            $this->user_connection_id = $user_connection_id;
-        }
-
-        public function getUserConnectionId() {
-            return $this->user_connection_id;
-        }
-
-
-        public function GetAllUsersAsOffline() {
+        public function GetAllUsers() {
             $stmt = $this->connect()->prepare('SELECT * FROM users');
             if(!$stmt->execute()){
                 $stmt = null;
@@ -79,7 +62,7 @@
         }
 
 
-        public function GetAllUsers() {
+        public function GetAllUsersExceptMe() {
             $session = $_SESSION['userid'];
             $stmt = $this->connect()->prepare('SELECT * FROM users WHERE user_id != :userid;');
             $stmt->bindParam(':userid', $session);
@@ -93,18 +76,31 @@
         }
 
         public function GetAllOnliners() {
-            $session = $_SESSION['userid'];
             $online = 1;
-            $stmt = $this->connect()->prepare('SELECT * FROM users WHERE user_id != :userid AND login_status = :login_status;');
-            $stmt->bindParam(':userid', $session);
+            $stmt = $this->connect()->prepare('SELECT * FROM users WHERE login_status = :login_status;');
             $stmt->bindParam(':login_status', $online);
             if(!$stmt->execute()){
                 $stmt = null;
                 header("location: login.php?error=stmtfailed");
                 exit();
             }
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $users;
+            $onliners = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $onliners;
+            
+        }
+
+
+        public function GetViewedUser() {
+            $currentUser = $_GET['user'];
+            $stmt = $this->connect()->prepare('SELECT * FROM users WHERE user_id = :userid;');
+            $stmt->bindParam(':userid', $currentUser);
+            if(!$stmt->execute()){
+                $stmt = null;
+                header("location: login.php?error=stmtfailed");
+                exit();
+            }
+            $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $user;
             
         }
 

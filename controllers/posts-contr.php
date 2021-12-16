@@ -21,7 +21,8 @@
         }
         $this->PostTopicToDB($this->category, $this->subject, $this->topic);
         
-   }
+        }
+
 
         private function emptyPostInput() {
             $result = 0;

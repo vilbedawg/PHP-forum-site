@@ -16,6 +16,13 @@ $(document).ready(function() {
     }
 });
 
+$(document).ready(function() {
+    if (window.location.href.indexOf("edit") > -1) {
+        $(modal).css('display', 'flex');
+        modal.show();
+    }
+});
+
 
 //----------------------------//
 //maximi kuvan suuruus
@@ -73,6 +80,46 @@ $(window).scroll(function() {
     }, 600);
     return false;
   });
+
+
+
+//----------------------------//
+//Edit nappi
+  $(document).ready(function() {
+    if (window.location.href.indexOf("edit") > -1) {
+        $('.edit').css('display', 'none');
+    }
+});
+
+
+//----------------------------//
+//Poista postaus
+
+
+
+
+
+//----------------------------//
+//Käyttäjälista
+$(document).ready(function(){
+    $(".show-list").on('click', function(){
+        $(".user-list-h2").fadeIn("fast");
+        $('.table-wrapper').stop().slideDown("normal", function(){
+            $('.table-wrapper').css('display', 'flex');
+            $(".show-list").hide();
+            $(".hide-list").show();
+            
+        });
+        $(".hide-list").on('click', function(){
+            $('.table-wrapper').stop().slideUp("normal", function(){
+                $('.table-wrapper').css('display', 'none');
+                $(".hide-list").hide();
+                $(".show-list").show();
+                $(".user-list-h2").fadeOut("fast");
+            });
+        });
+    });
+});
 
 
 //----------------------------//

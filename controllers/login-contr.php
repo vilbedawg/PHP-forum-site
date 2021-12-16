@@ -16,11 +16,7 @@
                 header("location: login.php?error=emptyinput&name=$this->name");
                 exit();
             }
-
-            
-
             $this->getUser($this->name, $this->pwd);
-            
         }
         
         private function emptyInput() {

@@ -7,13 +7,11 @@
         private $pwd2;
         
        
-        public function __construct($name, $pwd, $pwd2, $email, $loginStatus, $lastLogin) {
+        public function __construct($name, $pwd, $pwd2, $email) {
             $this->name = $name;
             $this->email = $email;
             $this->pwd = $pwd;
             $this->pwd2 = $pwd2;
-            $this->loginStatus = $loginStatus;
-            $this->lastLogin = $lastLogin;
         }
 
         public function signupUser() {

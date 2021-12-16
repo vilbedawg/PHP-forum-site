@@ -13,7 +13,6 @@ class Login extends Dbh {
             exit();
         }  
         
-
         if($stmt->rowCount() == 0)
         {
             $stmt = null;
@@ -30,6 +29,7 @@ class Login extends Dbh {
             header("location: login.php?error=wrongpwd&name=$name");
             exit();
         }
+
 
         elseif($checkPwd == true) 
         {
@@ -50,10 +50,20 @@ class Login extends Dbh {
             }
 
             $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
+           
             session_start();
             $_SESSION["userid"] = $user[0]["user_id"];
+            $banned = 3;
             $online = 1;
+
+            if($user[0]['login_status'] == $banned) {
+                $stmt = null;
+                header("location: login.php?error=banned");
+                exit();
+            }
+
+            
 
             $sql = 'UPDATE users SET login_status = :login_status WHERE user_id = :userid;';
             $stmt = $this->connect()->prepare($sql);
