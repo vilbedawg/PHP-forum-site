@@ -1,6 +1,6 @@
 <?php
 // Allowed origins to upload images
-$accepted_origins = array("http://localhost:8080", "http://107.161.82.130");
+$accepted_origins = array("http://localhost:8080", "http://107.161.82.130", "http://localhost");
 
 // Images upload path
 $imageFolder = "images/";

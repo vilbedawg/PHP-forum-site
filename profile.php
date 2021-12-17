@@ -189,5 +189,11 @@ if(isset($_POST['del'])){
     <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
+    <script>
+         $(document).ready(function() {
+            $("p").has("img").css({"textAlign" : "center",
+            });
+        });
+    </script>
 </body>
 </html>

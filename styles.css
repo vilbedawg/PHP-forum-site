@@ -571,6 +571,7 @@ input[type="radio"] {
     align-self: flex-start;
     width: 100%;
     margin-bottom: 10px;
+    
 }
 
 
@@ -583,6 +584,7 @@ input[type="radio"] {
     -webkit-box-orient: vertical;
     margin-left: 10px;
     font-size: 16px;
+    text-align: left;
 }
 
 

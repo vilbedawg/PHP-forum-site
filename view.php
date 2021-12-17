@@ -26,7 +26,7 @@ if(isset($_POST['post'])) {
     $content = $_POST['content'];
     $post = new commentContr($content, $roomNum);
     $post->PostComment();
-    header("Location: room-1.php?room=$roomNum&error=none");
+    header("Location: ?room=$roomNum&error=none");
 }
 
 
@@ -35,8 +35,8 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
 
 
 if(isset($_GET['edit'])){
-    $currentPostData = $getCurrentRoom->getCurrentPostData($_GET['room']);?>
-
+    $currentPostData = $getCurrentRoom->getCurrentPostData($_GET['room']);
+    ?>
 
     <div class="bg-modal">
     <div class="modal-content">
@@ -49,7 +49,9 @@ if(isset($_GET['edit'])){
             $title = $_POST['subject'];
             $topic = $_POST['topic'];
             $category = $_POST['category'];
-            $updatePost = new PostedContent();
+            $updatePost = new PostsContr($title, $topic, $category);
+            $updatePost->updateTopic($roomNum);
+            header("Location: view.php?room=$roomNum");
             
         }
 
@@ -104,8 +106,7 @@ if(isset($_GET['edit'])){
      <?php
 }
 ?>   
-} 
-?>
+ 
 
 <body>
     <div class="navbar-other">
@@ -114,7 +115,9 @@ if(isset($_GET['edit'])){
             <h1>Rawr</h1>
         </div>
         <div class="buttons">
-        <button class="create">Luo uusi</button>
+        <?php if (isset($_POST['edit'])) {
+            echo '<button class="create">Luo uusi</button>';
+         } ?>
         <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
         <a href="users.php"><button class="create">Home</button></a>
         </div>
@@ -210,4 +213,11 @@ if(isset($_GET['edit'])){
     <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
     <script src="js/app.js"></script>
+    <script>
+         $(document).ready(function() {
+            $("p").has("img").css({"textAlign" : "center",
+                                    
+            });
+        });
+    </script>
 </body>

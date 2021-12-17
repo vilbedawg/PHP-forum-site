@@ -36,6 +36,7 @@ if (!isset($_SESSION["userid"])) {
                 $category = $_POST['category'];
                 $post = new PostsContr($title, $topic, $category);
                 $post->PostTopic();
+                header('Location: users.php?success');
             }
 
             ?>
@@ -154,7 +155,7 @@ if (!isset($_SESSION["userid"])) {
             <div class="users-link"><button class="create">Luo uusi</button></div>
             <hr>
             <p><?php echo $_SESSION['name']?></p>
-            <a href="profile.php?user=<?php echo $_SESSION['userid'] ?>"><div class="users-link"><button class="create">Käyttäjätiedot</button></div><a>
+            <a href="profile.php?user=<?php echo $_SESSION['userid'] ?>"><div class="users-link"><button class="logout">Käyttäjätiedot</button></div><a>
         </div>
         </div>
         <a href="" class="scrollup">
@@ -165,6 +166,15 @@ if (!isset($_SESSION["userid"])) {
         <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
         <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
         <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
+
+        <script>
+        $(document).ready(function() {
+            $("p").has("img").css({"textAlign" : "center",
+                                    "background" : "black",
+            });
+        });
+        </script>
+
 </body>
 
 </html>
