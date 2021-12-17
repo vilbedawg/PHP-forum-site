@@ -23,10 +23,23 @@
         
         }
 
+        public function updateTopic($roomNum) {
+            if($this->emptyPostInput() == false)
+            {
+                header("location: view.php?room=$roomNum&edit&error=emptyinput");
+                exit();
+            }
+            $this->updateTopicToDB($this->category, $this->subject, $this->topic, $roomNum);
+            
+            }
+
+
+
+
 
         private function emptyPostInput() {
             $result = 0;
-            if(empty($this->subject && $this->category  && $this->topic )) {
+            if(empty($this->subject or $this->category  or $this->topic )) {
                 $result = false;
             } else {
                 $result = true;
