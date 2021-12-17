@@ -180,7 +180,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
-   
+    margin-top: 50px;
 }
 
 
@@ -420,7 +420,6 @@ input[type="radio"] {
 
 .room {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     flex-direction: column;
     cursor: pointer;
@@ -430,6 +429,8 @@ input[type="radio"] {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     overflow-y: hidden;
+    position: relative;
+    min-height: 150px;
   }
 
   .room-container:hover {
@@ -495,16 +496,26 @@ input[type="radio"] {
       margin-right: 5px;
   }
 
+  .post-toolbar-editpost {
+      margin-left: 15px;
+      color: black;
+      font-weight: 500;
+  }
+  .post-toolbar-editpost:hover {
+    color: #ee6c4d;
+  }
+
 .date-and-users{
     display: flex;
     flex-direction: column;
-    margin-left: 10px;
     justify-content: space-between;
     height: 20%;
     align-self: flex-start;
     margin-bottom: 10px;
     width: 100%;
+    padding: 10px;
 }
+
 
 .date-and-post{
     display: flex;
@@ -527,9 +538,14 @@ input[type="radio"] {
     font-size: 14px;
 } 
 
-.delete-post {
-   
+.post-footer {
+    height: 40px;
+    width: 100%;
+    background-color: #fff;
+    position: absolute;
+    bottom: 0;
 }
+
 
 .delete-post-btn {
     border: none;
@@ -539,6 +555,7 @@ input[type="radio"] {
     top: 15px;
     right: 20px;
     transform: scale(2);
+    cursor: pointer;
 }
 
 .edit-post-btn {
@@ -549,7 +566,48 @@ input[type="radio"] {
     top: 13px;
     right: 60px;
     transform: scale(2);
+    cursor: pointer;
 }
+
+.edit-post-btn:hover {
+    color: #4895ef;
+ }
+ 
+ .edit-toolbar {
+     width: 800px;
+     height: 50px;
+     background-color: #F8F8F8;
+     position: fixed;
+     top: 100px;
+     z-index: 995;
+     color: black;
+ }
+ .edit-toolbar-roomname {
+     position: absolute;
+     top: 12px;
+     left: 80px;
+    font-size: 18px;
+ }
+
+ .edit-toolbar-close{
+    position: absolute;
+    right: 15px;
+    top: 13px;
+    color: black;
+ }
+
+ .close-view:hover {
+     color: #ee6c4d;
+ }
+
+ .close-view {
+    color: black;
+    position: absolute;
+    top: 8px;
+    right: 55px;
+    font-size: 24px;
+    
+ }
 
 .delete-post-btn:hover {
     color: red;
@@ -561,7 +619,9 @@ input[type="radio"] {
 }
 
 .hashtag {
-    align-self: flex-end;
+    position: absolute;
+    bottom: 0;
+    right: 0;
     margin-bottom: 5px;
     margin-right: 5px;
 }
@@ -571,17 +631,17 @@ input[type="radio"] {
     align-self: flex-start;
     width: 100%;
     margin-bottom: 10px;
-    
+    max-height: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 
 
 .bodytext-users p {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
     margin-left: 10px;
     font-size: 16px;
     text-align: left;
@@ -610,7 +670,8 @@ input[type="radio"] {
     flex-direction: column;
     width: 800px;
     background-color: #fff;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
+    padding-bottom: 50px;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
@@ -878,7 +939,7 @@ input[type="radio"] {
       background-color: rgba(0, 0, 0, 0.7);
       position: fixed;
       top: 0;
-      z-index: 10;
+      z-index: 9999;
       justify-content: center;
       align-items: center;
       display: none;
@@ -1286,3 +1347,105 @@ input[type="radio"] {
     color: black;
 }
 
+.post-toolbar-users {
+    position: absolute;
+    display: flex;
+    bottom: 10px;
+    left: 10px;
+}
+
+.post-toolbar-users p {
+    margin-left: 5px;
+}
+
+
+
+.sbutton {
+   color: #FFF;
+   display: inline-block;
+   position: absolute;
+   bottom: 10px;
+   left: 150px;
+   font-weight: 500;
+   }
+   
+   .sbutton:hover {
+     cursor: pointer;
+   }
+   
+   .smenu {
+     background: #fff;
+     border: 1px solid #ccc;
+     border-radius: 3px;
+     left: -20px;
+     margin: 0;
+     opacity: 0;
+     padding: 0;
+     position: absolute;
+     top: 0px;
+     -webkit-transition: opacity 0.2s ease-in-out, top 0.2s ease-in-out;
+     -moz-transition: opacity 0.2s ease-in-out, top 0.2s ease-in-out;
+     transition: opacity 0.2s ease-in-out, top 0.2s ease-in-out;
+   }
+   
+   .smenu:after {
+     background-color: #FFF;
+   border-top: 1px solid #CCC;
+   border-left: 1px solid #CCC;
+   top: -7px;
+   content: '';
+   display: inline-block;
+   height: 10px;
+   left: 50px;
+   position: absolute;
+   width: 10px;
+   -webkit-transform: rotate(45deg);
+   -moz-transform: rotate(45deg);
+   -ms-transform: rotate(45deg);
+   transform: rotate(45deg)
+   }
+   
+   .smenu li {
+     border-bottom: 1px solid #ccc;
+     list-style-type: none;
+     margin: 0;
+     padding: 7px;
+     width: 100px;
+   }
+   
+   .smenu li:hover {
+     background-color: #fafafa;
+   }
+   
+   .smenu .facebook:hover {
+   background-color: #4C66A4;
+   color: #FFF !important;
+   }
+   
+   .smenu .twitter:hover {
+   background-color: #019AD2;
+   color: #FFF !important;
+   }
+   
+   .smenu .reddit:hover {
+   background-color: #D73D32;
+   color: #FFF !important;
+   }
+   
+   .smenu li:last-child {
+     border-bottom: none;
+   }
+   
+   .smenu li a {
+     color: #E04006;
+     text-decoration: none;
+   }
+   
+   .smenu li:hover a {
+     color:#fff !important;
+   }
+   
+   .smenu.share {
+     opacity: 1;
+     top: 45px;
+   }

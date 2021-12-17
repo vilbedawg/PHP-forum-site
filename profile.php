@@ -25,7 +25,7 @@ if(isset($_POST['del'])){
     <div class="navbar-other">
         <div class="navbar-menu">
             <div class="current-user-parent">
-                <h1>Rawr</h1>
+                <h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1>
             </div>
             <div class="buttons">
                 <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
@@ -85,6 +85,8 @@ if(isset($_POST['del'])){
                 foreach ($posts as $post) {
                     $mysqldate = strtotime($post['date']);
                     $phpdate = date('Y/m/d G:i A', $mysqldate);
+                    $comments = $postObj->getAllComments($post['post_id']);
+                    $roomAmount = count($comments);
                     echo 
                     '
                     <a href="view.php?room=' . $post['post_id'] . '" style="color: black; display: block;">
@@ -112,8 +114,13 @@ if(isset($_POST['del'])){
                                         <h1 class="user-post">' . $post['title'] . '</h1>
                                         </div> 
                                         <div class="bodytext-users"><p>' . $post['topic'] . '</p></div>
-                                    <div class="hashtag">
-                                    '. $post['category'] . ' 
+                                        <div class="post-footer">
+                                        <div class="hashtag">
+                                        ' . $post['category'] . ' </div>
+                                    <div class="post-toolbar-users">
+                                    <i class="far fa-comment-alt"></i>
+                                     <p> '. $roomAmount .' kommenttia </p>
+                                    </div>
                                     </div>
                                     </div>
                                 </div></a>
@@ -195,5 +202,12 @@ if(isset($_POST['del'])){
             });
         });
     </script>
+    <script type="text/javascript">
+        function ConfirmDelete()
+        {
+                if (confirm("Delete Account?"))
+                    location.href='linktoaccountdeletion';
+        }
+  </script>
 </body>
 </html>

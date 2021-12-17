@@ -52,12 +52,22 @@ if (!isset($_SESSION["userid"])) {
                         if ($signupCheck == "emptyinput") {
                             echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
                         }
+                        if ($signupCheck == "invalidTitle") {
+                            echo "<div class='error-texti'><p>Otsikko vähintään 5 merkkiä</p></div>";
+                        }
                     }
                     ?>
                 </div>
                     <div class="form-group-upper">
                         <label>Otsikko</label>
-                        <input type="text" name="subject" id="subject"></input>
+                    <?php if(isset($_GET['title'])) {
+                         $formName = $_GET['title'];
+                        
+                        echo '<input type="text" name="subject" id="subject" value="'.$formName.'">';
+                        } else {
+                            echo '<input type="text" name="subject" id="subject"></input>';
+                        } ?>
+                        
                     </div>
                     <div class="form-group-middle">
                         <label>Kategoria</label>
@@ -78,7 +88,13 @@ if (!isset($_SESSION["userid"])) {
                     </div>
                     <div class="form-group">
                         <label>Aihe</label>
-                        <textarea class="tinymce" name="topic" id="topic" rows="7"></textarea>
+                        <?php if(isset($_GET['topic'])) {
+                         $formContent = $_GET['topic'];
+                        echo '<textarea class="tinymce" name="topic" id="topic" rows="7">'. $formContent .'</textarea>';
+                        } else {
+                            echo '<textarea class="tinymce" name="topic" id="topic" rows="7"></textarea>';
+                        } ?>
+                        
                         <div class="post-topic-button">
                             <input type="submit" name="post" value="Julkaise" id="post">
                         </div>
@@ -95,7 +111,7 @@ if (!isset($_SESSION["userid"])) {
     <div class="navbar">
         <div class="navbar-menu">
             <div class="current-user-parent">
-                <h1>Rawr</h1>
+                <h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1>
             </div>
             <div class="buttons">
                 <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
@@ -118,13 +134,14 @@ if (!isset($_SESSION["userid"])) {
             <?php
             $postObj = new PostedContent;
             $posts = $postObj->getAllPostsByNewest();
-
+            
 
 
             foreach ($posts as $post) {
                 $mysqldate = strtotime($post['date']);
                 $phpdate = date('Y/m/d G:i A', $mysqldate);
-
+                $comments = $postObj->getAllComments($post['post_id']);
+                $roomAmount = count($comments);
                 echo "<a href='view.php?room=" . $post['post_id'] . "'style='color: black; display: block;'><div class='room-container'>
                         <div class='room'>
                                 <div class='date-and-post'>
@@ -135,9 +152,15 @@ if (!isset($_SESSION["userid"])) {
                                     <h1 class='user-post'>" . $post['title'] . "</h1>
                                     </div> 
                                     <div class='bodytext-users'><p>" . $post['topic'] . "</p></div>
-                                <div class='hashtag'>
-                                " . $post['category'] . " </div>
-                                </div>
+                                    <div class='post-footer'>
+                                    <div class='hashtag'>
+                                    " . $post['category'] . " </div>
+                                    <div class='post-toolbar-users'>
+                                    <i class='far fa-comment-alt'></i>
+                                     <p> ". $roomAmount ." kommenttia </p>
+                                    </div>
+                                    </div>
+                                    </div>
                             </div></a>";
             }
             ?>
@@ -171,7 +194,13 @@ if (!isset($_SESSION["userid"])) {
         $(document).ready(function() {
             $("p").has("img").css({"textAlign" : "center",
                                     "background" : "black",
+                                    "margin-left" : "0",
+                                    "color" : "transparent",
             });
+            $("p").has("iframe").css({"textAlign" : "center",
+                                    "background" : "black",
+                                    "margin-left" : "0",
+            });           
         });
         </script>
 

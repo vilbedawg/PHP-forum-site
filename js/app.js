@@ -18,6 +18,9 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     if (window.location.href.indexOf("edit") > -1) {
+        $('.modal-content').css({  'height' : '700px',
+                                    'width' : '800px'
+                                });
         $(modal).css('display', 'flex');
         modal.show();
     }
@@ -121,6 +124,7 @@ $(document).ready(function(){
         });
     });
 });
+
 
 
 //----------------------------//

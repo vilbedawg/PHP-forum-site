@@ -8,6 +8,7 @@ tinymce.init({
     toolbar: 'undo redo | styleselect | forecolor | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image media',
     link_default_protocol: 'https',
     images_upload_url: 'upload.php',
+    verify_html : false,
     
     
     // override default upload handler to simulate successful upload

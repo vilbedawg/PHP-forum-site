@@ -13,9 +13,10 @@ class commentContr extends post
 
     
     public function PostComment() {
+        $roomNum = $_GET['room'];
         if($this->emptyInput() == false)
         {
-            header("location: ?error=emptyinput");
+            header("location: view.php?room=$roomNum&error=emptyinput");
             exit();
         }
         $this->PostCommentToDB($this->content, $this->roomNum);

@@ -35,7 +35,7 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
 
 
 if(isset($_GET['edit'])){
-    $currentPostData = $getCurrentRoom->getCurrentPostData($_GET['room']);
+    $currentPostData = $getCurrentRoom->GetPostByCurrentRoomID($_GET['room']);
     ?>
 
     <div class="bg-modal">
@@ -112,7 +112,7 @@ if(isset($_GET['edit'])){
     <div class="navbar-other">
     <div class="navbar-menu">
         <div class="current-user-parent">
-            <h1>Rawr</h1>
+            <h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1>
         </div>
         <div class="buttons">
         <?php if (isset($_POST['edit'])) {
@@ -126,13 +126,26 @@ if(isset($_GET['edit'])){
     <div class="all-content">
 
     
-
     <div class="all-comments">
+    <div class="edit-toolbar">
+        <?php
+        
+         if(isset($_GET['edit'])){
+            echo '<a href="view.php?room='.$roomNum.'" class="close-view" style="margin-right: 20px;""><i class="fas fa-times"></i></a><a href="view.php?room='. $roomNum .'" class="edit-toolbar-close">Peruuta</a>';
+        } else {
+            echo '<a href="users.php" class="close-view"><i class="fas fa-times"></i></a><a href="users.php" class="edit-toolbar-close">Sulje</a>';
+        }
+     ?>
+        
+    </div>
     <div class="room-header">
         <div class='date-and-users'>
             <div class='date'>
                 <p class='username'><?php echo $currentRoom[0]['name']; ?></p>
-                <p><?php echo $currentRoom[0]['date']; ?></p>
+                <p><?php  $mysqldate = strtotime($currentRoom[0]['date']);
+                          $phpdate = date('Y/m/d G:i A', $mysqldate);
+                          echo $phpdate; ?>
+                </p>
             </div>
         <h1 class='room-header-h1'><?php echo $currentRoom[0]['title']; ?></h1>
         <p class='room-header-p'> <?php echo $currentRoom[0]['topic']; ?> </p>
@@ -140,7 +153,13 @@ if(isset($_GET['edit'])){
     <div class='post-toolbar'>
         <i class='far fa-comment-alt'></i>
         <?php $roomAmount = count($allPosts);
-            echo "<p>". $roomAmount ." kommenttia</p>"?>
+            echo "<p>". $roomAmount ." kommenttia</p>";
+            $isOwner = $_SESSION['userid'] == $currentRoom[0]['post_id'];
+            if($isOwner) {
+                if(!isset($_GET['edit'])){
+                    echo "<a href='view.php?room=" . $roomNum . "&edit' class='post-toolbar-editpost'>Muokkaa</a>";
+                }
+            }?>
     </div>
     </div>
                 
@@ -174,8 +193,7 @@ if(isset($_GET['edit'])){
             </div>
         </form>
         </div>
-       
-        <span class="post-hr"><hr></span>
+        <span class="post-hr" id="#commentsection"><hr></span>
         <?php
         if (count($allPosts) == 0) {
             echo "<div class='empty-room'><p>Täällä on tyhjää</p></div>";
@@ -215,9 +233,11 @@ if(isset($_GET['edit'])){
     <script src="js/app.js"></script>
     <script>
          $(document).ready(function() {
-            $("p").has("img").css({"textAlign" : "center",
-                                    
+            $("p").has("img").css({"textAlign" : "center", 
+                                    "margin-bottom" : "10px"                      
             });
         });
     </script>
+
+    
 </body>
