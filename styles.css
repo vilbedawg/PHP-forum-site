@@ -945,6 +945,10 @@ input[type="radio"] {
       display: none;
   }
 
+  .tox-tinymce-aux {
+      z-index:99999999999 !important;
+    }
+
   .modal-content {
       width: 80%;
       height: 80%;

@@ -35,7 +35,7 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
 
 
 if(isset($_GET['edit'])){
-    $currentPostData = $getCurrentRoom->GetPostByCurrentRoomID($_GET['room']);
+    
     ?>
 
     <div class="bg-modal">
@@ -73,7 +73,7 @@ if(isset($_GET['edit'])){
             </div>
                 <div class="form-group-upper">
                     <label>Otsikko</label>
-                    <input type="text" name="subject" id="subject" value=" <?php echo $currentPostData[0]['title'] ?>"></input>
+                    <input type="text" name="subject" id="subject" value=" <?php echo $currentRoom[0]['title'] ?>"></input>
                 </div>
                 <div class="form-group-middle">
                     <label>Kategoria</label>
@@ -94,7 +94,7 @@ if(isset($_GET['edit'])){
                 </div>
                 <div class="form-group">
                     <label>Aihe</label>
-                    <textarea class="tinymce" name="topic" id="topic" rows="7" ><?php echo $currentPostData[0]['topic'] ?></textarea>
+                    <textarea class="tinymce" name="topic" id="topic" rows="7" ><?php echo $currentRoom[0]['topic'] ?></textarea>
                     <div class="post-topic-button">
                         <input type="submit" name="edit" value="Julkaise" id="post">
                     </div>
@@ -152,18 +152,16 @@ if(isset($_GET['edit'])){
     </div>
     <div class='post-toolbar'>
         <i class='far fa-comment-alt'></i>
-        <?php $roomAmount = count($allPosts);
-            echo "<p>". $roomAmount ." kommenttia</p>";
-            $isOwner = $_SESSION['userid'] == $currentRoom[0]['post_id'];
+        <?php $commentAmount = count($allPosts);
+            echo "<p>". $commentAmount ." kommenttia</p>";
+            $isOwner = $_SESSION['userid'] == $currentRoom[0]['user_id'];
             if($isOwner) {
-                if(!isset($_GET['edit'])){
-                    echo "<a href='view.php?room=" . $roomNum . "&edit' class='post-toolbar-editpost'>Muokkaa</a>";
-                }
-            }?>
+                echo "<a href='view.php?room=" . $roomNum . "&edit' class='post-toolbar-editpost'>Muokkaa</a>";
+            }
+            ?>
     </div>
     </div>
                 
-    
    
 
     <div class="discussion-section">

@@ -9,6 +9,7 @@ tinymce.init({
     link_default_protocol: 'https',
     images_upload_url: 'upload.php',
     verify_html : false,
+    images_file_types: 'jpg,jpeg,gif,png',
     
     
     // override default upload handler to simulate successful upload
@@ -19,7 +20,7 @@ tinymce.init({
         if( image_size  > max_size ){        
             failure('Kuva on liian iso(' + image_size  + ') , Max: ' + max_size + ' kB');
             return;      
-    }else {
+        }else {
 
         xhr = new XMLHttpRequest();
         xhr.withCredentials = false;

@@ -25,15 +25,18 @@ if(is_uploaded_file($temp['tmp_name'])){
     }
   
     // Verify extension
-    if(!in_array(strtolower(pathinfo($temp['name'], PATHINFO_EXTENSION)), array("gif", "jpg", "png"))){
+    $extensions = array("gif", "jpg", "png", "jpeg");
+    if(!in_array(strtolower(pathinfo($temp['name'], PATHINFO_EXTENSION)), $extensions)){
         header("HTTP/1.1 400 Invalid extension.");
         return;
     }
 
-    
-  
+    $fileExt = pathinfo($temp['name'], PATHINFO_EXTENSION);
+    $withoutExt = md5(time().$temp['name']);
+    $newFile = $withoutExt . ".".$fileExt;
+
     // Accept upload if there was no origin, or if it is an accepted origin
-    $filetowrite = $imageFolder . $temp['name'];
+    $filetowrite = $imageFolder . $newFile;
     move_uploaded_file($temp['tmp_name'], $filetowrite);
   
     // Respond to the successful upload with JSON.
@@ -42,4 +45,5 @@ if(is_uploaded_file($temp['tmp_name'])){
     // Notify editor that the upload failed
     header("HTTP/1.1 500 Server Error");
 }
+
 ?>
