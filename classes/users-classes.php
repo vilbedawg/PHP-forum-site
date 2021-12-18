@@ -1,14 +1,21 @@
 <?php
     class Users extends Dbh 
     {
+        private $userid;
         private $name;
         private $email;
         private $pwd;
-        private $loginStatus;
+        private $status;
         private $lastLogin;
-        private $user_token;
-        private $user_connection_id;
       
+
+        public function getUserID() {
+            return $this->UserID;
+        }
+    
+        public function setUserID($userid) {
+            $this->userid = $userid;
+        }
 
         public function getName() {
             return $this->name;
@@ -35,11 +42,11 @@
         }
 
         public function getloginStatus() {
-            return $this->loginStatus;
+            return $this->status;
         }
     
-        public function setloginStatus($loginStatus) {
-            $this->loginsStatus = $loginStatus;
+        public function setloginStatus($status) {
+            $this->status = $status;
         }
 
         public function getlastLogin() {
@@ -48,6 +55,19 @@
     
         public function setlastLogin($lastLogin) {
             $this->lastLogin = $lastLogin;
+        }
+
+
+        public function GetAllUsersButMe() {
+            $stmt = $this->connect()->prepare('SELECT * FROM users WHERE user_id != :user_id;');
+            $stmt->bindParam(':user_id', $this->userid, PDO::PARAM_INT);
+            if(!$stmt->execute()){
+                $stmt = null;
+                header("location: login.php?error=stmtfailed");
+                exit();
+            }
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $users;
         }
 
         public function GetAllUsers() {
@@ -62,23 +82,9 @@
         }
 
 
-        public function GetAllUsersExceptMe() {
-            $session = $_SESSION['userid'];
-            $stmt = $this->connect()->prepare('SELECT * FROM users WHERE user_id != :userid;');
-            $stmt->bindParam(':userid', $session);
-            if(!$stmt->execute()){
-                $stmt = null;
-                header("location: login.php?error=stmtfailed");
-                exit();
-            }
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $users;
-        }
-
         public function GetAllOnliners() {
-            $online = 1;
             $stmt = $this->connect()->prepare('SELECT * FROM users WHERE login_status = :login_status;');
-            $stmt->bindParam(':login_status', $online);
+            $stmt->bindParam(':login_status', $this->status);
             if(!$stmt->execute()){
                 $stmt = null;
                 header("location: login.php?error=stmtfailed");
@@ -86,24 +92,34 @@
             }
             $onliners = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $onliners;
-            
         }
 
 
         public function GetViewedUser() {
-            $currentUser = $_GET['user'];
             $stmt = $this->connect()->prepare('SELECT * FROM users WHERE user_id = :userid;');
-            $stmt->bindParam(':userid', $currentUser);
+            $stmt->bindParam(':userid', $this->userid, PDO::PARAM_INT);
             if(!$stmt->execute()){
                 $stmt = null;
                 header("location: login.php?error=stmtfailed");
                 exit();
             }
-            $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if(!$user = $stmt->fetchAll(PDO::FETCH_ASSOC)){
+                header("location: profile.php?user=deleted");
+            }
             return $user;
             
         }
 
+        public function DeleteUser() {
+            $stmt = $this->connect()->prepare('DELETE FROM users WHERE user_id = :user_id;');
+            $stmt->bindParam(':user_id', $this->userid, PDO::PARAM_INT);
+            if(!$stmt->execute()){
+                $stmt = null;
+                header("location: login.php?error=stmtfailed");
+                exit();
+            }
+            
+        }
 
     
 

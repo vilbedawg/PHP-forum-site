@@ -37,14 +37,22 @@ class post extends Dbh
             $stmt->bindParam(':title', $subject);
             $stmt->bindParam(':topic', $topic);
             $stmt->bindParam(':post_id', $roomNum);
+            if(!$stmt->execute())  {
+                $stmt = null;
+                header("location: index.php?error=stmtfailed");
+                exit();
+            }
+    }
 
-
-
-        if(!$stmt->execute())  {
+    public function DeletePost() {
+        $stmt = $this->connect()->prepare('DELETE FROM posts WHERE user_id = :user_id;');
+        $stmt->bindParam(':user_id', $this->userid, PDO::PARAM_INT);
+        if(!$stmt->execute()){
             $stmt = null;
-            header("location: index.php?error=stmtfailed");
+            header("location: login.php?error=stmtfailed");
             exit();
         }
+        
     }
 
     

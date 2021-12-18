@@ -3,7 +3,7 @@
 class Signup extends Dbh {
 
     protected function setUser($name, $email, $pwd) {
-        $defaultImg = 'profile_images/default.jpg';
+        $defaultImg = 'images/profile_images/default.jpg';
 
         $stmt = $this->connect()->prepare('INSERT INTO users (name, email, password, login_status, last_login, image) 
         VALUES (?, ?, ?, ?, ?, ?);');

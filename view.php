@@ -94,7 +94,7 @@ if(isset($_GET['edit'])){
                 </div>
                 <div class="form-group">
                     <label>Aihe</label>
-                    <textarea class="tinymce" name="topic" id="topic" rows="7" ><?php echo $currentPostData[0]['topic'] ?></textarea>
+                    <textarea class="tinymce" name="topic" id="topic" rows="7" style="z-index: 99999;" ><?php echo $currentPostData[0]['topic'] ?></textarea>
                     <div class="post-topic-button">
                         <input type="submit" name="edit" value="Julkaise" id="post">
                     </div>
@@ -154,11 +154,9 @@ if(isset($_GET['edit'])){
         <i class='far fa-comment-alt'></i>
         <?php $roomAmount = count($allPosts);
             echo "<p>". $roomAmount ." kommenttia</p>";
-            $isOwner = $_SESSION['userid'] == $currentRoom[0]['post_id'];
+            $isOwner = $_SESSION['userid'] == $currentRoom[0]['user_id'];
             if($isOwner) {
-                if(!isset($_GET['edit'])){
-                    echo "<a href='view.php?room=" . $roomNum . "&edit' class='post-toolbar-editpost'>Muokkaa</a>";
-                }
+                echo "<a href='view.php?room=" . $roomNum . "&edit' class='post-toolbar-editpost'>Muokkaa</a>"; 
             }?>
     </div>
     </div>
@@ -186,7 +184,7 @@ if(isset($_GET['edit'])){
             ?>
             <div class="form-group">
                 <a id="comment"></a>
-                <textarea class="tinymce" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7"></textarea>
+                <textarea class="tinymce" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7" style="z-index: 99999;"></textarea>
             </div>
             <div class="post-comment">
                 <input type="submit" name="post" value="Kommentoi" id="post">
