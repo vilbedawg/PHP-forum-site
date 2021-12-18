@@ -36,6 +36,13 @@ $userlist = $objUser->GetAllUsersButMe();
     </div>
     <div class="home-other">
         <?php
+        if(isset($_GET['/noexist'])) {
+        echo "<div class='noexist-box'>
+            <h1>Käyttäjä ei ole olemassa :(</h1>
+            <a href='users.php'><button class='logout'>Takaisin kotisivulle</button></a>
+            </div>";
+        }else {
+            
         if (isset($_GET['user'])) {
             $objUser->setUserID($_GET['user']);
             $userOnView = $objUser->GetViewedUser();
@@ -130,6 +137,7 @@ $userlist = $objUser->GetAllUsersButMe();
                                 ';
             }
         }
+    } 
         ?>
 
         <?php if ($_SESSION['userid'] == 1) {

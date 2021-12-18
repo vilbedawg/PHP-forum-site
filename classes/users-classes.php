@@ -104,7 +104,7 @@
                 exit();
             }
             if(!$user = $stmt->fetchAll(PDO::FETCH_ASSOC)){
-                header("location: profile.php?user=deleted");
+                header("location: profile.php?/noexist");
             }
             return $user;
             

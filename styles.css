@@ -492,17 +492,29 @@ input[type="radio"] {
       margin-left: 10px;
   }
 
+  .post-toolbar p:hover {
+    background-color: #e6e4e4;
+  }
+
   .post-toolbar i {
       margin-right: 5px;
+      padding: 2px;
+  }
+
+  .post-toolbar p {
+    padding: 2px;
+    border-radius: 3px;
   }
 
   .post-toolbar-editpost {
       margin-left: 15px;
       color: black;
       font-weight: 500;
+      padding: 2px;
+      border-radius: 3px;
   }
   .post-toolbar-editpost:hover {
-    color: #ee6c4d;
+    background-color: #e6e4e4;
   }
 
 .date-and-users{
@@ -531,12 +543,21 @@ input[type="radio"] {
     display: flex;
     font-size: 14px;
 }   
-
+.date-users p {
+    padding: 2px;
+}
 .username-users {
     margin-right: 10px;
     font-weight: 500;
     font-size: 14px;
+    color: black;
+    padding: 2px;
+    border-radius: 3px;
 } 
+
+.username-users:hover {
+    background-color: #e6e4e4;
+}
 
 .post-footer {
     height: 40px;
@@ -657,10 +678,21 @@ input[type="radio"] {
     font-size: 12px;
 }
 
+.date p {
+    padding: 2px;
+}
+
 .username {
     margin-right: 10px;
     font-weight: 500;
     font-size: 12px;
+    color: black;
+    padding: 2px;
+    border-radius: 3px;
+}
+
+.username:hover {
+    background-color: #e6e4e4;
 }
 
 .discussion-section {
@@ -1366,3 +1398,10 @@ input[type="radio"] {
     z-index:99999999999 !important;
 }
 
+.noexist-box {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    height: 150px;
+}

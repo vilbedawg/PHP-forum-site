@@ -35,7 +35,6 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
 
 
 if(isset($_GET['edit'])){
-    $currentPostData = $getCurrentRoom->GetPostByCurrentRoomID($_GET['room']);
     ?>
 
     <div class="bg-modal">
@@ -73,7 +72,7 @@ if(isset($_GET['edit'])){
             </div>
                 <div class="form-group-upper">
                     <label>Otsikko</label>
-                    <input type="text" name="subject" id="subject" value=" <?php echo $currentPostData[0]['title'] ?>"></input>
+                    <input type="text" name="subject" id="subject" value=" <?php echo $currentRoom[0]['title'] ?>"></input>
                 </div>
                 <div class="form-group-middle">
                     <label>Kategoria</label>
@@ -94,7 +93,7 @@ if(isset($_GET['edit'])){
                 </div>
                 <div class="form-group">
                     <label>Aihe</label>
-                    <textarea class="tinymce" name="topic" id="topic" rows="7" style="z-index: 99999;" ><?php echo $currentPostData[0]['topic'] ?></textarea>
+                    <textarea class="tinymce" name="topic" id="topic" rows="7" style="z-index: 99999;" ><?php echo $currentRoom[0]['topic'] ?></textarea>
                     <div class="post-topic-button">
                         <input type="submit" name="edit" value="Julkaise" id="post">
                     </div>
@@ -141,7 +140,7 @@ if(isset($_GET['edit'])){
     <div class="room-header">
         <div class='date-and-users'>
             <div class='date'>
-                <p class='username'><?php echo $currentRoom[0]['name']; ?></p>
+                <a href="profile.php?user=<?php echo $currentRoom[0]['user_id']; ?>" class='username'><?php echo $currentRoom[0]['name']; ?></a>
                 <p><?php  $mysqldate = strtotime($currentRoom[0]['date']);
                           $phpdate = date('Y/m/d G:i A', $mysqldate);
                           echo $phpdate; ?>
