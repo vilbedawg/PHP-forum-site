@@ -47,12 +47,12 @@ $userlist = $objUser->GetAllUsersButMe();
             $objUser->setUserID($_GET['user']);
             $userOnView = $objUser->GetViewedUser();
             echo ' <div class="user-managment">
-        <img src="' . $userOnView[0]['image'] . '"></img>
-        <div class="user-details">
-        <h1> ' . $userOnView[0]['name'] . ' </h1>
-        </div>
-        </div>        
-        ';
+            <img src="' . $userOnView[0]['image'] . '"></img>
+            <div class="user-details">
+            <h1> ' . $userOnView[0]['name'] . ' </h1>
+            </div>
+            </div>        
+            ';
 
 
             if ($_GET['user'] == $_SESSION['userid']) {
@@ -139,8 +139,7 @@ $userlist = $objUser->GetAllUsersButMe();
         }
     } 
         ?>
-
-        <?php if ($_SESSION['userid'] == 1) {
+        <?php if ($_SESSION['userid'] == 0) {
             echo "";
         } else {
         ?>
@@ -174,12 +173,12 @@ $userlist = $objUser->GetAllUsersButMe();
                             </thead>
                             <tbody>
                                 <?php foreach ($userlist as $user) {
-                                    echo  "<tr>
-                    <td><a href='profile.php?user=" . $user['user_id'] . "' class='user-table-id'>" . $user['user_id'] . "</a></td>
-                    <td>" . $user['name'] . "</td>
-                    <td>" . $user['email'] . "</td>
-                    <td>" . $user['created'] . "</td>
-                    <td>";
+                                    echo  "<tr id='". $user['user_id'] ."'>
+                                            <td><a href='profile.php?user=" . $user['user_id'] . "' class='user-table-id'>" . $user['user_id'] . "</a></td>
+                                            <td>" . $user['name'] . "</td>
+                                            <td>" . $user['email'] . "</td>
+                                            <td>" . $user['created'] . "</td>
+                                            <td>";
                                     if (($user['login_status']) == 1) {
                                         echo " <i class='fa fa-circle' aria-hidden='true' style='color: green'></i> ";
                                     } else {
@@ -187,17 +186,13 @@ $userlist = $objUser->GetAllUsersButMe();
                                     } ?>
                                     </td>
                                     <td>
-                                        <form method="POST" class="delete-user-form">
-                                            <input type="submit" name="delete" value="poista">
-                                            <p> / </p>
-                                            <input type="submit" name="ban" value="ban">
-                                        </form>
+                                    <button class="delete">Poista käyttäjä</button>
                                         <?php 
                                         if (isset($_POST['delete'])) {
-                                            $user['user_id'];
-                                            $delete = new Users();
-                                            $delete->setUserID($user['user_id']); 
-                                            $delete->DeleteUser();
+                                            // $user['user_id'];
+                                            // $delete = new Users();
+                                            // $delete->setUserID($user['user_id']); 
+                                            // $delete->DeleteUser();
                                         } 
                                         ?>
                                     </td>
@@ -213,6 +208,31 @@ $userlist = $objUser->GetAllUsersButMe();
 ?>
 </section>
 
+<script type="text/javascript">
+            $(".delete").click(function(){
+                var id = $(this).parents("tr").attr("id");
+                if(confirm('Are you sure to remove this record ?'))
+                {
+                    $.ajax({
+                    url: 'delete.php',
+                    type: 'GET',
+                    data: {id:id},
+                        success:function(data){
+                        alert(data);
+                        },
+                    error: function() {
+                        alert('Something is wrong');
+                    },
+                    success: function(data) {
+                            $("#"+id).remove();
+                            alert(data);  
+                    }
+                    });
+                }
+            });
+
+
+        </script>
 
 
 

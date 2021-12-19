@@ -117,8 +117,7 @@
                 $stmt = null;
                 header("location: login.php?error=stmtfailed");
                 exit();
-            }
-            
+            }            
         }
 
     

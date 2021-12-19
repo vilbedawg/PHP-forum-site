@@ -8,6 +8,7 @@ require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
 include_once "includes/header.php";
 $objUser = new Users;
+$objUser->setUserID($_GET['user']);
 $userOnView = $objUser->GetViewedUser();
 
 
