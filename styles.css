@@ -492,17 +492,29 @@ input[type="radio"] {
       margin-left: 10px;
   }
 
+  .post-toolbar p:hover {
+    background-color: #e6e4e4;
+  }
+
   .post-toolbar i {
       margin-right: 5px;
+      padding: 2px;
+  }
+
+  .post-toolbar p {
+    padding: 2px;
+    border-radius: 3px;
   }
 
   .post-toolbar-editpost {
       margin-left: 15px;
       color: black;
       font-weight: 500;
+      padding: 2px;
+      border-radius: 3px;
   }
   .post-toolbar-editpost:hover {
-    color: #ee6c4d;
+    background-color: #e6e4e4;
   }
 
 .date-and-users{
@@ -531,12 +543,21 @@ input[type="radio"] {
     display: flex;
     font-size: 14px;
 }   
-
+.date-users p {
+    padding: 2px;
+}
 .username-users {
     margin-right: 10px;
     font-weight: 500;
     font-size: 14px;
+    color: black;
+    padding: 2px;
+    border-radius: 3px;
 } 
+
+.username-users:hover {
+    background-color: #e6e4e4;
+}
 
 .post-footer {
     height: 40px;
@@ -657,10 +678,21 @@ input[type="radio"] {
     font-size: 12px;
 }
 
+.date p {
+    padding: 2px;
+}
+
 .username {
     margin-right: 10px;
     font-weight: 500;
     font-size: 12px;
+    color: black;
+    padding: 2px;
+    border-radius: 3px;
+}
+
+.username:hover {
+    background-color: #e6e4e4;
 }
 
 .discussion-section {
@@ -1362,94 +1394,18 @@ input[type="radio"] {
     margin-left: 5px;
 }
 
+.delete-user-form {
+    display: flex;
+}
 
+.tox-tinymce-aux{
+    z-index:99999999999 !important;
+}
 
-.sbutton {
-   color: #FFF;
-   display: inline-block;
-   position: absolute;
-   bottom: 10px;
-   left: 150px;
-   font-weight: 500;
-   }
-   
-   .sbutton:hover {
-     cursor: pointer;
-   }
-   
-   .smenu {
-     background: #fff;
-     border: 1px solid #ccc;
-     border-radius: 3px;
-     left: -20px;
-     margin: 0;
-     opacity: 0;
-     padding: 0;
-     position: absolute;
-     top: 0px;
-     -webkit-transition: opacity 0.2s ease-in-out, top 0.2s ease-in-out;
-     -moz-transition: opacity 0.2s ease-in-out, top 0.2s ease-in-out;
-     transition: opacity 0.2s ease-in-out, top 0.2s ease-in-out;
-   }
-   
-   .smenu:after {
-     background-color: #FFF;
-   border-top: 1px solid #CCC;
-   border-left: 1px solid #CCC;
-   top: -7px;
-   content: '';
-   display: inline-block;
-   height: 10px;
-   left: 50px;
-   position: absolute;
-   width: 10px;
-   -webkit-transform: rotate(45deg);
-   -moz-transform: rotate(45deg);
-   -ms-transform: rotate(45deg);
-   transform: rotate(45deg)
-   }
-   
-   .smenu li {
-     border-bottom: 1px solid #ccc;
-     list-style-type: none;
-     margin: 0;
-     padding: 7px;
-     width: 100px;
-   }
-   
-   .smenu li:hover {
-     background-color: #fafafa;
-   }
-   
-   .smenu .facebook:hover {
-   background-color: #4C66A4;
-   color: #FFF !important;
-   }
-   
-   .smenu .twitter:hover {
-   background-color: #019AD2;
-   color: #FFF !important;
-   }
-   
-   .smenu .reddit:hover {
-   background-color: #D73D32;
-   color: #FFF !important;
-   }
-   
-   .smenu li:last-child {
-     border-bottom: none;
-   }
-   
-   .smenu li a {
-     color: #E04006;
-     text-decoration: none;
-   }
-   
-   .smenu li:hover a {
-     color:#fff !important;
-   }
-   
-   .smenu.share {
-     opacity: 1;
-     top: 45px;
-   }
+.noexist-box {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    height: 150px;
+}

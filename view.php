@@ -141,7 +141,7 @@ if(isset($_GET['edit'])){
     <div class="room-header">
         <div class='date-and-users'>
             <div class='date'>
-                <p class='username'><?php echo $currentRoom[0]['name']; ?></p>
+                <a href="profile.php?user=<?php echo $currentRoom[0]['user_id']; ?>" class='username'><?php echo $currentRoom[0]['name']; ?></a>
                 <p><?php  $mysqldate = strtotime($currentRoom[0]['date']);
                           $phpdate = date('Y/m/d G:i A', $mysqldate);
                           echo $phpdate; ?>
@@ -184,7 +184,7 @@ if(isset($_GET['edit'])){
             ?>
             <div class="form-group">
                 <a id="comment"></a>
-                <textarea class="tinymce" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7"></textarea>
+                <textarea class="tinymce" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7" style="z-index: 99999;"></textarea>
             </div>
             <div class="post-comment">
                 <input type="submit" name="post" value="Kommentoi" id="post">

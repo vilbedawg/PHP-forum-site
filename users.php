@@ -9,8 +9,8 @@ include_once "includes/header.php";
 $objUser = new Users;
 $users = $objUser->GetAllUsers();
 
+$objUser->setloginStatus(1);
 $onliners = $objUser->GetAllOnliners();
-
 
 if (!isset($_SESSION["userid"])) {
     header("location: login.php");
