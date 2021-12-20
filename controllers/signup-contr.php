@@ -67,7 +67,7 @@
 
         private function invalidName() {
             $result = 0;
-            if(!preg_match("/^[a-zA-Z0-9]*$/", $this->name))
+            if(!preg_match('/(?!^$)([^\s]){5,}$/', $this->name))
             {
                 $result = false;
             } else {

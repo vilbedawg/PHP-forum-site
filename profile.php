@@ -209,30 +209,32 @@ $userlist = $objUser->GetAllUsersButMe();
 </section>
 
 <script type="text/javascript">
-            $(".delete").click(function(){
-                var id = $(this).parents("tr").attr("id");
-                if(confirm('Are you sure to remove this record ?'))
-                {
-                    $.ajax({
-                    url: 'delete.php',
-                    type: 'GET',
-                    data: {id:id},
-                        success:function(data){
-                        alert(data);
-                        },
-                    error: function() {
-                        alert('Something is wrong');
+        $(".delete").click(function(){
+            var id = $(this).parents("tr").attr("id");
+            if(confirm('Are you sure to remove this record ?'))
+            {
+                $.ajax({
+                url: 'action.php',
+                type: 'GET',
+                data: {id: id},
+                    success:function(data){
                     },
-                    success: function(data) {
-                            $("#"+id).remove();
-                            alert(data);  
-                    }
+                error: function() {
+                    alert('Something is wrong');
+                },
+                success: function(data) {
+                        $("#"+id).remove();
+                        alert("Käyttäjä numero " + id + "poistettiin.");  
+                        $('.table-wrapper').stop().slideDown("normal", function(){
+                        $('.table-wrapper').css('display', 'flex');
+                        $(".show-list").hide();
+                        $(".hide-list").show();
                     });
                 }
             });
-
-
-        </script>
+            }
+        });
+    </script>
 
 
 

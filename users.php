@@ -53,7 +53,10 @@ if (!isset($_SESSION["userid"])) {
                             echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
                         }
                         if ($signupCheck == "invalidTitle") {
-                            echo "<div class='error-texti'><p>Otsikko vähintään 5 merkkiä</p></div>";
+                            echo "<div class='error-texti'><p>Otsikko sisältää ei sallittuja kirjaimia</p></div>";
+                        }
+                        if ($signupCheck == "invalidLength") {
+                            echo "<div class='error-texti'><p>Otsikon täytyy olla 3-50 merkkiä</p></div>";
                         }
                     }
                     ?>

@@ -16,6 +16,7 @@ $(document).ready(function() {
     }
 });
 
+
 $(document).ready(function() {
     if (window.location.href.indexOf("edit") > -1) {
         $('.modal-content').css({  'height' : '700px',
@@ -23,6 +24,24 @@ $(document).ready(function() {
                                 });
         $(modal).css('display', 'flex');
         modal.show();
+    }
+});
+
+
+var regmodal = $('.register-modal');
+$('.post').click(function() {
+    $(regmodal).css('display', 'flex');
+    regmodal.show();
+});
+
+$('.modal-close').click(function() {
+    regmodal.hide();
+});
+
+$(document).ready(function() {
+    if (window.location.href.indexOf("error") > -1) {
+        $(regmodal).css('display', 'flex');
+        regmodal.show();
     }
 });
 
@@ -94,12 +113,6 @@ $(window).scroll(function() {
         $('.edit').css('display', 'none');
     }
 });
-
-
-//----------------------------//
-//Poista postaus
-
-
 
 
 
@@ -182,6 +195,7 @@ toggleBtn.onclick = () => {
     window.onscroll = resetIdleTimeout;
 
 })();
+
 
 
 

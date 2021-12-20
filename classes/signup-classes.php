@@ -37,7 +37,7 @@ class Signup extends Dbh {
     }
 
 
-    protected function checkUser($name) {
+    public function checkUser($name) {
         $stmt = $this->connect()->prepare('SELECT name FROM users WHERE name = ?;');
 
         if(!$stmt->execute(array($name)))  {
@@ -55,7 +55,7 @@ class Signup extends Dbh {
         return $resultCheck;
     }
 
-    protected function checkEmail($email) {
+    public function checkEmail($email) {
         $stmt = $this->connect()->prepare('SELECT email FROM users WHERE email = ?;');
 
         if(!$stmt->execute(array($email)))  {

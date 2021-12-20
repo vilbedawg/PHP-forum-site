@@ -28,6 +28,12 @@
             header("location: ?error=invalidTitle&title=$titleNoHTML&topic=$topicNoHTML");
             exit();
         }
+
+        if($this->invalidLength() == false) 
+            {
+                header("location: ?error=invalidLength&title=$titleNoHTML&topic=$topicNoHTML");
+                exit();
+            }
         
         $this->cleanWhitespace();
         $this->PostTopicToDB($this->category, $this->subject, $this->topic);
@@ -46,6 +52,12 @@
             if($this->invalidTitle() == false) 
             {
                 header("location: view.php?room=$roomNum&edit&error=invalidTitle&$this->subject&$this->topic");
+                exit();
+            }
+
+            if($this->invalidLength() == false) 
+            {
+                header("location: view.php?room=$roomNum&edit&error=invalidLength&$this->subject&$this->topic");
                 exit();
             }
             
@@ -67,13 +79,26 @@
 
         private function invalidTitle() {
             $result = 0;
-            if(!preg_match('/(?!^$)([^\s]){5,}$/', $this->subject)){
+            if(!preg_match('/^[-a-zA-Z0-9-()]+(\s+[-a-zA-Z0-9-()]+)*$/', $this->subject)){
                 $result = false;
             } else {
                 $result = true;
             }
             return $result;
         }
+
+        private function invalidLength() {
+            $result = 0;
+            if(strlen($this->subject) <= 2 || (strlen($this->subject)) >= 51) {            
+                $result = false;
+            } else {
+                $result = true;
+            }
+            return $result;
+        }
+
+
+        
 
         private function cleanWhitespace() {
             $result = preg_replace('/\s+/', ' ', $this->subject and $this->topic);

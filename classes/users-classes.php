@@ -110,18 +110,6 @@
             
         }
 
-        public function DeleteUser() {
-            $stmt = $this->connect()->prepare('DELETE FROM users WHERE user_id = :user_id;');
-            $stmt->bindParam(':user_id', $this->userid, PDO::PARAM_INT);
-            if(!$stmt->execute()){
-                $stmt = null;
-                header("location: login.php?error=stmtfailed");
-                exit();
-            }            
-        }
-
-    
-
 
     }
 
