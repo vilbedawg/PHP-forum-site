@@ -17,7 +17,6 @@ if(isset($_GET['id'])) {
 
 //käyttäjänimen päivitys
 if(isset($_POST['name'])) { 
-
     $checkName = new Signup();
     if(!$checkName->checkUser($_POST['name'])) {
         $error = "<div class='error-texti'><p>Käyttäjänimi jo käytössä</p></div>";
@@ -88,9 +87,12 @@ if(isset($_POST['email'])){
 //profiilikuvan lataaminen
 if(is_array($_FILES)){
     $imageFolder = "images/profile_images/";
-    $oldImage = $_POST['oldimg'];
+  
+    $user->setUserID($_POST['id']);
+    $i = $user->GetViewedUser();
+    $oldImage = $i[0]['image'];
 
-    // Verify extension
+    //Verify extension
     $extensions = array("gif", "jpg", "png", "jpeg");
     reset($_FILES);
     $temp = current($_FILES);
@@ -113,23 +115,29 @@ if(is_array($_FILES)){
         $error = "<div class='error-texti'><p>Kuva liian iso, max 1000mb</p></div>";
     }
 
-    else if ($error == "") {
-        // nimetään tiedosto uniikilla nimellä
+    if ($error == "") {
+        //nimetään tiedosto uniikilla nimellä
         $fileExt = pathinfo($temp['name'], PATHINFO_EXTENSION);
         $withoutExt = md5(time().$temp['name']);
         $newFile = $withoutExt . ".".$fileExt;
 
-        if(file_exists($oldImage)){
-            if($oldImage !== "images/profile_images/default.jpg"){
-               unlink($oldImage);
-            } 
-        }
+        
 
         $filetowrite = $imageFolder . $newFile;
-        move_uploaded_file($temp['tmp_name'], $filetowrite);
-
+        if(move_uploaded_file($temp['tmp_name'], $filetowrite)) {
+            if(file_exists($oldImage)){
+                if($oldImage !== "images/profile_images/default.jpg"){
+                   unlink($oldImage);
+                } else {
+                    $error = "";
+                }
+            } else {
+                $error = "";
+            }
+        }
+        
     
-        $stmt =  $user->connect()->prepare("UPDATE users SET image = :image WHERE user_id = :user_id");
+            $stmt =  $user->connect()->prepare("UPDATE users SET image = :image WHERE user_id = :user_id");
             $stmt->bindParam(':image', $filetowrite);
             $stmt->bindParam(':user_id', $_POST['id'], PDO::PARAM_INT);
             if(!$stmt->execute())  {
@@ -137,12 +145,15 @@ if(is_array($_FILES)){
                 $error = "<div class='error-texti'><p>STMT FAILED</p></div>";
                 exit();
             }
+        $image = '<img class="image-preview" src="'. $filetowrite .'">';
         $error = "<div class='success-texti'><p>Tallennettu</p></div>";
-    } 
-
-    $image = '<img class="image-preview" src="'. $filetowrite .'">';
-    $arr = array('error' => $error, 'img' => $image);
-    echo json_encode($arr);
-    exit();
+        $arr = array('error' => $error, 'img' => $image);
+        echo json_encode($arr);
+        exit();
+    } else {
+        $currentImg = '<img class="image-preview" src="'. $oldImage .'">';
+        $arr = array('error' => $error, 'img' => $currentImg);
+        echo json_encode($arr);
+    }  
 }
 ?>

@@ -10,7 +10,7 @@
       
 
         public function getUserID() {
-            return $this->UserID;
+            return $this->userid;
         }
     
         public function setUserID($userid) {

@@ -39,40 +39,7 @@ $userOnView = $objUser->GetViewedUser();
         </div>
         <h1 class="edit-user-title"> <?php echo $userOnView[0]['name'] ?> </h1>
         <div class="error-txt">
-                    <?php if (!isset($_GET['error'])) {
-                        echo "";
-                    } else {
-                        $signupCheck = $_GET['error'];
-
-                        if ($signupCheck == "fileTooLarge") {
-                            echo "<div class='error-texti'><p>Kuva liian iso, max 1000mb</p></div>";
-                        }
-                        if ($signupCheck == "invalidFileName") {
-                            echo "<div class='error-texti'><p>Kuva sisältää ei-sallittuja kirjaimia</p></div>";
-                        }
-                        if ($signupCheck == "invalidFileExtension") {
-                            echo "<div class='error-texti'><p>Väärä kuvan tiedostomuoto, vain jpg, jpeg, png</p></div>";
-                        }
-                        if($signupCheck  == "invalidName") {
-                            echo "<div class='error-texti'><p>Väärän muotoinen nimi</p></div>";
-                        }
-                        if ($signupCheck == "usernameTaken"){
-                            echo "<div class='error-texti'><p>Käyttäjänimi jo käytössä</p></div>";
-                        }
-                        if ($signupCheck == "invalidLength"){
-                            echo "<div class='error-texti'><p>Käyttäjänimen tulee sisältää 3-14 merkkiä</p></div>";
-                        }
-                        if ($signupCheck == "invalidEmail"){
-                            echo "<div class='error-texti'><p>Väärä muotoinen sähköposti</p></div>";
-                        }
-                        if ($signupCheck == "emailTaken"){
-                            echo "<div class='error-texti'><p>Sähköposti käytössä</p></div>";
-                        }
-                        if ($signupCheck == 'success') {
-                            echo "<div class='success-texti'><p>Tallennettu</p></div>";
-                        }
-                    } ?>
-                </div>
+        </div>
         <div class="edit-page-box1">
         <div class="user-details">
             <h1>Profiilikuva</h1>
@@ -84,7 +51,6 @@ $userOnView = $objUser->GetViewedUser();
                     <label>Profiilikuva</label>
                     <div class="form-group">
                     <input type="file" name="img" id="image" accept=".jpg,.jpeg,.png">
-                    <input type="hidden" name="oldimg" id="oldimg" value="<?php echo $userOnView[0]['image']; ?>">
                     <input type="hidden" name="id" value="<?php echo $userOnView[0]['user_id']; ?>">
                     <div class="field button-img">
                         <input type="submit" name="img" value="Vaihda" id="submitImg">
@@ -182,10 +148,7 @@ $userOnView = $objUser->GetViewedUser();
         });
         $("#imagesubmit").on('submit', function(e){
         e.preventDefault();
-        var data = $(".error-txt").val();
         var image = $('#image')[0].files[0];
-        var oldimg = $("#oldimg").val();
-        alert(image);
         $.ajax({
             url: 'action.php',
             type: 'POST',
@@ -198,12 +161,14 @@ $userOnView = $objUser->GetViewedUser();
                     $('.error-txt').stop().show();
                     $('.error-txt').stop().html(data.error);
                     $('.user-managment img').replaceWith(data.img);
-                    $(oldimg).val(data.img);
+                    $("#oldimg").val(data.img);
                 },
                 error: function(data) {
                     alert('jokin meni pieleen');
                 }
+                
             });  
+            $("#imagesubmit")[0].reset();
         });
     });    
 </script>
