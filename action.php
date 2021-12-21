@@ -5,16 +5,17 @@ require_once 'includes/autoload-classes.php';
 $error = '';
 $user = new Users();
 
+
+
 //Käyttäjän poistaminen
 if(isset($_GET['id'])) {
     $id = $_GET['id'];
-    $db = $user->connect();
-    $stmt = $db->prepare('DELETE FROM users WHERE user_id = :id;');
+    $stmt = $user->connect()->prepare('DELETE FROM users WHERE user_id = :id;');
     $stmt->execute(array(':id' => $id));
     exit();
 } 
 
-
+//julkaisun poistaminen
 if(isset($_GET['deleteid'])) {
     $id = $_GET['deleteid'];
     $stmt = $user->connect()->prepare('DELETE FROM posts WHERE post_id = :id;');

@@ -35,8 +35,28 @@ $userOnView = $objUser->GetViewedUser();
                     echo '<button class="create">Luo uusi</button>';
                 } ?>
                 <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
-                <a href="users.php"><button class="create">Home</button></a>
             </div>
+        </div>
+        <div class="search-toolbar">
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
+            <div id="myDropdown" class="dropdown-content">
+                <a href="users.php">Kotisivu</a>
+                <?php if(isset($_SESSION['userid'])) { 
+                    echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
+                    echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
+                    echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
+                     } ?>
+                
+            </div>
+            </div>
+            <div class="search">
+                <button><i class="fas fa-search"></i></button>
+                <input type="text" placeholder="Etsi julkaisu...">
+            </div>
+            
+                 <button class="create">Luo uusi</button>
+            
         </div>
     </div>
 <div class="user-edit-page">
@@ -178,5 +198,5 @@ $userOnView = $objUser->GetViewedUser();
         });
     });    
 </script>
-
+<script src="js/dropdown.js"></script>  
 </body>

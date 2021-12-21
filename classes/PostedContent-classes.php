@@ -49,6 +49,20 @@ class PostedContent extends Dbh
         return $allPostsNewest;
     }
 
+
+    public function getAllPostsByCategory($category){
+        $category = str_split($category, 100);
+        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date DESC;");
+        if(!$stmt->execute($category)) {
+            $stmt = null;
+            header("location: login.php?error=stmtfailed");
+            exit();
+        }
+        $allPostsNewest = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $allPostsNewest;
+    }
+
+
     public function getAllComments($roomNum){
         $roomNum = str_split($roomNum, 100);
         $stmt = $this->connect()->prepare("SELECT * FROM comments WHERE post_id = ? ORDER BY date ASC;");
@@ -60,9 +74,6 @@ class PostedContent extends Dbh
         $allComments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $allComments;
     }
-
-
-    
 
 }
 

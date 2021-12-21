@@ -5,7 +5,7 @@ tinymce.init({
     height: '300',
     menubar: false,
     plugins: 'image media link autolink',
-    toolbar: 'undo redo | styleselect | forecolor | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image media',
+    toolbar: 'undo redo | styleselect | forecolor | bold italic | link image media | alignleft aligncenter alignright alignjustify | outdent indent',
     link_default_protocol: 'https',
     images_upload_url: 'upload.php',
     verify_html : false,

@@ -16,7 +16,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    top: 150px;
+    top: 200px;
     width: 100%;
 }
 
@@ -74,7 +74,7 @@ body {
     justify-content: center;
     margin: 0;
     width: 70%;
-    padding: 30px;
+    margin-left: 20px;
 }
 
 .comment-form {
@@ -184,7 +184,6 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 50px;
 }
 
 
@@ -192,10 +191,11 @@ body {
     margin-bottom: 15px;
     width: 100%;
     height: 30%;
-    font-size: 20px;
+    font-size: 18px;
     display: flex;
     flex-direction: column;
     justify-content: left;
+    position: relative;
 }
 
 
@@ -213,14 +213,14 @@ body {
 
 .form-post .form-group label {
     align-self: flex-start;
-    font-size: 20px ;
+    font-size: 18px ;
 }
 
 .form-post .form-group-upper input {
     width: 100%;
     height: 100%;
     outline: none;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
     border: 0;
     border-bottom: 1px solid #333;
@@ -228,34 +228,6 @@ body {
 
 }
 
-.form-post .form-group-middle {
-    margin-bottom: 20px;
-    width: 100%;
-    height: 30%;
-    font-size: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-}
-
-.radio-buttons {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    font-size: 16px ;
-    margin-top: 1%;
-}
-
-:is(.radio1, .radio2, .radio3) {
-    padding: 10px
-}
-
-input[type="radio"] {
-    -ms-transform: scale(2); /* IE 9 */
-    -webkit-transform: scale(2); /* Chrome, Safari, Opera */
-    transform: scale(2);
-    margin-right: 5px;
-}
 
 .form-post textarea {
     width: 100%;
@@ -341,7 +313,7 @@ input[type="radio"] {
 }
 
 .create {
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 500;
     padding: 7px 15px;
     background: #ee6c4d;
@@ -352,7 +324,6 @@ input[type="radio"] {
     display: block;
     color: #fff;
 }
-
 
 .profile-create {
     font-size: 20px;
@@ -374,22 +345,25 @@ input[type="radio"] {
 }
 
 .profile-back {
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 500;
     padding: 7px 15px;
     background: #ee6c4d;
-    border-radius: 5px;
+    border-radius: 20px;
     cursor: pointer;
     border: 0;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     display: block;
     color: #fff;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .logout{
     color: #fff;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 500;
     padding: 7px 15px;
     background: #3d5a80;
@@ -402,7 +376,7 @@ input[type="radio"] {
 
 .back {
     color: #fff;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 500;
     padding: 7px 15px;
     background: #3d5a80;
@@ -459,7 +433,7 @@ input[type="radio"] {
     justify-content: flex-end;
     padding-top: 1rem;
     width: 100%;
-    margin-top: 100px;
+    margin-top: 200px;
 }
 
 .discussion-page{
@@ -669,7 +643,7 @@ input[type="radio"] {
      height: 50px;
      background-color: #F8F8F8;
      position: fixed;
-     top: 100px;
+     top: 150px;
      z-index: 995;
      color: black;
      display: flex;
@@ -1067,18 +1041,18 @@ input[type="radio"] {
       z-index: 99999;
       justify-content: center;
       align-items: center;
-      display: none;
+      display: flex;
   }
 
   .modal-content {
-      width: 70%;
       background-color: #fff;
       border-radius: 4px;
       display: flex;
       justify-content: center;
-      align-items: center;
       overflow-y: hidden;
       position: relative;
+      padding: 30px;
+      height: 800px;
     }
 
     .modal-close {
@@ -1089,6 +1063,39 @@ input[type="radio"] {
         cursor: pointer;
     }
 
+    .modal-side-bar {
+        width: 200px;
+        height: 90%;
+        background-color: #ccc;
+        border-radius: 5px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-categories{
+        word-spacing: 100vw;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    } 
+        
+    .modal-categories a {
+        padding: 5px;
+        color: black;
+    } 
+
+    #category {
+        z-index: 10;
+    }
+    #categorylist {
+        width: 50%;
+        background-color: #4895ef;
+        z-index: 12;
+        display: none;
+    }
+
+    
 
     .scrollup {
         width: 60px;
@@ -1109,19 +1116,35 @@ input[type="radio"] {
         border-radius: 5px;
         position: relative;
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        margin-left: 50px;
     }
     
       .profile {
-          width: 300px;
-          height: 400px;
-          background-color: #fff;
-          border-radius: 5px;
-          position: relative;
-          box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-          margin-left: 50px;
-          
+        width: 300px;
+        height: 400px;
+        background-color: #fff;
+        border-radius: 5px;
+        position: relative;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        margin-left: 50px;
       }
+
+
+      .side-menu {
+        background-color: #4895ef;
+        margin-left: 50px;
+    }
+
+    .side-bar {
+        margin-top: 50px;
+        width: 300px;
+        height: 500px;
+        background-color: #fff;
+        border-radius: 5px;
+        position: relative;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        display: flex;
+        flex-direction: column;
+    }
 
 
       .profile-status {
@@ -1585,7 +1608,7 @@ input[type="radio"] {
     justify-content: center;
     position: relative;
     background-color: #324960;
-    margin-top: 100px;
+    margin-top: 150px;
 }
 
 .edit-page-close {
@@ -1647,3 +1670,44 @@ input[type="radio"] {
     height: 150px;
 }
 
+.dropbtn {
+    background-color: #3498DB;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dropbtn:hover, .dropbtn:focus {
+    background-color: #2980B9;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown a:hover {background-color: #ddd;}
+  
+  .show {display: block;}
+
+
+  

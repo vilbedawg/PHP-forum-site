@@ -69,7 +69,7 @@ if (isset($_GET['edit'])) {
                     </div>
                     <div class="form-group-upper">
                         <label>Otsikko</label>
-                        <input type="text" name="subject" id="subject" value=" <?php echo $currentRoom[0]['title'] ?>"></input>
+                        <input type="text" name="subject" id="subject" value="<?php echo $currentRoom[0]['title'] ?>"></input>
                     </div>
                     <div class="form-group-middle">
                         <label>Kategoria</label>
@@ -120,6 +120,27 @@ if (isset($_GET['edit'])) {
                 }?>
                 
             </div>
+        </div>
+        <div class="search-toolbar">
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
+            <div id="myDropdown" class="dropdown-content">
+                <a href="users.php">Kotisivu</a>
+                <?php if(isset($_SESSION['userid'])) { 
+                    echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
+                    echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
+                    echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
+                     } ?>
+                
+            </div>
+            </div>
+            <div class="search">
+                <button><i class="fas fa-search"></i></button>
+                <input type="text" placeholder="Etsi julkaisu...">
+            </div>
+            
+                 <button class="create">Luo uusi</button>
+            
         </div>
     </div>
     <div class="all-content">
@@ -244,6 +265,7 @@ if (isset($_GET['edit'])) {
     <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/dropdown.js"></script>  
 
     <script type="text/javascript">
         $("#delete-post").click(function(){

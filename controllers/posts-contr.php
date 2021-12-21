@@ -17,6 +17,7 @@
        public function PostTopic() {
         $titleNoHTML = strip_tags($this->subject);
         $topicNoHTML = strip_tags($this->topic);
+
         if($this->emptyPostInput() == false)
         {
             header("location: ?error=emptyinput&title=$titleNoHTML&topic=$topicNoHTML");
@@ -68,7 +69,7 @@
 
         private function emptyPostInput() {
             $result = 0;
-            if(empty($this->subject or $this->category  or $this->topic )) {
+            if(empty($this->subject && $this->topic && $this->category)) {
                 $result = false;
             } else {
                 $result = true;

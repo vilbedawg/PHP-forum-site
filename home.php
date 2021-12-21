@@ -15,7 +15,31 @@ $onliners = $objUser->GetAllOnliners();
 
 
 ?>
-
+<script>
+    $(document).ready(function() {
+        $('#category').keyup(function() {
+            var query = $(this).val();
+            if(query != '')
+            {
+                $.ajax({
+                   url:"search.php",
+                   method: "POST",
+                   data: {query:query},
+                   success:function(data)
+                   {
+                       $('#categorylist').fadeIn();
+                       $('#categorylist').html(data);
+                   },
+                   error:function(data)
+                   {
+                        $('#categorylist').fadeIn();
+                        $('#categorylist').html('Jokin meni vikaan');
+                   }
+                });
+            }
+        });
+    });
+</script>
 <body>
 
 
@@ -23,6 +47,27 @@ $onliners = $objUser->GetAllOnliners();
     <div class="bg-modal">
         <div class="modal-content">
             <div class="modal-close"><i class="fas fa-times"></i>
+            </div>
+            <div class="modal-categories">
+            <div class="modal-side-bar">
+            <div class="profile-status">
+                <h1>Kategoriat</h1>
+            </div>
+            <div class="modal-categories">
+                <a href="home.php?show=Yleinen">Yleinen</a>
+                <a href="home.php?show=Politiikka">Politiikka</a>
+                <a href="home.php?show=Valokuvaus">Valokuvaus</a>
+                <a href="home.php?show=Videot">Videot</a>
+                <a href="home.php?show=Tarinat">Tarinat</a>
+                <a href="home.php?show=Taide">Taide</a>
+                <a href="home.php?show=Pelit">Pelit</a>
+                <a href="home.php?show=Elokuvat">Elokuvat</a>
+                <a href="home.php?show=Musiikki">Musiikki</a>
+                <a href="home.php?show=Urheilu">Urheilu</a>
+                <a href="home.php?show=Harrastukset">Harrastukset</a>
+                <a href="home.php?show=NSFW" style="color: red;">NSFW</a>
+            </div>
+            </div>
             </div>
 
             <?php
@@ -70,25 +115,11 @@ $onliners = $objUser->GetAllOnliners();
                         } else {
                             echo '<input type="text" name="subject" id="subject"></input>';
                         } ?>
-                        
+                   
+                        <label>Valitse kategoria</label>
+                        <input type="text" name="category" id="category" placeholder=""> 
                     </div>
-                    <div class="form-group-middle">
-                        <label>Kategoria</label>
-                        <div class="radio-buttons">
-                            <div class="radio1">
-                                <input type="radio" name="category" id="select1" value="Python"></input>
-                                <label>Python</label>
-                            </div>
-                            <div class="radio2">
-                                <input type="radio" name="category" id="select2" value="PHP"></input>
-                                <label>PHP</label>
-                            </div>
-                            <div class="radio3">
-                                <input type="radio" name="category" id="select3" value="C#"></input>
-                                <label>C#</label>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="categorylist"></div>
                     <div class="form-group">
                         <label>Aihe</label>
                         <?php if(isset($_GET['topic'])) {
@@ -126,6 +157,18 @@ $onliners = $objUser->GetAllOnliners();
             </div>
         </div>
         <div class="search-toolbar">
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
+            <div id="myDropdown" class="dropdown-content">
+                <a href="users.php">Kotisivu</a>
+                <?php if(isset($_SESSION['userid'])) { 
+                    echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
+                    echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
+                    echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
+                     } ?>
+                
+            </div>
+            </div>
             <div class="search">
                 <button><i class="fas fa-search"></i></button>
                 <input type="text" placeholder="Etsi julkaisu...">
@@ -143,20 +186,22 @@ $onliners = $objUser->GetAllOnliners();
 
             <?php
             $postObj = new PostedContent;
-            $posts = $postObj->getAllPostsByNewest();
+            if(isset($_GET['show'])) {
+                $posts = $postObj->getAllPostsByCategory($_GET['show']);
+            } else {
+                $posts = $postObj->getAllPostsByNewest();
+            }
             
-
-
             foreach ($posts as $post) {
                 $mysqldate = strtotime($post['date']);
                 $phpdate = date('Y/m/d G:i A', $mysqldate);
                 $comments = $postObj->getAllComments($post['post_id']);
                 $roomAmount = count($comments);
-                echo "<a href='view.php?room=" . $post['post_id'] . "'style='color: black; display: block;'><div class='room-container'>
+                echo "<div class='room-container' data-id='". $post['post_id'] ."'>
                         <div class='room'>
                                 <div class='date-and-post'>
                                     <div class='date-users'>
-                                        <p class='username-users'>" . $post['name'] . "</p>
+                                        <p class='username-users' data-id='". $post['user_id'] ."'>" . $post['name'] . "</p>
                                         <p>" . $phpdate . "</p>
                                     </div>
                                     <h1 class='user-post'>" . $post['title'] . "</h1>
@@ -171,11 +216,12 @@ $onliners = $objUser->GetAllOnliners();
                                     </div>
                                     </div>
                                     </div>
-                            </div></a>";
+                            </div>";
             }
             ?>
         </div>
 
+        <div class="side-menu">
         <div class="profile-users">
             <div class="profile-status">
                 <h1>Käyttäjätiedot</h1>
@@ -195,6 +241,27 @@ $onliners = $objUser->GetAllOnliners();
             }?>
             
         </div>
+        <div class="side-bar">
+            <div class="profile-status">
+                <h1>Kategoriat</h1>
+            </div>
+            <div class="categories">
+                <a href="home.php?show=Yleinen">Yleinen</a>
+                <a href="home.php?show=Politiikka">Politiikka</a>
+                <a href="home.php?show=Valokuvaus">Valokuvaus</a>
+                <a href="home.php?show=Videot">Videot</a>
+                <a href="home.php?show=Tarinat">Tarinat</a>
+                <a href="home.php?show=Taide">Taide</a>
+                <a href="home.php?show=Pelit">Pelit</a>
+                <a href="home.php?show=Elokuvat">Elokuvat</a>
+                <a href="home.php?show=Musiikki">Musiikki</a>
+                <a href="home.php?show=Urheilu">Urheilu</a>
+                <a href="home.php?show=Harrastukset">Harrastukset</a>
+                <a href="home.php?show=NSFW">NSFW</a>
+            </div>
+            
+        </div>
+        </div>
         </div>
         <a href="" class="scrollup">
         <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#4895ef" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z"/></svg>
@@ -204,7 +271,7 @@ $onliners = $objUser->GetAllOnliners();
         <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
         <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
         <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
-
+        <script src="js/dropdown.js"></script>  
         <script>
         $(document).ready(function() {
             $("p").has("img").css({"textAlign" : "center",
@@ -215,10 +282,22 @@ $onliners = $objUser->GetAllOnliners();
             $("p").has("iframe").css({"textAlign" : "center",
                                     "background" : "black",
                                     "margin-left" : "0",
-            });           
-        });
-        </script>
+            });  
+            //----------------------------//
+            //room container linkit
+            $(".username-users").on('click', function(e){
+                    e.preventDefault;
+                    e.stopPropagation();
+                    var id = $(this).data('id');
+                    window.location = "profile.php?user="+id;
+                });
+                $(".room-container").on('click', function(e){
+                        e.preventDefault;
+                        var id = $(this).data('id');
+                        window.location = "view.php?room="+id;
+                });         
+            });
+        </script> 
 
 </body>
-
 </html>

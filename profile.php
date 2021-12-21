@@ -130,6 +130,27 @@ $userlist = $objUser->GetAllUsersButMe();
                 ?>
             </div>
         </div>
+        <div class="search-toolbar">
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
+            <div id="myDropdown" class="dropdown-content">
+                <a href="users.php">Kotisivu</a>
+                <?php if(isset($_SESSION['userid'])) { 
+                    echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
+                    echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
+                    echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
+                     } ?>
+                
+            </div>
+            </div>
+            <div class="search">
+                <button><i class="fas fa-search"></i></button>
+                <input type="text" placeholder="Etsi julkaisu...">
+            </div>
+            
+                 <button class="create">Luo uusi</button>
+            
+        </div>
     </div>
     <div class="home-other">
         <?php
@@ -165,7 +186,7 @@ $userlist = $objUser->GetAllUsersButMe();
               <button class="profile-create">Luo uusi</button>
             </div>
             <div class="discussion-page-users">
-            <a href="users.php"><button class="profile-back">Kotisivulle</button></a>
+            <a href="users.php" style="width: 100px;"><button class="profile-back" style="width: 100%;">Kotisivulle</button></a>
             ';
             
             foreach ($posts as $post) {
@@ -174,20 +195,16 @@ $userlist = $objUser->GetAllUsersButMe();
                 $comments = $postObj->getAllComments($post['post_id']);
                 $roomAmount = count($comments);
                 echo
-                '
-                    <a href="view.php?room=' . $post['post_id'] . '" style="color: black; display: block;">
-                            <div class="room-container"></a>
-                                ';
+                '<div class="room-container" data-id="'. $post['post_id'] .'">';             
                 if (isset($_SESSION['userid']) && ($post['user_id'] === $_SESSION['userid'])) {
                     echo '<div class="delete-post" data-id="'. $post['post_id'] .'">           
                     <button class="delete-post-btn" id="delete-post"><i class="fa fa-times" aria-hidden="true"></i></div></button>
-                    <div class="edit-post">
-                    <a href="view.php?room=' . $post['post_id'] . '&edit"><button class="edit-post-btn"><i class="fas fa-edit"></i></div></button></a>
+                    <div class="edit-post" data-id="'. $post['post_id'] .'">
+                    <button class="edit-post-btn"><i class="fas fa-edit"></i></div></button>
                     ';
                     }
                     echo
                     ' 
-                <a href="view.php?room=' . $post['post_id'] . '" style="color: black; display: block;">
                 <div class="room">
                     <div class="date-and-post">
                         <div class="date-users">
@@ -206,7 +223,7 @@ $userlist = $objUser->GetAllUsersButMe();
                     </div>
                     </div>
                     </div>
-                </div></a>
+                </div>
                 ';
             }
      
@@ -276,7 +293,7 @@ $userlist = $objUser->GetAllUsersButMe();
     $(document).ready(function() {
         $(".delete").click(function(){
             var id = $(this).parents("tr").attr("id");
-            if(confirm('Are you sure to remove this record ?'))
+            if(confirm(' Haluatko varmasti poistaa käyttäjän? ?'))
             {
                 $.ajax({
                 url: 'action.php',
@@ -299,7 +316,9 @@ $userlist = $objUser->GetAllUsersButMe();
         });
         $(".delete-post").on('click', function(e){
             e.preventDefault;
+            e.stopPropagation();
             var id = $(this).data('id');
+            var room = $(this).parent();
             if(confirm('Haluatko varmasti poistaa julkaisun?'))
             {
                 $.ajax({
@@ -311,7 +330,7 @@ $userlist = $objUser->GetAllUsersButMe();
                     alert("Jokin meni vikaan");
                 },
                 success: function(data) {
-                    alert("Julkaisu " + id + "poistettiin.");
+                    room.remove();
                 }
             });
             }
@@ -328,12 +347,26 @@ $userlist = $objUser->GetAllUsersButMe();
 <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
 <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
 <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
+<script src="js/dropdown.js"></script>  
 <script>
-    $(document).ready(function() {
-        $("p").has("img").css({
-            "textAlign": "center",
-        });
+//----------------------------//
+//room container linkit
+$(document).ready(function(){
+    $(".edit-post").on('click', function(e){
+        e.preventDefault;
+        e.stopPropagation();
+        var id = $(this).data('id');
+        window.location = "view.php?room="+id+"&edit";
     });
+    $(".room-container").on('click', function(e){
+            e.preventDefault;
+            var id = $(this).data('id');
+            window.location = "view.php?room="+id;
+    });
+    $("p").has("img").css({
+            "textAlign": "center",
+    });
+});
 </script>
 </body>
 <?php
