@@ -25,7 +25,7 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 5;
+    z-index: 99998;
 }
 
 .navbar {
@@ -54,6 +54,10 @@ body {
 
 .current-user-parent{
     margin-left: 10%;
+    
+}
+
+.current-user-parent h1 {
     color: #fff;
 }
 
@@ -68,9 +72,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: auto;
+    margin: 0;
     width: 70%;
-    padding: 50px;
+    padding: 30px;
 }
 
 .comment-form {
@@ -349,6 +353,40 @@ input[type="radio"] {
     color: #fff;
 }
 
+
+.profile-create {
+    font-size: 20px;
+    font-weight: 500;
+    padding: 7px 15px;
+    background: #ee6c4d;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 0;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    display: block;
+    color: #fff;
+    margin: auto;
+    width: 90%;
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.profile-back {
+    font-size: 17px;
+    font-weight: 500;
+    padding: 7px 15px;
+    background: #ee6c4d;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 0;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    display: block;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
 .logout{
     color: #fff;
     font-size: 17px;
@@ -359,7 +397,7 @@ input[type="radio"] {
     cursor: pointer;
     border: 0;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .back {
@@ -375,8 +413,34 @@ input[type="radio"] {
     margin-right: 20px;
 }
 
+.delete {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 7px 15px;
+    background: red;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 0;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
 
-:is(.create:hover , .logout:hover, .back:hover) {
+#delete-post {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 2px;
+    background: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 0;
+}
+
+.delete:hover {
+    background-color: #333;
+}
+
+
+:is(.create:hover , .logout:hover, .back:hover, .profile-create:hover, .profile-back:hover) {
     background-color: #4895ef;
 }
 
@@ -392,7 +456,7 @@ input[type="radio"] {
 
 .home-other {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     padding-top: 1rem;
     width: 100%;
     margin-top: 100px;
@@ -492,6 +556,7 @@ input[type="radio"] {
 
   .post-toolbar {
       display: flex;
+      align-items: center;
       font-size: 14px;
       margin-left: 10px;
       padding-bottom: 10px;
@@ -518,7 +583,7 @@ input[type="radio"] {
       padding: 2px;
       border-radius: 3px;
   }
-  .post-toolbar-editpost:hover {
+  .post-toolbar-editpost:hover, #delete-post:hover {
     background-color: #e6e4e4;
   }
 
@@ -607,6 +672,8 @@ input[type="radio"] {
      top: 100px;
      z-index: 995;
      color: black;
+     display: flex;
+     align-items: center;
  }
  .edit-toolbar-roomname {
      position: absolute;
@@ -997,21 +1064,20 @@ input[type="radio"] {
       background-color: rgba(0, 0, 0, 0.7);
       position: fixed;
       top: 0;
-      z-index: 9999;
+      z-index: 99999;
       justify-content: center;
       align-items: center;
       display: none;
   }
 
   .modal-content {
-      width: 80%;
-      height: 80%;
+      width: 70%;
       background-color: #fff;
       border-radius: 4px;
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow-y: scroll;
+      overflow-y: hidden;
       position: relative;
     }
 
@@ -1036,18 +1102,30 @@ input[type="radio"] {
         display: none;
       }
 
+      .profile-users {
+        width: 300px;
+        height: 400px;
+        background-color: #fff;
+        border-radius: 5px;
+        position: relative;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        margin-left: 50px;
+    }
+    
       .profile {
-          width: 400px;
+          width: 300px;
           height: 400px;
           background-color: #fff;
-          margin-left: 40px;
           border-radius: 5px;
           position: relative;
           box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+          margin-left: 50px;
+          
       }
 
+
       .profile-status {
-        width: 400px;
+        width: 100%;
         height: 50px;
         background-color: #333;
         border-top-left-radius: 5px;
@@ -1093,8 +1171,8 @@ input[type="radio"] {
         border: 0;
         height: 1px;
         background: #ccc;
-        width: 95%;
-        margin: auto;
+        width: 100%;
+        margin: 30px 0;
       }
 
     .user-managment {
@@ -1142,13 +1220,46 @@ input[type="radio"] {
     height: 400px;
 }
 
+
+.profile-managment {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px;
+    height: 150px;
+}
+
+.profile-managment img {
+    width: 70px;
+    height: 70px;
+    border: 1px solid #aaa;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    overflow:hidden;
+    margin-left: 10px;
+    align-self: flex-start;
+}
+
+
+
+.profile-details {
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    height: 50px;
+    justify-content: space-between;
+    align-self: flex-start;
+}
+
 .user-details {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     align-items: center;
     width: 400px;
-    
     background-color: #fff;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
@@ -1250,6 +1361,10 @@ input[type="radio"] {
     height: 30px;
 }
 
+.user-managment form .button-img input:hover{ 
+    background-color: #333;
+}
+
 .user-managment form .button input {
     border: none;
     font-size: 14px;
@@ -1310,12 +1425,10 @@ input[type="radio"] {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 20px;
-    right: 50px;
     border-radius: 50px;
     padding: 2px;
     transition: .1s ease-in;
+
 }
 
 .edit:hover {
@@ -1329,7 +1442,9 @@ input[type="radio"] {
 }
 
 .edit-btn {
-    position: relative;
+    position: absolute;
+    top: 20%;
+    right: 15%;
 }
 
 .user-form-image{
@@ -1481,17 +1596,23 @@ input[type="radio"] {
     cursor: pointer;
 }
 
+.edit-page-close i { 
+    color: black;
+}
+
+.edit-page-close i:hover { 
+    color: #ee6c4d;
+}
+
 .home-users {
     display: flex;
     justify-content: center;
-    align-items: center;
     width: 100%;
+    flex-direction: row-reverse;
 }
 
 .discussion-page-users{
     width: 800px;
-    margin-top: 50px;
-    margin-right: 440px;
     display: flex;
     flex-direction: column;
     color: black;

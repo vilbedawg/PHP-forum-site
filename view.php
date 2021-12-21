@@ -31,7 +31,6 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
 
 
 if (isset($_GET['edit'])) {
-
 ?>
 
     <div class="bg-modal">
@@ -49,6 +48,8 @@ if (isset($_GET['edit'])) {
                 $updatePost->updateTopic($roomNum);
                 header("Location: view.php?room=$roomNum");
             }
+
+          
 
             ?>
 
@@ -107,14 +108,17 @@ if (isset($_GET['edit'])) {
     <div class="navbar-other">
         <div class="navbar-menu">
             <div class="current-user-parent">
-                <h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1>
+                <a href="users.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
             </div>
             <div class="buttons">
                 <?php if (isset($_POST['edit'])) {
                     echo '<button class="create">Luo uusi</button>';
-                } ?>
-                <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
-                <a href="users.php"><button class="create">Home</button></a>
+                } if(isset($_SESSION['userid'])){
+                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+                } else {
+                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                }?>
+                
             </div>
         </div>
     </div>
@@ -123,6 +127,7 @@ if (isset($_GET['edit'])) {
 
         <div class="all-comments">
             <div class="edit-toolbar">
+            <a href="users.php"><button class="profile-back" style="margin-bottom: 0; margin-left: 10px;">Kotisivulle</button></a>
                 <?php
 
                 if (isset($_GET['edit'])) {
@@ -136,7 +141,10 @@ if (isset($_GET['edit'])) {
             <div class="room-header">
                 <div class='date-and-users'>
                     <div class='date'>
-                        <a href="profile.php?user=<?php echo $currentRoom[0]['user_id']; ?>" class='username'><?php echo $currentRoom[0]['name']; ?></a>
+                        
+                    <a href="profile.php?user=<?php echo $currentRoom[0]['user_id'] ?> " class="username"><?php echo $currentRoom[0]['name'] ?> </a>
+                        
+                       
                         <p><?php $mysqldate = strtotime($currentRoom[0]['date']);
                             $phpdate = date('Y/m/d G:i A', $mysqldate);
                             echo $phpdate; ?>
@@ -149,9 +157,9 @@ if (isset($_GET['edit'])) {
                     <i class='far fa-comment-alt'></i>
                     <?php $commentAmount = count($allPosts);
                     echo "<p>" . $commentAmount . " kommenttia</p>";
-                    $isOwner = $_SESSION['userid'] == $currentRoom[0]['user_id'];
-                    if ($isOwner) {
+                    if(isset($_SESSION['userid']) && $_SESSION['userid'] == $currentRoom[0]['user_id']) {
                         echo "<a href='view.php?room=" . $roomNum . "&edit' class='post-toolbar-editpost'>Muokkaa</a>";
+                        echo "<button class='post-toolbar-editpost' id='delete-post' data-id='". $roomNum ."'>Poista julkaisu</button>";
                     }
                     ?>
                 </div>
@@ -177,13 +185,19 @@ if (isset($_GET['edit'])) {
                             }
                         }
                         ?>
+                         <?php if (isset($_SESSION['userid'])) {
+                        echo '
                         <div class="form-group">
                             <a id="comment"></a>
                             <textarea class="tinymce" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7" style="z-index: 99999;"></textarea>
                         </div>
                         <div class="post-comment">
                             <input type="submit" name="post" value="Kommentoi" id="post">
-                        </div>
+                        </div> ';
+                        } else {
+                            echo '<p>kirjaudu sisään jotta voit kommentoida</p>';
+                        }
+                        ?>
                     </form>
                 </div>
                 <span class="post-hr" id="#commentsection">
@@ -225,100 +239,34 @@ if (isset($_GET['edit'])) {
         </div>
     </div>
 
-    <script type="text/javascript">
-        $("#kommentoi").click(function(e) {
-            e.preventDefault();
-            var id = $(this).parents("tr").attr("id");
-            if (confirm('Are you sure to remove this record ?')) {
-                $.ajax({
-                    url: 'action.php',
-                    type: 'GET',
-                    data: {
-                    id: id
-                    },
-                    success: function(data) {},
-                    error: function() {
-                        alert('Something is wrong');
-                    },
-                    success: function(data) {
-                        $("#" + id).remove();
-                        alert("Käyttäjä numero " + id + " poistettiin.");
-                        $('.table-wrapper').stop().slideDown("normal", function() {
-                            $('.table-wrapper').css('display', 'flex');
-                            $(".show-list").hide();
-                            $(".hide-list").show();
-                        });
-                    }
-                });
-            }
-        });
-    </script>
-
-    <?php if (isset($_SESSION["userid"])) { ?>
-        <div class="register-modal">
-            <div class="reg-modal-content">
-                <div class="modal-close"><i class="fas fa-times"></i></div>
-                <div class="hero">
-                    <div class="wrapper-login">
-                        <section class="form signup">
-                            <header>Kirjaudu</header>
-                            <form action="" method="post">
-                                <div class="error-txt">
-                                    <?php
-                                    if (!isset($_GET['error'])) {
-                                        echo "";
-                                    } else {
-                                        $signupCheck = $_GET['error'];
-
-                                        if ($signupCheck == "emptyinput") {
-                                            echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
-                                        } elseif ($signupCheck == "wrongpwd") {
-                                            echo "<div class='error-texti'><p>Väärä salasana</p></div>";
-                                        } elseif ($signupCheck == "usernotfound") {
-                                            echo "<div class='error-texti'><p>Käyttäjää ei löydy</p></div>";
-                                        } elseif ($signupCheck == "banned") {
-                                            echo "<div class='error-texti'><p>Banned</p></div>";
-                                        }
-                                    }
-
-                                    ?>
-                                </div>
-                                <div class="field input">
-                                    <label>Käyttäjänimi</label>
-                                    <?php
-                                    if (isset($_GET['name'])) {
-                                        $formName = $_GET['name'];
-
-                                        echo '<input type="text" name="name" id="name" placeholder="Käyttäjänimi" value="' . $formName . '">';
-                                    } else {
-                                        echo '<input type="text" name="name" id="name" placeholder="Käyttäjänimi">';
-                                    }
-                                    ?>
-                                </div>
-                                <div class="field input">
-                                    <label>Salasana</label>
-                                    <input type="password" name="password" id="Password" placeholder="Salasana">
-                                    <i class="fas fa-eye"></i>
-                                </div>
-                                <div class="field button">
-                                    <input type="submit" name="submit" value="Kirjaudu" id="submit">
-                                </div>
-                            </form>
-                            <div class="link">Rekisteröitynyt?<a href="index.php"> Rekisteröidy</a></div>
-                        </section>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php   } ?>
-
-
-
 
     <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
     <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
     <script src="js/app.js"></script>
+
+    <script type="text/javascript">
+        $("#delete-post").click(function(){
+            var id = $(this).data('id');
+            if(confirm('Haluatko varmasti poistaa julkaisun?'))
+            {
+                $.ajax({
+                url: 'action.php',
+                type: 'GET',
+                data: {deleteid: id},
+                dataType: "html",
+                error: function() {
+                    alert("Jokin meni vikaan");
+                },
+                success: function(data) {
+                    alert("Julkaisu " + id + "poistettiin.");
+                    window.location = "users.php"; 
+                }
+            });
+            }
+        });
+    </script>                                
+
     <script>
         $(document).ready(function() {
             $("p").has("img").css({

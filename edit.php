@@ -17,10 +17,18 @@ $userOnView = $objUser->GetViewedUser();
 
 ?>
 <body>
+
+<div class="bg-modal">
+    <div class="modal-content">
+        <div class="modal-close"><i class="fas fa-times"></i>
+        </div>
+    </div>
+</div>
+
 <div class="navbar-other">
         <div class="navbar-menu">
             <div class="current-user-parent">
-                <h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1>
+            <a href="users.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
             </div>
             <div class="buttons">
                 <?php if (isset($_POST['edit'])) {
@@ -61,8 +69,6 @@ $userOnView = $objUser->GetViewedUser();
     </div>
     <!-- // -->
     </div>
-             
-
         <!-- nimen vaihto form -->
         <div class="user-form-container">
         <h1>Käyttäjätiedot</h1>
@@ -104,7 +110,7 @@ $userOnView = $objUser->GetViewedUser();
         $("#nameSubmit").on('submit', function(e) {
             e.preventDefault();
             var name = $('#name').val();
-            var id = $('#id').val();
+            var id = $('#userid').val();
             $.ajax({
                 url: "action.php",
                 method: "POST",

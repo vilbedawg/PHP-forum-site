@@ -110,6 +110,21 @@
             
         }
 
+        public function GetMostRecent() {
+            $stmt = $this->connect()->prepare('SELECT MAX(post_id) FROM posts WHERE user_id = :userid;');
+            $stmt->bindParam(':userid', $this->userid, PDO::PARAM_INT);
+            if(!$stmt->execute()){
+                $stmt = null;
+                header("location: login.php?error=stmtfailed");
+                exit();
+            }
+            if(!$recentPost = $stmt->fetchAll(PDO::FETCH_ASSOC)){
+                header("location: profile.php?/noexist");
+            }
+            return $recentPost;
+            
+        }
+
 
     }
 

@@ -15,9 +15,20 @@ if(isset($_GET['id'])) {
 } 
 
 
+if(isset($_GET['deleteid'])) {
+    $id = $_GET['deleteid'];
+    $stmt = $user->connect()->prepare('DELETE FROM posts WHERE post_id = :id;');
+    $stmt->execute(array(':id' => $id));
+    exit();
+}
+
+
+
+
 //käyttäjänimen päivitys
 if(isset($_POST['name'])) { 
     $checkName = new Signup();
+    
     if(!$checkName->checkUser($_POST['name'])) {
         $error = "<div class='error-texti'><p>Käyttäjänimi jo käytössä</p></div>";
     }

@@ -12,10 +12,7 @@ $users = $objUser->GetAllUsers();
 $objUser->setloginStatus(1);
 $onliners = $objUser->GetAllOnliners();
 
-if (!isset($_SESSION["userid"])) {
-    header("location: login.php");
-    exit();
-}
+
 
 ?>
 
@@ -36,7 +33,10 @@ if (!isset($_SESSION["userid"])) {
                 $category = $_POST['category'];
                 $post = new PostsContr($title, $topic, $category);
                 $post->PostTopic();
-                header('Location: users.php?success');
+
+                $objUser->setUserID($_SESSION['userid']);
+                $mostRecent = $objUser->GetMostRecent();
+                header('Location: view.php?room= '. $mostRecent[0]['MAX(post_id)'] .' ');
             }
 
             ?>
@@ -114,10 +114,15 @@ if (!isset($_SESSION["userid"])) {
     <div class="navbar">
         <div class="navbar-menu">
             <div class="current-user-parent">
-                <h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1>
+            <a href="users.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
             </div>
             <div class="buttons">
-                <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
+                <?php if(isset($_SESSION['userid'])) {
+                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+                }else {
+                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                }
+                ?>
             </div>
         </div>
         <div class="search-toolbar">
@@ -125,7 +130,9 @@ if (!isset($_SESSION["userid"])) {
                 <button><i class="fas fa-search"></i></button>
                 <input type="text" placeholder="Etsi julkaisu...">
             </div>
-            <button class="create">Luo uusi</button>
+            
+                 <button class="create">Luo uusi</button>
+            
         </div>
     </div>
 
@@ -169,7 +176,7 @@ if (!isset($_SESSION["userid"])) {
             ?>
         </div>
 
-        <div class="profile">
+        <div class="profile-users">
             <div class="profile-status">
                 <h1>Käyttäjätiedot</h1>
             </div>
@@ -177,11 +184,16 @@ if (!isset($_SESSION["userid"])) {
                 <div class="member-amount"><p class="amount"><?php echo count($users); ?></p><p>Jäsentä</p> </div>
                 <div class="members-online"><p class="amount"><?php echo count($onliners); ?></p> <p>paikalla</p> </div>
             </div>
-            <hr>
-            <div class="users-link"><button class="create">Luo uusi</button></div>
-            <hr>
-            <p><?php echo $_SESSION['name']?></p>
-            <a href="profile.php?user=<?php echo $_SESSION['userid'] ?>"><div class="users-link"><button class="logout">Käyttäjätiedot</button></div><a>
+            
+            
+            <?php if(isset($_SESSION['userid'])){
+                echo '<div class="users-link"><button class="create" style="width: 90%; border-radius: 20px;">Luo uusi</button></div>
+                      <a href="profile.php?user='. $_SESSION['userid'] .'"><div class="users-link"><button class="logout" style="width: 90%; border-radius: 20px; margin-left: 0;">Käyttäjätiedot</button></div><a>
+                      <p style="width: 70%; position: absolute; bottom: 5px; left: 5px;">Kirjautunut sisään käyttäjällä <b>'. $_SESSION['name'] .'</b></p>';
+            } else {
+                echo '<a href="login.php"><div class="users-link"><button class="logout" style="width: 90%; border-radius: 20px; margin-left: 0;">Kirjaudu sisään</button></div><a>';
+            }?>
+            
         </div>
         </div>
         <a href="" class="scrollup">

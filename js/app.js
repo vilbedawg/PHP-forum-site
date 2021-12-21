@@ -1,23 +1,32 @@
+
 //Modaali funktiot
-var modal = $('.bg-modal');
-$('.create').click(function() {
-    $(modal).css('display', 'flex');
-    modal.show();
-});
-
-$('.modal-close').click(function() {
-    modal.hide();
-});
-
 $(document).ready(function() {
+
+    var modal = $('.bg-modal');
+    $('.create').click(function() {
+        $(modal).css('display', 'flex');
+        modal.show();
+    });
+    
+    $('.modal-close').click(function() {
+        modal.hide();
+    });
+    
+
+    $('.profile-create').click(function() {
+        $(modal).css('display', 'flex');
+        modal.show();
+    });
+    
+    $('.modal-close').click(function() {
+        modal.hide();
+    });
+
     if (window.location.href.indexOf("error") > -1) {
         $(modal).css('display', 'flex');
         modal.show();
     }
-});
 
-
-$(document).ready(function() {
     if (window.location.href.indexOf("edit") > -1) {
         $('.modal-content').css({  'height' : '700px',
                                     'width' : '800px'
@@ -25,24 +34,21 @@ $(document).ready(function() {
         $(modal).css('display', 'flex');
         modal.show();
     }
-});
 
-
-var regmodal = $('.register-modal');
-$('.post').click(function() {
-    $(regmodal).css('display', 'flex');
-    regmodal.show();
-});
-
-$('.modal-close').click(function() {
-    regmodal.hide();
-});
-
-$(document).ready(function() {
-    if (window.location.href.indexOf("error") > -1) {
-        $(regmodal).css('display', 'flex');
-        regmodal.show();
+    if (window.location.href.indexOf("edit") > -1) {
+        $('.modal-content').css({  'height' : '700px',
+                                    'width' : '800px'
+                                });
+        $(modal).css('display', 'flex');
+        modal.show();
     }
+
+    $('.create').click(function() {
+        if($(this).html() == 'Luo uusi') {
+            alert('Jee');
+        }
+    });
+
 });
 
 
@@ -53,15 +59,9 @@ $( document ).ready(function() {
     $('.bodytext img').css({'height' : 'auto',
                             'max-width' : '100%'
     });
-});
-
-$( document ).ready(function() {
     $('.bodytext-users img').css({'height' : 'auto',
                             'max-width' : '100%'                        
     });
-});
-
-$( document ).ready(function() {
     $('.date-and-users img').css({'height' : 'auto',
                             'max-width' : '100%'
                             

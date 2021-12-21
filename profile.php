@@ -1,9 +1,10 @@
 <?php
 session_start();
-if (!isset($_SESSION["userid"])) {
-    header("location: login.php");
-    exit();
-}
+// if (!isset($_SESSION["userid"])) {
+//     header("location: users.php?notallowed");
+//     exit();
+// }
+
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
 include_once "includes/header.php";
@@ -17,20 +18,116 @@ $onliners = $objUser->GetAllOnliners();
 $postObj = new PostedContent;
 $posts = $postObj->GetAllPostsByID($_GET['user']);
 
-$objUser->setUserID($_SESSION['userid']);
+$objUser->setUserID($_GET['user']);
+$userOnView = $objUser->GetViewedUser();
 $userlist = $objUser->GetAllUsersButMe();
-
-
 ?>
 
 <body>
+ <!--Modal section-->
+ <div class="bg-modal">
+        <div class="modal-content">
+            <div class="modal-close"><i class="fas fa-times"></i>
+            </div>
+
+            <?php
+            if (isset($_POST['post'])) {
+                include_once "controllers/posts-contr.php";
+                $title = $_POST['subject'];
+                $topic = $_POST['topic'];
+                $category = $_POST['category'];
+                $post = new PostsContr($title, $topic, $category);
+                $post->PostTopic();
+
+                
+                $objUser->setUserID($_GET['user']);
+                $mostRecent = $objUser->GetMostRecent();
+                header('Location: view.php?room= '. $mostRecent[0]['MAX(post_id)'] .' ');
+            }
+
+            ?>
+            
+            <div class="create-form">
+                <form class="form-post" method="POST">
+                <div class="error-text">
+                    <?php
+                    if (!isset($_GET['error'])) {
+                        echo "";
+                    } else {
+                        $signupCheck = $_GET['error'];
+                        if ($signupCheck == "emptyinput") {
+                            echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
+                        }
+                        if ($signupCheck == "invalidTitle") {
+                            echo "<div class='error-texti'><p>Otsikko sisältää ei sallittuja kirjaimia</p></div>";
+                        }
+                        if ($signupCheck == "invalidLength") {
+                            echo "<div class='error-texti'><p>Otsikon täytyy olla 3-50 merkkiä</p></div>";
+                        }
+                    }
+                    ?>
+                </div>
+                    <div class="form-group-upper">
+                        <label>Otsikko</label>
+                    <?php if(isset($_GET['title'])) {
+                         $formName = $_GET['title'];
+                        
+                        echo '<input type="text" name="subject" id="subject" value="'.$formName.'">';
+                        } else {
+                            echo '<input type="text" name="subject" id="subject"></input>';
+                        } ?>
+                        
+                    </div>
+                    <div class="form-group-middle">
+                        <label>Kategoria</label>
+                        <div class="radio-buttons">
+                            <div class="radio1">
+                                <input type="radio" name="category" id="select1" value="Python"></input>
+                                <label>Python</label>
+                            </div>
+                            <div class="radio2">
+                                <input type="radio" name="category" id="select2" value="PHP"></input>
+                                <label>PHP</label>
+                            </div>
+                            <div class="radio3">
+                                <input type="radio" name="category" id="select3" value="C#"></input>
+                                <label>C#</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Aihe</label>
+                        <?php if(isset($_GET['topic'])) {
+                         $formContent = $_GET['topic'];
+                        echo '<textarea class="tinymce" name="topic" id="topic" rows="7">'. $formContent .'</textarea>';
+                        } else {
+                            echo '<textarea class="tinymce" name="topic" id="topic" rows="7"></textarea>';
+                        } ?>
+                        
+                        <div class="post-topic-button">
+                            <input type="submit" name="post" value="Julkaise" id="post">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal section loppuu-->
+
     <div class="navbar-other">
         <div class="navbar-menu">
             <div class="current-user-parent">
-                <h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1>
+            <a href="users.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
             </div>
             <div class="buttons">
-                <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
+                <?php if(isset($_SESSION['userid'])) {
+                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+                } else {
+                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                }
+                
+                ?>
             </div>
         </div>
     </div>
@@ -41,57 +138,36 @@ $userlist = $objUser->GetAllUsersButMe();
             <h1>Käyttäjä ei ole olemassa :(</h1>
             <a href='users.php'><button class='logout'>Takaisin kotisivulle</button></a>
             </div>";
-        }else {
-            
-        if (isset($_GET['user'])) {
-            $objUser->setUserID($_GET['user']);
-            $userOnView = $objUser->GetViewedUser();
-            echo ' <div class="user-managment">
-            <img src="' . $userOnView[0]['image'] . '"></img>
-            <div class="user-details">
-            <h1> ' . $userOnView[0]['name'] . ' </h1>
-            </div>
-            </div>        
-            ';
-
-
-            if ($_GET['user'] == $_SESSION['userid']) {
-                echo
-                '
-             <a href="edit.php?user=' . $_SESSION['userid'] . '" class="edit-btn">
-             <button class="edit" type="submit" name="user" value="' . $_SESSION['userid'] . '">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-5 17l1.006-4.036 3.106 3.105-4.112.931zm5.16-1.879l-3.202-3.202 5.841-5.919 3.201 3.2-5.84 5.921z"/></svg>
-             </button>
-             </a>
-             ';
-            }
-
+        }
             echo
             '
+            <div class="home-users">
             <div class="profile">
-                    <div class="profile-status">
-                        <h1>Käyttäjätiedot</h1>
-                    </div>
-                    <div class="about">
-                        <div class="member-amount">
-                            <p class="amount">' . count($users) . '</p>
-                            <p>Jäsentä</p>
-                        </div>
-                        <div class="members-online">
-                            <p class="amount">' . count($onliners) . '</p>
-                            <p>paikalla</p>
-                        </div>
-                    </div>
-                    <hr>
-                    <a href="users.php"><button class="create">Home</button></a>
-                    <hr>
-                    <p>' . $_SESSION["name"] . '</p>
-                    </div>
-                    </div>  
-                    </div>
+            <div class="profile-status">
+                <h1>Käyttäjätiedot</h1>
+            </div>
+            <div class="profile-managment">';
 
-                    <div class="home-users">                        
-                    <div class="discussion-page-users">';
+            if (isset($_SESSION['userid']) && $_SESSION['userid'] == $userOnView[0]['user_id']) {
+                echo '<a href="edit.php?user=' . $_SESSION['userid'] . '" class="edit-btn">
+                <button class="edit" type="submit" name="user" value="' . $_SESSION['userid'] . '">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-5 17l1.006-4.036 3.106 3.105-4.112.931zm5.16-1.879l-3.202-3.202 5.841-5.919 3.201 3.2-5.84 5.921z"/></svg>
+                </button>
+                </a>';
+            }
+        echo ' <img src="' . $userOnView[0]['image'] . '"></img>
+              <div class="profile-details">
+              <p><b>' . $userOnView[0]['name'] . '</b></p>
+              <p> ' . $userOnView[0]['email'] . ' </p>
+              </div>
+              </div> 
+              <hr>
+              <button class="profile-create">Luo uusi</button>
+            </div>
+            <div class="discussion-page-users">
+            <a href="users.php"><button class="profile-back">Kotisivulle</button></a>
+            ';
+            
             foreach ($posts as $post) {
                 $mysqldate = strtotime($post['date']);
                 $phpdate = date('Y/m/d G:i A', $mysqldate);
@@ -102,44 +178,40 @@ $userlist = $objUser->GetAllUsersButMe();
                     <a href="view.php?room=' . $post['post_id'] . '" style="color: black; display: block;">
                             <div class="room-container"></a>
                                 ';
-                if (($post['user_id']) === $_SESSION['userid']) {
-                    echo '<div class="delete-post">
-                                    <form method="POST">
-                                    <button class="delete-post-btn" name="del"><i class="fa fa-times" aria-hidden="true"></i></div></button>
-                                    </form>
-                                    
-                                    <div class="delete-post">
-                                    <a href="view.php?room=' . $post['post_id'] . '&edit"><button class="edit-post-btn" name="del"><i class="fas fa-edit"></i></div></button></a>
-                                    ';
-                                    }
-                                    echo
-                                    ' 
-                                <a href="view.php?room=' . $post['post_id'] . '" style="color: black; display: block;">
-                                <div class="room">
-                                    <div class="date-and-post">
-                                        <div class="date-users">
-                                        <p class="username-users">' . $post['name'] . '</p>
-                                        <p>' . $phpdate . '</p>
-                                        </div>
-                                        <h1 class="user-post">' . $post['title'] . '</h1>
-                                        </div> 
-                                        <div class="bodytext-users"><p>' . $post['topic'] . '</p></div>
-                                        <div class="post-footer">
-                                        <div class="hashtag">
-                                        ' . $post['category'] . ' </div>
-                                    <div class="post-toolbar-users">
-                                    <i class="far fa-comment-alt"></i>
-                                     <p> ' . $roomAmount . ' kommenttia </p>
-                                    </div>
-                                    </div>
-                                    </div>
-                                </div></a>
-                                ';
+                if (isset($_SESSION['userid']) && ($post['user_id'] === $_SESSION['userid'])) {
+                    echo '<div class="delete-post" data-id="'. $post['post_id'] .'">           
+                    <button class="delete-post-btn" id="delete-post"><i class="fa fa-times" aria-hidden="true"></i></div></button>
+                    <div class="edit-post">
+                    <a href="view.php?room=' . $post['post_id'] . '&edit"><button class="edit-post-btn"><i class="fas fa-edit"></i></div></button></a>
+                    ';
+                    }
+                    echo
+                    ' 
+                <a href="view.php?room=' . $post['post_id'] . '" style="color: black; display: block;">
+                <div class="room">
+                    <div class="date-and-post">
+                        <div class="date-users">
+                        <p class="username-users">' . $post['name'] . '</p>
+                        <p>' . $phpdate . '</p>
+                        </div>
+                        <h1 class="user-post">' . $post['title'] . '</h1>
+                        </div> 
+                        <div class="bodytext-users"><p>' . $post['topic'] . '</p></div>
+                        <div class="post-footer">
+                        <div class="hashtag">
+                        ' . $post['category'] . ' </div>
+                    <div class="post-toolbar-users">
+                    <i class="far fa-comment-alt"></i>
+                        <p> ' . $roomAmount . ' kommenttia </p>
+                    </div>
+                    </div>
+                    </div>
+                </div></a>
+                ';
             }
-        }
-    } 
+     
         ?>
-        <?php if ($_SESSION['userid'] == 0) {
+        <?php if (isset($_SESSION['userid']) && $_SESSION['userid'] == 0) {
             echo "";
         } else {
         ?>
@@ -187,14 +259,6 @@ $userlist = $objUser->GetAllUsersButMe();
                                     </td>
                                     <td>
                                     <button class="delete">Poista käyttäjä</button>
-                                        <?php 
-                                        if (isset($_POST['delete'])) {
-                                            // $user['user_id'];
-                                            // $delete = new Users();
-                                            // $delete->setUserID($user['user_id']); 
-                                            // $delete->DeleteUser();
-                                        } 
-                                        ?>
                                     </td>
                                     </tr>
                                 <?php } ?>
@@ -209,6 +273,7 @@ $userlist = $objUser->GetAllUsersButMe();
 </section>
 
 <script type="text/javascript">
+    $(document).ready(function() {
         $(".delete").click(function(){
             var id = $(this).parents("tr").attr("id");
             if(confirm('Are you sure to remove this record ?'))
@@ -217,14 +282,12 @@ $userlist = $objUser->GetAllUsersButMe();
                 url: 'action.php',
                 type: 'GET',
                 data: {id: id},
-                    success:function(data){
-                    },
                 error: function() {
-                    alert('Something is wrong');
+                    alert('Jokin meni vikaan');
                 },
                 success: function(data) {
                         $("#"+id).remove();
-                        alert("Käyttäjä numero " + id + "poistettiin.");  
+                        alert("Käyttäjä numero " + id + " poistettiin.");  
                         $('.table-wrapper').stop().slideDown("normal", function(){
                         $('.table-wrapper').css('display', 'flex');
                         $(".show-list").hide();
@@ -234,9 +297,27 @@ $userlist = $objUser->GetAllUsersButMe();
             });
             }
         });
-    </script>
-
-
+        $(".delete-post").on('click', function(e){
+            e.preventDefault;
+            var id = $(this).data('id');
+            if(confirm('Haluatko varmasti poistaa julkaisun?'))
+            {
+                $.ajax({
+                url: 'action.php',
+                type: 'GET',
+                data: {deleteid: id},
+                dataType: "html",
+                error: function() {
+                    alert("Jokin meni vikaan");
+                },
+                success: function(data) {
+                    alert("Julkaisu " + id + "poistettiin.");
+                }
+            });
+            }
+        });
+    });
+</script>
 
 <a href="" class="scrollup">
     <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#4895ef" viewBox="0 0 24 24">
@@ -254,12 +335,7 @@ $userlist = $objUser->GetAllUsersButMe();
         });
     });
 </script>
-<script type="text/javascript">
-    function ConfirmDelete() {
-        if (confirm("Delete Account?"))
-            location.href = 'linktoaccountdeletion';
-    }
-</script>
 </body>
-
+<?php
+?>
 </html>
