@@ -3,6 +3,8 @@
 $(document).ready(function() {
 
     var modal = $('.bg-modal');
+
+
     $('.create').click(function() {
         $(modal).css('display', 'flex');
         modal.show();
@@ -11,7 +13,7 @@ $(document).ready(function() {
     $('.modal-close').click(function() {
         modal.hide();
     });
-    
+
 
     $('.profile-create').click(function() {
         $(modal).css('display', 'flex');
@@ -28,24 +30,17 @@ $(document).ready(function() {
     }
 
     if (window.location.href.indexOf("edit") > -1) {
-        $('.modal-content').css({  'height' : '700px',
-                                    'width' : '800px'
-                                });
         $(modal).css('display', 'flex');
         modal.show();
     }
 
-    if (window.location.href.indexOf("edit") > -1) {
-        $('.modal-content').css({  'height' : '700px',
-                                    'width' : '800px'
-                                });
-        $(modal).css('display', 'flex');
-        modal.show();
-    }
+
+
 
     $('.create').click(function() {
-        if($(this).html() == 'Luo uusi') {
-            alert('Jee');
+        if (window.location.href.indexOf("room") > -1) {
+            window.location = 'home.php#newpost';
+            
         }
     });
 
@@ -70,13 +65,23 @@ $( document ).ready(function() {
 
 //----------------------------//
 //navbar ja scroll up funktiot
-$(window).bind('scroll', function () {
-    if ($(window).scrollTop() > 100) {
-        $('.navbar').addClass('fixed');
-    } else {
-        $('.navbar').removeClass('fixed');
-    }
-});
+// $(window).bind('scroll', function () {
+//     if ($(window).scrollTop() > 170) {
+//         $('.navbar').addClass('fixed');
+//     } else {
+//         $('.navbar').removeClass('fixed');
+//     }
+// });
+
+window.onscroll = scrollShowNav;
+function scrollShowNav() {
+   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      document.getElementsByTagName("nav")[0].style.top = "0";
+   } else {
+      document.getElementsByTagName("nav")[0].style.top = "-50px";
+   }
+}
+
 
 
 

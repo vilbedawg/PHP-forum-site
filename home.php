@@ -17,6 +17,20 @@ $onliners = $objUser->GetAllOnliners();
 ?>
 <script>
     $(document).ready(function() {
+        $(".category-item").click(function(){
+                $("#category").val($(this).html());
+                $('#categorylist').hide();
+                $('.category-item').removeClass('background_selected');
+                $(this).addClass('background_selected');
+            });
+
+
+            $(document).on('click', '.list-group-item', function(){
+                $("#category").val($(this).html());
+                $('#categorylist').hide();            
+                $( ".category-item:contains('"+ $(this).html() +"')").addClass('background_selected');  
+            });
+        
         $('#category').keyup(function() {
             var query = $(this).val();
             if(query != '')
@@ -27,7 +41,7 @@ $onliners = $objUser->GetAllOnliners();
                    data: {query:query},
                    success:function(data)
                    {
-                       $('#categorylist').fadeIn();
+                       $('#categorylist').show();
                        $('#categorylist').html(data);
                    },
                    error:function(data)
@@ -36,7 +50,21 @@ $onliners = $objUser->GetAllOnliners();
                         $('#categorylist').html('Jokin meni vikaan');
                    }
                 });
+            } else {
+                $('#categorylist').hide();
             }
+
+            $(".category-item").each(function () {
+                var item = $(this).text();
+                if ($("#category").val().indexOf(item) > -1)
+                {
+                    $(this).removeClass('background_selected');
+                    $(this).addClass('background_selected');
+                } else {
+                    $(this).removeClass('background_selected');
+                }
+            });
+            
         });
     });
 </script>
@@ -48,25 +76,23 @@ $onliners = $objUser->GetAllOnliners();
         <div class="modal-content">
             <div class="modal-close"><i class="fas fa-times"></i>
             </div>
-            <div class="modal-categories">
             <div class="modal-side-bar">
             <div class="profile-status">
                 <h1>Kategoriat</h1>
             </div>
             <div class="modal-categories">
-                <a href="home.php?show=Yleinen">Yleinen</a>
-                <a href="home.php?show=Politiikka">Politiikka</a>
-                <a href="home.php?show=Valokuvaus">Valokuvaus</a>
-                <a href="home.php?show=Videot">Videot</a>
-                <a href="home.php?show=Tarinat">Tarinat</a>
-                <a href="home.php?show=Taide">Taide</a>
-                <a href="home.php?show=Pelit">Pelit</a>
-                <a href="home.php?show=Elokuvat">Elokuvat</a>
-                <a href="home.php?show=Musiikki">Musiikki</a>
-                <a href="home.php?show=Urheilu">Urheilu</a>
-                <a href="home.php?show=Harrastukset">Harrastukset</a>
-                <a href="home.php?show=NSFW" style="color: red;">NSFW</a>
-            </div>
+                <div class="category-item">Yleinen</div>
+                <div class="category-item">Politiikka</div>
+                <div class="category-item">Valokuvaus</div>
+                <div class="category-item">Videot</div>
+                <div class="category-item">Tarinat</div>
+                <div class="category-item">Taide</div>
+                <div class="category-item">Pelit</div>
+                <div class="category-item">Elokuvat</div>
+                <div class="category-item">Musiikki</div>
+                <div class="category-item">Urheilu</div>
+                <div class="category-item">Harrastukset</div>
+                <div class="category-item" style="color: red;">NSFW</div>
             </div>
             </div>
 
@@ -76,9 +102,9 @@ $onliners = $objUser->GetAllOnliners();
                 $title = $_POST['subject'];
                 $topic = $_POST['topic'];
                 $category = $_POST['category'];
+                
                 $post = new PostsContr($title, $topic, $category);
-                $post->PostTopic();
-
+                $i = $post->PostTopic();
                 $objUser->setUserID($_SESSION['userid']);
                 $mostRecent = $objUser->GetMostRecent();
                 header('Location: view.php?room= '. $mostRecent[0]['MAX(post_id)'] .' ');
@@ -103,9 +129,13 @@ $onliners = $objUser->GetAllOnliners();
                         if ($signupCheck == "invalidLength") {
                             echo "<div class='error-texti'><p>Otsikon täytyy olla 3-50 merkkiä</p></div>";
                         }
+                        if ($signupCheck == "invalidCategory") {
+                            echo "<div class='error-texti'><p>Valitse jokin kategoria listalta</p></div>";
+                        }
                     }
                     ?>
                 </div>
+                <div class="form-group-box">
                     <div class="form-group-upper">
                         <label>Otsikko</label>
                     <?php if(isset($_GET['title'])) {
@@ -115,11 +145,13 @@ $onliners = $objUser->GetAllOnliners();
                         } else {
                             echo '<input type="text" name="subject" id="subject"></input>';
                         } ?>
-                   
+                        </div>
+                        <div class="form-group-upper" style="margin-bottom: 0;">
                         <label>Valitse kategoria</label>
-                        <input type="text" name="category" id="category" placeholder=""> 
+                        <input type="text" name="category" id="category"> 
                     </div>
                     <div id="categorylist"></div>
+                    </div>
                     <div class="form-group">
                         <label>Aihe</label>
                         <?php if(isset($_GET['topic'])) {
@@ -140,30 +172,15 @@ $onliners = $objUser->GetAllOnliners();
 
     <!--Modal section loppuu-->
 
-    <div class="home-filler">
-    </div>
-    <div class="navbar">
-        <div class="navbar-menu">
-            <div class="current-user-parent">
-            <a href="users.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
-            </div>
-            <div class="buttons">
-                <?php if(isset($_SESSION['userid'])) {
-                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
-                }else {
-                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
-                }
-                ?>
-            </div>
-        </div>
+   
         <div class="search-toolbar">
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="users.php">Kotisivu</a>
+                <a href="home.php">Kotisivu</a>
                 <?php if(isset($_SESSION['userid'])) { 
                     echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
-                    echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
+                    echo '<a href="manage.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
                     echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
                      } ?>
                 
@@ -177,7 +194,24 @@ $onliners = $objUser->GetAllOnliners();
                  <button class="create">Luo uusi</button>
             
         </div>
+        <div class="home-filler">
     </div>
+    <div class="navbar">
+        <div class="navbar-menu">
+            <div class="current-user-parent">
+            <a href="home.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
+            </div>
+            <div class="buttons">
+                <?php if(isset($_SESSION['userid'])) {
+                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+                }else {
+                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+    
 
    
 
@@ -246,20 +280,19 @@ $onliners = $objUser->GetAllOnliners();
                 <h1>Kategoriat</h1>
             </div>
             <div class="categories">
-                <a href="home.php?show=Yleinen">Yleinen</a>
-                <a href="home.php?show=Politiikka">Politiikka</a>
-                <a href="home.php?show=Valokuvaus">Valokuvaus</a>
-                <a href="home.php?show=Videot">Videot</a>
-                <a href="home.php?show=Tarinat">Tarinat</a>
-                <a href="home.php?show=Taide">Taide</a>
-                <a href="home.php?show=Pelit">Pelit</a>
-                <a href="home.php?show=Elokuvat">Elokuvat</a>
-                <a href="home.php?show=Musiikki">Musiikki</a>
-                <a href="home.php?show=Urheilu">Urheilu</a>
-                <a href="home.php?show=Harrastukset">Harrastukset</a>
-                <a href="home.php?show=NSFW">NSFW</a>
+                <a href="home.php?show=Yleinen" class="category-item">Yleinen</a>
+                <a href="home.php?show=Politiikka" class="category-item">Politiikka</a>
+                <a href="home.php?show=Valokuvaus" class="category-item">Valokuvaus</a>
+                <a href="home.php?show=Videot" class="category-item">Videot</a>
+                <a href="home.php?show=Tarinat" class="category-item">Tarinat</a>
+                <a href="home.php?show=Taide" class="category-item">Taide</a>
+                <a href="home.php?show=Pelit" class="category-item">Pelit</a>
+                <a href="home.php?show=Elokuvat" class="category-item">Elokuvat</a>
+                <a href="home.php?show=Musiikki" class="category-item">Musiikki</a>
+                <a href="home.php?show=Urheilu" class="category-item">Urheilu</a>
+                <a href="home.php?show=Harrastukset" class="category-item">Harrastukset</a>
+                <a href="home.php?show=NSFW" class="category-item">NSFW</a>
             </div>
-            
         </div>
         </div>
         </div>
@@ -295,7 +328,13 @@ $onliners = $objUser->GetAllOnliners();
                         e.preventDefault;
                         var id = $(this).data('id');
                         window.location = "view.php?room="+id;
-                });         
+                });     
+                
+                   var hash = window.location.hash;
+                   if (hash == "#newpost") {
+                    $('.bg-modal').css('display', 'flex');
+                   }
+              
             });
         </script> 
 

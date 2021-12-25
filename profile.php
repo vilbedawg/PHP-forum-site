@@ -1,10 +1,5 @@
 <?php
 session_start();
-// if (!isset($_SESSION["userid"])) {
-//     header("location: users.php?notallowed");
-//     exit();
-// }
-
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
 include_once "includes/header.php";
@@ -24,10 +19,83 @@ $userlist = $objUser->GetAllUsersButMe();
 ?>
 
 <body>
- <!--Modal section-->
- <div class="bg-modal">
+<script>
+    $(document).ready(function() {
+
+        $(".category-item").click(function(){
+                $("#category").val($(this).html());
+                $('#categorylist').hide();
+                $('.category-item').removeClass('background_selected');
+                $(this).addClass('background_selected');
+            });
+
+
+            $(document).on('click', '.list-group-item', function(){
+                $("#category").val($(this).html());
+                $('#categorylist').hide();            
+                $( ".category-item:contains('"+ $(this).html() +"')").addClass('background_selected');  
+            });
+        
+        $('#category').keyup(function() {
+            var query = $(this).val();
+            if(query != '')
+            {
+                $.ajax({
+                   url:"search.php",
+                   method: "POST",
+                   data: {query:query},
+                   success:function(data)
+                   {
+                       $('#categorylist').show();
+                       $('#categorylist').html(data);
+                   },
+                   error:function(data)
+                   {
+                        $('#categorylist').fadeIn();
+                        $('#categorylist').html('Jokin meni vikaan');
+                   }
+                });
+            } else {
+                $('#categorylist').hide();
+            }
+
+            $(".category-item").each(function () {
+                var item = $(this).text();
+                if ($("#category").val().indexOf(item) > -1)
+                {
+                    $(this).removeClass('background_selected');
+                    $(this).addClass('background_selected');
+                } else {
+                    $(this).removeClass('background_selected');
+                }
+            });
+            
+        });
+    });
+</script>
+    <!--Modal section-->
+    <div class="bg-modal">
         <div class="modal-content">
             <div class="modal-close"><i class="fas fa-times"></i>
+            </div>
+            <div class="modal-side-bar">
+            <div class="profile-status">
+                <h1>Kategoriat</h1>
+            </div>
+            <div class="modal-categories">
+                <div class="category-item">Yleinen</div>
+                <div class="category-item">Politiikka</div>
+                <div class="category-item">Valokuvaus</div>
+                <div class="category-item">Videot</div>
+                <div class="category-item">Tarinat</div>
+                <div class="category-item">Taide</div>
+                <div class="category-item">Pelit</div>
+                <div class="category-item">Elokuvat</div>
+                <div class="category-item">Musiikki</div>
+                <div class="category-item">Urheilu</div>
+                <div class="category-item">Harrastukset</div>
+                <div class="category-item" style="color: red;">NSFW</div>
+            </div>
             </div>
 
             <?php
@@ -36,11 +104,10 @@ $userlist = $objUser->GetAllUsersButMe();
                 $title = $_POST['subject'];
                 $topic = $_POST['topic'];
                 $category = $_POST['category'];
-                $post = new PostsContr($title, $topic, $category);
-                $post->PostTopic();
-
                 
-                $objUser->setUserID($_GET['user']);
+                $post = new PostsContr($title, $topic, $category);
+                $i = $post->PostTopic();
+                $objUser->setUserID($_SESSION['userid']);
                 $mostRecent = $objUser->GetMostRecent();
                 header('Location: view.php?room= '. $mostRecent[0]['MAX(post_id)'] .' ');
             }
@@ -64,9 +131,13 @@ $userlist = $objUser->GetAllUsersButMe();
                         if ($signupCheck == "invalidLength") {
                             echo "<div class='error-texti'><p>Otsikon täytyy olla 3-50 merkkiä</p></div>";
                         }
+                        if ($signupCheck == "invalidCategory") {
+                            echo "<div class='error-texti'><p>Valitse jokin kategoria listalta</p></div>";
+                        }
                     }
                     ?>
                 </div>
+                <div class="form-group-box">
                     <div class="form-group-upper">
                         <label>Otsikko</label>
                     <?php if(isset($_GET['title'])) {
@@ -76,24 +147,12 @@ $userlist = $objUser->GetAllUsersButMe();
                         } else {
                             echo '<input type="text" name="subject" id="subject"></input>';
                         } ?>
-                        
-                    </div>
-                    <div class="form-group-middle">
-                        <label>Kategoria</label>
-                        <div class="radio-buttons">
-                            <div class="radio1">
-                                <input type="radio" name="category" id="select1" value="Python"></input>
-                                <label>Python</label>
-                            </div>
-                            <div class="radio2">
-                                <input type="radio" name="category" id="select2" value="PHP"></input>
-                                <label>PHP</label>
-                            </div>
-                            <div class="radio3">
-                                <input type="radio" name="category" id="select3" value="C#"></input>
-                                <label>C#</label>
-                            </div>
                         </div>
+                        <div class="form-group-upper" style="margin-bottom: 0;">
+                        <label>Valitse kategoria</label>
+                        <input type="text" name="category" id="category"> 
+                    </div>
+                    <div id="categorylist"></div>
                     </div>
                     <div class="form-group">
                         <label>Aihe</label>
@@ -118,7 +177,7 @@ $userlist = $objUser->GetAllUsersButMe();
     <div class="navbar-other">
         <div class="navbar-menu">
             <div class="current-user-parent">
-            <a href="users.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
+            <a href="home.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
             </div>
             <div class="buttons">
                 <?php if(isset($_SESSION['userid'])) {
@@ -134,7 +193,7 @@ $userlist = $objUser->GetAllUsersButMe();
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="users.php">Kotisivu</a>
+                <a href="home.php">Kotisivu</a>
                 <?php if(isset($_SESSION['userid'])) { 
                     echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
                     echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
@@ -157,7 +216,7 @@ $userlist = $objUser->GetAllUsersButMe();
         if(isset($_GET['/noexist'])) {
         echo "<div class='noexist-box'>
             <h1>Käyttäjä ei ole olemassa :(</h1>
-            <a href='users.php'><button class='logout'>Takaisin kotisivulle</button></a>
+            <a href='home.php'><button class='logout'>Takaisin kotisivulle</button></a>
             </div>";
         }
             echo
@@ -186,7 +245,7 @@ $userlist = $objUser->GetAllUsersButMe();
               <button class="profile-create">Luo uusi</button>
             </div>
             <div class="discussion-page-users">
-            <a href="users.php" style="width: 100px;"><button class="profile-back" style="width: 100%;">Kotisivulle</button></a>
+            <a href="home.php" style="width: 100px;"><button class="profile-back" style="width: 100%;">Kotisivulle</button></a>
             ';
             
             foreach ($posts as $post) {

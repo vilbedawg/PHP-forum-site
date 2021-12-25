@@ -3,13 +3,12 @@ session_start();
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
 require_once 'controllers/comment-contr.php';
-
-include_once "includes/header.php";
+require_once "controllers/posts-contr.php";
+require_once "includes/header.php";
 
 
 
 // kaikki postaukset 
-
 $roomNum = $_GET['room'];
 
 // Kaikki kommentit
@@ -29,91 +28,178 @@ if (isset($_POST['post'])) {
 $getCurrentRoom = new PostedContent();
 $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
 
+?>
 
+
+
+
+<body>
+<script>
+    $(document).ready(function() {
+
+        $(".category-item").click(function(){
+                $("#category").val($(this).html());
+                $('#categorylist').hide();
+                $('.category-item').removeClass('background_selected');
+                $(this).addClass('background_selected');
+            });
+
+
+            $(document).on('click', '.list-group-item', function(){
+                $("#category").val($(this).html());
+                $('#categorylist').hide();            
+                $( ".category-item:contains('"+ $(this).html() +"')").addClass('background_selected');  
+            });
+        
+        $('#category').keyup(function() {
+            var query = $(this).val();
+            if(query != '')
+            {
+                $.ajax({
+                   url:"search.php",
+                   method: "POST",
+                   data: {query:query},
+                   success:function(data)
+                   {
+                       $('#categorylist').show();
+                       $('#categorylist').html(data);
+                   },
+                   error:function(data)
+                   {
+                        $('#categorylist').fadeIn();
+                        $('#categorylist').html('Jokin meni vikaan');
+                   }
+                });
+            } else {
+                $('#categorylist').hide();
+            }
+
+            $(".category-item").each(function () {
+                var item = $(this).text();
+                if ($("#category").val().indexOf(item) > -1)
+                {
+                    $(this).removeClass('background_selected');
+                    $(this).addClass('background_selected');
+                } else {
+                    $(this).removeClass('background_selected');
+                }
+            });
+            
+        });
+    });
+</script>
+<?php
 if (isset($_GET['edit'])) {
 ?>
 
-    <div class="bg-modal">
+<!--EDIT Modal section-->
+<div class="bg-modal">
         <div class="modal-content">
             <div class="modal-close"><i class="fas fa-times"></i>
             </div>
+            <div class="modal-side-bar">
+            <div class="profile-status">
+                <h1>Kategoriat</h1>
+            </div>
+            <div class="modal-categories">
+                <div class="category-item">Yleinen</div>
+                <div class="category-item">Politiikka</div>
+                <div class="category-item">Valokuvaus</div>
+                <div class="category-item">Videot</div>
+                <div class="category-item">Tarinat</div>
+                <div class="category-item">Taide</div>
+                <div class="category-item">Pelit</div>
+                <div class="category-item">Elokuvat</div>
+                <div class="category-item">Musiikki</div>
+                <div class="category-item">Urheilu</div>
+                <div class="category-item">Harrastukset</div>
+                <div class="category-item" style="color: red;">NSFW</div>
+            </div>
+            </div>
 
             <?php
-            if (isset($_POST['edit'])) {
-                include_once "controllers/posts-contr.php";
+            if (isset($_POST['update'])) {
                 $title = $_POST['subject'];
                 $topic = $_POST['topic'];
                 $category = $_POST['category'];
+
                 $updatePost = new PostsContr($title, $topic, $category);
                 $updatePost->updateTopic($roomNum);
                 header("Location: view.php?room=$roomNum");
             }
 
-          
-
             ?>
-
+            
             <div class="create-form">
                 <form class="form-post" method="POST">
-                    <div class="error-text">
-                        <?php
-                        if (!isset($_GET['error'])) {
-                            echo "";
-                        } else {
-                            $signupCheck = $_GET['error'];
-                            if ($signupCheck == "emptyinput") {
-                                echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
-                            }
+                <div class="error-text">
+                    <?php
+                    if (!isset($_GET['error'])) {
+                        echo "";
+                    } else {
+                        $signupCheck = $_GET['error'];
+                        if ($signupCheck == "emptyinput") {
+                            echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
                         }
-                        ?>
-                    </div>
+                        if ($signupCheck == "invalidTitle") {
+                            echo "<div class='error-texti'><p>Otsikko sisältää ei sallittuja kirjaimia</p></div>";
+                        }
+                        if ($signupCheck == "invalidLength") {
+                            echo "<div class='error-texti'><p>Otsikon täytyy olla 3-50 merkkiä</p></div>";
+                        }
+                        if ($signupCheck == "invalidCategory") {
+                            echo "<div class='error-texti'><p>Valitse jokin kategoria listalta</p></div>";
+                        }
+                    }
+                    ?>
+                </div>
+                <div class="form-group-box">
                     <div class="form-group-upper">
                         <label>Otsikko</label>
-                        <input type="text" name="subject" id="subject" value="<?php echo $currentRoom[0]['title'] ?>"></input>
-                    </div>
-                    <div class="form-group-middle">
-                        <label>Kategoria</label>
-                        <div class="radio-buttons">
-                            <div class="radio1">
-                                <input type="radio" name="category" id="select1" value="Python"></input>
-                                <label>Python</label>
-                            </div>
-                            <div class="radio2">
-                                <input type="radio" name="category" id="select2" value="PHP"></input>
-                                <label>PHP</label>
-                            </div>
-                            <div class="radio3">
-                                <input type="radio" name="category" id="select3" value="C#"></input>
-                                <label>C#</label>
-                            </div>
+                    <?php if(isset($_GET['title'])) {
+                         $formName = $_GET['title'];
+                        
+                        echo '<input type="text" name="subject" id="subject" value="'.$formName.'">';
+                        } else {
+                            echo '<input type="text" name="subject" id="subject" value="'. $currentRoom[0]['title'] .'"></input>';
+                        } ?>
                         </div>
+                        <div class="form-group-upper" style="margin-bottom: 0;">
+                        <label>Valitse kategoria</label>
+                        <input type="text" name="category" id="category" value="<?php echo $currentRoom[0]['category']; ?>"> 
+                    </div>
+                    <div id="categorylist"></div>
                     </div>
                     <div class="form-group">
                         <label>Aihe</label>
-                        <textarea class="tinymce" name="topic" id="topic" rows="7"><?php echo $currentRoom[0]['topic'] ?></textarea>
+                        <?php if(isset($_GET['topic'])) {
+                         $formContent = $_GET['topic'];
+                        echo '<textarea class="tinymce" name="topic" id="topic" rows="7">'. $formContent .'</textarea>';
+                        } else {
+                            echo '<textarea class="tinymce" name="topic" id="topic" rows="7">'. $currentRoom[0]['topic'] .'</textarea>';
+                        } ?>
+                        
                         <div class="post-topic-button">
-                            <input type="submit" name="edit" value="Julkaise" id="post">
+                            <input type="submit" name="update" value="Päivitä">
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+    <!--Modal section loppuu-->
 <?php
 }
 ?>
-
-
-<body>
+   
     <div class="navbar-other">
         <div class="navbar-menu">
             <div class="current-user-parent">
-                <a href="users.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
+                <a href="home.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
             </div>
             <div class="buttons">
-                <?php if (isset($_POST['edit'])) {
-                    echo '<button class="create">Luo uusi</button>';
-                } if(isset($_SESSION['userid'])){
+                <?php if(isset($_SESSION['userid'])){
                     echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
                 } else {
                     echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
@@ -125,7 +211,7 @@ if (isset($_GET['edit'])) {
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="users.php">Kotisivu</a>
+                <a href="home.php">Kotisivu</a>
                 <?php if(isset($_SESSION['userid'])) { 
                     echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
                     echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
@@ -148,19 +234,19 @@ if (isset($_GET['edit'])) {
 
         <div class="all-comments">
             <div class="edit-toolbar">
-            <a href="users.php"><button class="profile-back" style="margin-bottom: 0; margin-left: 10px;">Kotisivulle</button></a>
+            <a href="home.php"><button class="profile-back" style="margin-bottom: 0; margin-left: 10px;">Kotisivulle</button></a>
                 <?php
 
                 if (isset($_GET['edit'])) {
                     echo '<a href="view.php?room=' . $roomNum . '" class="close-view" style="margin-right: 20px;""><i class="fas fa-times"></i></a><a href="view.php?room=' . $roomNum . '" class="edit-toolbar-close">Peruuta</a>';
                 } else {
-                    echo '<a href="users.php" class="close-view"><i class="fas fa-times"></i></a><a href="users.php" class="edit-toolbar-close">Sulje</a>';
+                    echo '<a href="home.php" class="close-view"><i class="fas fa-times"></i></a><a href="home.php" class="edit-toolbar-close">Sulje</a>';
                 }
                 ?>
 
             </div>
             <div class="room-header">
-                <div class='date-and-users'>
+                <div class='date-and-post'>
                     <div class='date'>
                         
                     <a href="profile.php?user=<?php echo $currentRoom[0]['user_id'] ?> " class="username"><?php echo $currentRoom[0]['name'] ?> </a>
@@ -266,8 +352,11 @@ if (isset($_GET['edit'])) {
     <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
     <script src="js/app.js"></script>
     <script src="js/dropdown.js"></script>  
-
-    <script type="text/javascript">
+    
+    
+    <script>
+    $(document).ready(function() {
+        //delete post
         $("#delete-post").click(function(){
             var id = $(this).data('id');
             if(confirm('Haluatko varmasti poistaa julkaisun?'))
@@ -282,12 +371,13 @@ if (isset($_GET['edit'])) {
                 },
                 success: function(data) {
                     alert("Julkaisu " + id + "poistettiin.");
-                    window.location = "users.php"; 
+                    window.location = "home.php"; 
                 }
             });
             }
         });
-    </script>                                
+    });
+</script>
 
     <script>
         $(document).ready(function() {
@@ -295,13 +385,11 @@ if (isset($_GET['edit'])) {
                 "textAlign": "center",
                 "margin-bottom": "10px"
             });
-        });
-    </script>
-    <script>
-        setTimeout(function() {
+            setTimeout(function() {
             $('.success-texti').fadeOut(500, function() {
                 $(this).remove();
             });
         }, 2000);
+        });
     </script>
 </body>

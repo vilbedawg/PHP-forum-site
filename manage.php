@@ -6,7 +6,7 @@ if (!isset($_SESSION["userid"])) {
 }
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
-include_once "includes/header.php";
+require_once "includes/header.php";
 
 $objUser = new Users;
 $objUser->setUserID($_GET['user']);
@@ -14,21 +14,166 @@ $userOnView = $objUser->GetViewedUser();
 
 
 
-
 ?>
-<body>
+<script>
+    $(document).ready(function() {
+        $(".category-item").click(function(){
+                $("#category").val($(this).html());
+                $('#categorylist').hide();
+                $('.category-item').removeClass('background_selected');
+                $(this).addClass('background_selected');
+            });
 
-<div class="bg-modal">
-    <div class="modal-content">
-        <div class="modal-close"><i class="fas fa-times"></i>
+
+            $(document).on('click', '.list-group-item', function(){
+                $("#category").val($(this).html());
+                $('#categorylist').hide();            
+                $( ".category-item:contains('"+ $(this).html() +"')").addClass('background_selected');  
+            });
+        
+        $('#category').keyup(function() {
+            var query = $(this).val();
+            if(query != '')
+            {
+                $.ajax({
+                   url:"search.php",
+                   method: "POST",
+                   data: {query:query},
+                   success:function(data)
+                   {
+                       $('#categorylist').show();
+                       $('#categorylist').html(data);
+                   },
+                   error:function(data)
+                   {
+                        $('#categorylist').fadeIn();
+                        $('#categorylist').html('Jokin meni vikaan');
+                   }
+                });
+            } else {
+                $('#categorylist').hide();
+            }
+
+            $(".category-item").each(function () {
+                var item = $(this).text();
+                if ($("#category").val().indexOf(item) > -1)
+                {
+                    $(this).removeClass('background_selected');
+                    $(this).addClass('background_selected');
+                } else {
+                    $(this).removeClass('background_selected');
+                }
+            });
+            
+        });
+    });
+</script>
+
+<body>
+  <!--Modal section-->
+  <div class="bg-modal">
+        <div class="modal-content">
+            <div class="modal-close"><i class="fas fa-times"></i>
+            </div>
+            <div class="modal-side-bar">
+            <div class="profile-status">
+                <h1>Kategoriat</h1>
+            </div>
+            <div class="modal-categories">
+                <div class="category-item">Yleinen</div>
+                <div class="category-item">Politiikka</div>
+                <div class="category-item">Valokuvaus</div>
+                <div class="category-item">Videot</div>
+                <div class="category-item">Tarinat</div>
+                <div class="category-item">Taide</div>
+                <div class="category-item">Pelit</div>
+                <div class="category-item">Elokuvat</div>
+                <div class="category-item">Musiikki</div>
+                <div class="category-item">Urheilu</div>
+                <div class="category-item">Harrastukset</div>
+                <div class="category-item" style="color: red;">NSFW</div>
+            </div>
+            </div>
+
+            <?php
+            if (isset($_POST['post'])) {
+                include_once "controllers/posts-contr.php";
+                $title = $_POST['subject'];
+                $topic = $_POST['topic'];
+                $category = $_POST['category'];
+                
+                $post = new PostsContr($title, $topic, $category);
+                $i = $post->PostTopic();
+                $objUser->setUserID($_SESSION['userid']);
+                $mostRecent = $objUser->GetMostRecent();
+                header('Location: view.php?room= '. $mostRecent[0]['MAX(post_id)'] .' ');
+            }
+
+            ?>
+            
+            <div class="create-form">
+                <form class="form-post" method="POST">
+                <div class="error-text">
+                    <?php
+                    if (!isset($_GET['error'])) {
+                        echo "";
+                    } else {
+                        $signupCheck = $_GET['error'];
+                        if ($signupCheck == "emptyinput") {
+                            echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
+                        }
+                        if ($signupCheck == "invalidTitle") {
+                            echo "<div class='error-texti'><p>Otsikko sisältää ei sallittuja kirjaimia</p></div>";
+                        }
+                        if ($signupCheck == "invalidLength") {
+                            echo "<div class='error-texti'><p>Otsikon täytyy olla 3-50 merkkiä</p></div>";
+                        }
+                        if ($signupCheck == "invalidCategory") {
+                            echo "<div class='error-texti'><p>Valitse jokin kategoria listalta</p></div>";
+                        }
+                    }
+                    ?>
+                </div>
+                <div class="form-group-box">
+                    <div class="form-group-upper">
+                        <label>Otsikko</label>
+                    <?php if(isset($_GET['title'])) {
+                         $formName = $_GET['title'];
+                        
+                        echo '<input type="text" name="subject" id="subject" value="'.$formName.'">';
+                        } else {
+                            echo '<input type="text" name="subject" id="subject"></input>';
+                        } ?>
+                        </div>
+                        <div class="form-group-upper" style="margin-bottom: 0;">
+                        <label>Valitse kategoria</label>
+                        <input type="text" name="category" id="category"> 
+                    </div>
+                    <div id="categorylist"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Aihe</label>
+                        <?php if(isset($_GET['topic'])) {
+                         $formContent = $_GET['topic'];
+                        echo '<textarea class="tinymce" name="topic" id="topic" rows="7">'. $formContent .'</textarea>';
+                        } else {
+                            echo '<textarea class="tinymce" name="topic" id="topic" rows="7"></textarea>';
+                        } ?>
+                        
+                        <div class="post-topic-button">
+                            <input type="submit" name="post" value="Julkaise" id="post">
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
+    <!--Modal section loppuu-->
 <div class="navbar-other">
         <div class="navbar-menu">
             <div class="current-user-parent">
-            <a href="users.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
+            <a href="home.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
             </div>
             <div class="buttons">
                 <?php if (isset($_POST['edit'])) {
@@ -41,10 +186,10 @@ $userOnView = $objUser->GetViewedUser();
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="users.php">Kotisivu</a>
+                <a href="home.php">Kotisivu</a>
                 <?php if(isset($_SESSION['userid'])) { 
                     echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
-                    echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
+                    echo '<a href="manage.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
                     echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
                      } ?>
                 
@@ -198,5 +343,9 @@ $userOnView = $objUser->GetViewedUser();
         });
     });    
 </script>
+<script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
+<script type="text/javascript" src="tinymce\tinymce.min.js"></script>
+<script type="text/javascript" src="tinymce\init-tinymce.js"></script>
 <script src="js/dropdown.js"></script>  
+<script src="js/app.js"></script>
 </body>

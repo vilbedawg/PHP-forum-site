@@ -16,7 +16,7 @@ class commentContr extends post
         $roomNum = $_GET['room'];
         if($this->emptyInput() == false)
         {
-            header("location: view.php?room=$roomNum&error=emptyinput");
+            header("location: view.php?room=$roomNum&error=empty");
             exit();
         }
         $this->PostCommentToDB($this->content, $this->roomNum);
