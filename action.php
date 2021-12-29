@@ -23,9 +23,6 @@ if(isset($_GET['deleteid'])) {
     exit();
 }
 
-
-
-
 //käyttäjänimen päivitys
 if(isset($_POST['name'])) { 
     $checkName = new Signup();
@@ -65,7 +62,7 @@ if(isset($_POST['name'])) {
 }
 
 
-
+//sähköpostin päivitys
 if(isset($_POST['email'])){
     $email = $_POST['email'];
     $user = new Signup();
@@ -96,8 +93,9 @@ if(isset($_POST['email'])){
 }
 
 
+
 //profiilikuvan lataaminen
-if(is_array($_FILES)){
+if(isset($_FILES)){
     $imageFolder = "images/profile_images/";
   
     $user->setUserID($_POST['id']);
@@ -167,5 +165,5 @@ if(is_array($_FILES)){
         $arr = array('error' => $error, 'img' => $currentImg);
         echo json_encode($arr);
     }  
-}
+} 
 ?>

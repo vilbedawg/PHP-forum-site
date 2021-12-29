@@ -15,59 +15,6 @@ $onliners = $objUser->GetAllOnliners();
 
 
 ?>
-<script>
-    $(document).ready(function() {
-        $(".category-item").click(function(){
-                $("#category").val($(this).html());
-                $('#categorylist').hide();
-                $('.category-item').removeClass('background_selected');
-                $(this).addClass('background_selected');
-            });
-
-
-            $(document).on('click', '.list-group-item', function(){
-                $("#category").val($(this).html());
-                $('#categorylist').hide();            
-                $( ".category-item:contains('"+ $(this).html() +"')").addClass('background_selected');  
-            });
-        
-        $('#category').keyup(function() {
-            var query = $(this).val();
-            if(query != '')
-            {
-                $.ajax({
-                   url:"search.php",
-                   method: "POST",
-                   data: {query:query},
-                   success:function(data)
-                   {
-                       $('#categorylist').show();
-                       $('#categorylist').html(data);
-                   },
-                   error:function(data)
-                   {
-                        $('#categorylist').fadeIn();
-                        $('#categorylist').html('Jokin meni vikaan');
-                   }
-                });
-            } else {
-                $('#categorylist').hide();
-            }
-
-            $(".category-item").each(function () {
-                var item = $(this).text();
-                if ($("#category").val().indexOf(item) > -1)
-                {
-                    $(this).removeClass('background_selected');
-                    $(this).addClass('background_selected');
-                } else {
-                    $(this).removeClass('background_selected');
-                }
-            });
-            
-        });
-    });
-</script>
 <body>
 
 
@@ -175,9 +122,9 @@ $onliners = $objUser->GetAllOnliners();
    
         <div class="search-toolbar">
         <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
+            <button onclick="myFunction()" class="dropbtn"><div class="drop-icons"><i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i>Koti</div> <i class="fas fa-angle-down"></i></button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="home.php">Kotisivu</a>
+                <a href="home.php?show=Etusivu">Etusivu</a>
                 <?php if(isset($_SESSION['userid'])) { 
                     echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
                     echo '<a href="manage.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
@@ -187,19 +134,8 @@ $onliners = $objUser->GetAllOnliners();
             </div>
             </div>
             <div class="search">
-                <button><i class="fas fa-search"></i></button>
-                <input type="text" placeholder="Etsi julkaisu...">
-            </div>
-            
-                 <button class="create">Luo uusi</button>
-            
-        </div>
-        <div class="home-filler">
-    </div>
-    <div class="navbar">
-        <div class="navbar-menu">
-            <div class="current-user-parent">
-            <a href="home.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
+                <input type="text" id="post-search" placeholder="Etsi julkaisu...">
+                <div class="post-category-list"></div>
             </div>
             <div class="buttons">
                 <?php if(isset($_SESSION['userid'])) {
@@ -209,29 +145,82 @@ $onliners = $objUser->GetAllOnliners();
                 }
                 ?>
             </div>
+            
         </div>
+        <div class="home-filler">
     </div>
+    
+        <div class="navbar-menu">
+        <?php if(isset($_GET['show'])) {
+                echo '<p class="current-user-parent">'. $_GET['show'] .'</p>';
+            } else {
+                echo '<p class="current-user-parent">Koti</p>';
+            } ?>
+        </div>
+        <div class="navbar-menu-hidden">
+            <?php if(isset($_GET['show'])) {
+                echo '<p class="current-user-parent">'. $_GET['show'] .'</p>';
+            } else {
+                echo '<p class="current-user-parent">Koti</p>';
+            } ?>
+        </div>
+ 
     
 
    
 
     <div class="home">                        
         <div class="discussion-page">
-
+            <div class="sort-table">
+                <a href="home.php?show=<?php echo $_GET['show']; ?>&sort=New"><i class="fas fa-long-arrow-alt-up"></i> Uusin</a>
+                <a href="home.php?show=<?php echo $_GET['show']; ?>&sort=Old"><i class="fas fa-long-arrow-alt-down"></i> Vanhin</a>
+                <a href="home.php?show=<?php echo $_GET['show']; ?>&sort=Popular">Suosituin</a>
+        </div>
             <?php
             $postObj = new PostedContent;
-            if(isset($_GET['show'])) {
-                $posts = $postObj->getAllPostsByCategory($_GET['show']);
-            } else {
+    
+
+            if(isset($_GET['sort'], $_GET['show']) && $_GET['show'] !=='Etusivu') 
+            {
+                if($_GET['sort'] == 'New') {
+                    $posts = $postObj->getAllPostsByCategory($_GET['show']);
+                }
+                else if($_GET['sort'] == 'Old') {
+                    $posts = $postObj->getCategoryPostsOldest($_GET['show']);
+                }
+                else if($_GET['sort'] == 'Popular') {
+                    echo 'Popular';
+                }
+            } 
+
+            else if(isset($_GET['sort'],  $_GET['show']) && $_GET['show'] == 'Etusivu')
+            {
+                
+                if($_GET['sort'] == 'New') {
+                    $posts = $postObj->getAllPostsByNewest();
+                }
+                else if($_GET['sort'] == 'Old') {
+                    $posts = $postObj->getAllPostsByOldest();
+                }
+                else if($_GET['sort'] == 'Popular') {
+                    echo 'Popular';
+                }
+            }
+            else
+            {
                 $posts = $postObj->getAllPostsByNewest();
             }
             
+           
             foreach ($posts as $post) {
                 $mysqldate = strtotime($post['date']);
-                $phpdate = date('Y/m/d G:i A', $mysqldate);
+                $phpdate = date('d/m/Y G:i A', $mysqldate);
                 $comments = $postObj->getAllComments($post['post_id']);
-                $roomAmount = count($comments);
                 echo "<div class='room-container' data-id='". $post['post_id'] ."'>
+                    <div class='like-buttons'>
+                    <i class='fas fa-long-arrow-alt-up'></i>
+                    <i class='fas fa-long-arrow-alt-down'></i>
+                    </div>
                         <div class='room'>
                                 <div class='date-and-post'>
                                     <div class='date-users'>
@@ -246,7 +235,7 @@ $onliners = $objUser->GetAllOnliners();
                                     " . $post['category'] . " </div>
                                     <div class='post-toolbar-users'>
                                     <i class='far fa-comment-alt'></i>
-                                     <p> ". $roomAmount ." kommenttia </p>
+                                     <p> ". $comments['comment_amount'] ." kommenttia </p>
                                     </div>
                                     </div>
                                     </div>
@@ -280,24 +269,25 @@ $onliners = $objUser->GetAllOnliners();
                 <h1>Kategoriat</h1>
             </div>
             <div class="categories">
-                <a href="home.php?show=Yleinen" class="category-item">Yleinen</a>
-                <a href="home.php?show=Politiikka" class="category-item">Politiikka</a>
-                <a href="home.php?show=Valokuvaus" class="category-item">Valokuvaus</a>
-                <a href="home.php?show=Videot" class="category-item">Videot</a>
-                <a href="home.php?show=Tarinat" class="category-item">Tarinat</a>
-                <a href="home.php?show=Taide" class="category-item">Taide</a>
-                <a href="home.php?show=Pelit" class="category-item">Pelit</a>
-                <a href="home.php?show=Elokuvat" class="category-item">Elokuvat</a>
-                <a href="home.php?show=Musiikki" class="category-item">Musiikki</a>
-                <a href="home.php?show=Urheilu" class="category-item">Urheilu</a>
-                <a href="home.php?show=Harrastukset" class="category-item">Harrastukset</a>
-                <a href="home.php?show=NSFW" class="category-item">NSFW</a>
+                <a href="home.php?sort=New&show=Etusivu" class="category-item" style="font-weight: 500;">Kaikki</a>
+                <a href="home.php?sort=New&show=Yleinen" class="category-item">Yleinen</a>
+                <a href="home.php?sort=New&show=Politiikka" class="category-item">Politiikka</a>
+                <a href="home.php?sort=New&show=Valokuvaus" class="category-item">Valokuvaus</a>
+                <a href="home.php?sort=New&show=Videot" class="category-item">Videot</a>
+                <a href="home.php?sort=New&show=Tarinat" class="category-item">Tarinat</a>
+                <a href="home.php?sort=New&show=Taide" class="category-item">Taide</a>
+                <a href="home.php?sort=New&show=Pelit" class="category-item">Pelit</a>
+                <a href="home.php?sort=New&show=Elokuvat" class="category-item">Elokuvat</a>
+                <a href="home.php?sort=New&show=Musiikki" class="category-item">Musiikki</a>
+                <a href="home.php?sort=New&show=Urheilu" class="category-item">Urheilu</a>
+                <a href="home.php?sort=New&show=Harrastukset" class="category-item">Harrastukset</a>
+                <a href="home.php?sort=New&show=NSFW" class="category-item">NSFW</a>
             </div>
         </div>
         </div>
         </div>
         <a href="" class="scrollup">
-        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#4895ef" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#333" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z"/></svg>
         </a>
 
         <script src="js/app.js"></script>

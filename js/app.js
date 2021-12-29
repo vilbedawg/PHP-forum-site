@@ -12,6 +12,7 @@ $(document).ready(function() {
     
     $('.modal-close').click(function() {
         modal.hide();
+        $(".category-item").removeClass("background_selected");
     });
 
 
@@ -20,9 +21,6 @@ $(document).ready(function() {
         modal.show();
     });
     
-    $('.modal-close').click(function() {
-        modal.hide();
-    });
 
     if (window.location.href.indexOf("error") > -1) {
         $(modal).css('display', 'flex');
@@ -34,18 +32,120 @@ $(document).ready(function() {
         modal.show();
     }
 
-
-
-
     $('.create').click(function() {
         if (window.location.href.indexOf("room") > -1) {
-            window.location = 'home.php#newpost';
-            
+            window.location = 'home.php?show=Etusivu#newpost';
         }
     });
 
 });
 
+
+
+//JULKAISUJEN HAKU 
+$(document).on('click', function(e) {
+    var searchbar = $(this).find('#post-search');
+    if($(e.target).is('.search')){
+        $(searchbar).focus();
+        $(searchbar).keyup(function() {
+            var postquery = $(this).val();
+                if(postquery != '')
+                {
+                    $.ajax({
+                       url:"search.php",
+                       method: "POST",
+                       data: {
+                           postquery:postquery
+                        },
+                       success:function(data)
+                       {
+                           $('.post-category-list').show();
+                           $('.post-category-list').html(data);
+                           $('.post-row').on('click', function() {
+                              var postNum = $(this).attr('id');
+                            window.location = "view.php?room="+postNum;
+                           });
+                       },
+                       error:function()
+                       {
+                            $('.post-category-list').fadeIn();
+                            $('.post-category-list').html('Jokin meni vikaan');
+                       }
+                    });
+                } else {
+                    $('.post-category-list').hide();
+                }
+                
+            });
+    }else {
+        $(searchbar).val('');
+        $('.post-category-list').hide();
+    }
+    
+});
+
+
+
+//KATEGORIA HAKU
+$(".category-item").click(function () {
+  $("#category").val($(this).html());
+  $("#categorylist").hide();
+  $(".category-item").removeClass("background_selected");
+  $(this).addClass("background_selected");
+});
+
+$(document).on("click", ".list-group-item", function () {
+  $("#category").val($(this).html());
+  $("#categorylist").hide();
+  $(".category-item:contains('" + $(this).html() + "')").addClass(
+    "background_selected"
+  );
+});
+
+$("#category").keyup(function () {
+  var query = $(this).val();
+  if (query != "") {
+    $.ajax({
+      url: "search.php",
+      method: "POST",
+      data: { query: query },
+      success: function (data) {
+        $("#categorylist").show();
+        $("#categorylist").html(data);
+      },
+      error: function () {
+        $("#categorylist").fadeIn();
+        $("#categorylist").html("Jokin meni vikaan");
+      },
+    });
+  } else {
+    $("#categorylist").hide();
+  }
+
+  $(".category-item").each(function () {
+    var item = $(this).text();
+    if ($("#category").val().indexOf(item) > -1) {
+      $(this).removeClass("background_selected");
+      $(this).addClass("background_selected");
+    } else {
+      $(this).removeClass("background_selected");
+    }
+  });
+});
+
+$.ajax({
+  url: "search.php",
+  method: "POST",
+  data: { query: query },
+  success: function (data) {
+    $("#categorylist").show();
+    $("#categorylist").html(data);
+  },
+  error: function (data) {
+    $("#categorylist").fadeIn();
+    $("#categorylist").html("Jokin meni vikaan");
+  },
+});
 
 
 //----------------------------//
@@ -65,22 +165,31 @@ $( document ).ready(function() {
 
 //----------------------------//
 //navbar ja scroll up funktiot
-// $(window).bind('scroll', function () {
-//     if ($(window).scrollTop() > 170) {
-//         $('.navbar').addClass('fixed');
-//     } else {
-//         $('.navbar').removeClass('fixed');
-//     }
-// });
+$(window).bind('scroll', function () {
+    if ($(window).scrollTop() > 240) {
+        $('.current-user-parent').stop().animate({
+            "font-size": "24px"
+          }, 100);
+        $('.navbar-menu-hidden').stop().slideDown(200);
+        $('.navbar-menu-hidden').css({'display' : 'flex',
+                                    'position' : 'fixed',
+                                    'top' : '40px'
+                                });
+        $('.navbar-menu').hide();
+        
+      
+        
+    } else if ($(window).scrollTop() < 100) {
+        $('.navbar-menu-hidden').stop().hide();   
+        $('.navbar-menu').show();
+        $('.current-user-parent').stop().animate({
+            "font-size": "38px"
+          }, 100);
+                            
+    }
+});
 
-window.onscroll = scrollShowNav;
-function scrollShowNav() {
-   if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-      document.getElementsByTagName("nav")[0].style.top = "0";
-   } else {
-      document.getElementsByTagName("nav")[0].style.top = "-50px";
-   }
-}
+
 
 
 
@@ -118,11 +227,6 @@ $(window).scroll(function() {
         $('.edit').css('display', 'none');
     }
 });
-
-
-
-
-
 
 
 

@@ -15,60 +15,6 @@ $userOnView = $objUser->GetViewedUser();
 
 
 ?>
-<script>
-    $(document).ready(function() {
-        $(".category-item").click(function(){
-                $("#category").val($(this).html());
-                $('#categorylist').hide();
-                $('.category-item').removeClass('background_selected');
-                $(this).addClass('background_selected');
-            });
-
-
-            $(document).on('click', '.list-group-item', function(){
-                $("#category").val($(this).html());
-                $('#categorylist').hide();            
-                $( ".category-item:contains('"+ $(this).html() +"')").addClass('background_selected');  
-            });
-        
-        $('#category').keyup(function() {
-            var query = $(this).val();
-            if(query != '')
-            {
-                $.ajax({
-                   url:"search.php",
-                   method: "POST",
-                   data: {query:query},
-                   success:function(data)
-                   {
-                       $('#categorylist').show();
-                       $('#categorylist').html(data);
-                   },
-                   error:function(data)
-                   {
-                        $('#categorylist').fadeIn();
-                        $('#categorylist').html('Jokin meni vikaan');
-                   }
-                });
-            } else {
-                $('#categorylist').hide();
-            }
-
-            $(".category-item").each(function () {
-                var item = $(this).text();
-                if ($("#category").val().indexOf(item) > -1)
-                {
-                    $(this).removeClass('background_selected');
-                    $(this).addClass('background_selected');
-                } else {
-                    $(this).removeClass('background_selected');
-                }
-            });
-            
-        });
-    });
-</script>
-
 <body>
   <!--Modal section-->
   <div class="bg-modal">
@@ -170,23 +116,11 @@ $userOnView = $objUser->GetViewedUser();
     </div>
 
     <!--Modal section loppuu-->
-<div class="navbar-other">
-        <div class="navbar-menu">
-            <div class="current-user-parent">
-            <a href="home.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
-            </div>
-            <div class="buttons">
-                <?php if (isset($_POST['edit'])) {
-                    echo '<button class="create">Luo uusi</button>';
-                } ?>
-                <a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>
-            </div>
-        </div>
-        <div class="search-toolbar">
+    <div class="search-toolbar">
         <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
+            <button onclick="myFunction()" class="dropbtn"><div class="drop-icons"><i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i> Koti</div> <i class="fas fa-angle-down"></i></button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="home.php">Kotisivu</a>
+                <a href="home.php?show=Etusivu">Etusivu</a>
                 <?php if(isset($_SESSION['userid'])) { 
                     echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
                     echo '<a href="manage.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
@@ -196,14 +130,19 @@ $userOnView = $objUser->GetViewedUser();
             </div>
             </div>
             <div class="search">
-                <button><i class="fas fa-search"></i></button>
-                <input type="text" placeholder="Etsi julkaisu...">
+                <input type="text" id="post-search" placeholder="Etsi julkaisu...">
+                <div class="post-category-list"></div>
+            </div>
+            <div class="buttons">
+                <?php if(isset($_SESSION['userid'])) {
+                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+                }else {
+                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                }
+                ?>
             </div>
             
-                 <button class="create">Luo uusi</button>
-            
         </div>
-    </div>
 <div class="user-edit-page">
 
     <div class="user-managment">

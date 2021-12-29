@@ -13,7 +13,7 @@ if(isset($_POST['submit'])) {
 
     
     $login->loginUser();
-    header("location: home.php");
+    header("location: home.php?show=Etusivu");
   
 }
 

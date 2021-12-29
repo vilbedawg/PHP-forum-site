@@ -19,60 +19,6 @@ $userlist = $objUser->GetAllUsersButMe();
 ?>
 
 <body>
-<script>
-    $(document).ready(function() {
-
-        $(".category-item").click(function(){
-                $("#category").val($(this).html());
-                $('#categorylist').hide();
-                $('.category-item').removeClass('background_selected');
-                $(this).addClass('background_selected');
-            });
-
-
-            $(document).on('click', '.list-group-item', function(){
-                $("#category").val($(this).html());
-                $('#categorylist').hide();            
-                $( ".category-item:contains('"+ $(this).html() +"')").addClass('background_selected');  
-            });
-        
-        $('#category').keyup(function() {
-            var query = $(this).val();
-            if(query != '')
-            {
-                $.ajax({
-                   url:"search.php",
-                   method: "POST",
-                   data: {query:query},
-                   success:function(data)
-                   {
-                       $('#categorylist').show();
-                       $('#categorylist').html(data);
-                   },
-                   error:function(data)
-                   {
-                        $('#categorylist').fadeIn();
-                        $('#categorylist').html('Jokin meni vikaan');
-                   }
-                });
-            } else {
-                $('#categorylist').hide();
-            }
-
-            $(".category-item").each(function () {
-                var item = $(this).text();
-                if ($("#category").val().indexOf(item) > -1)
-                {
-                    $(this).removeClass('background_selected');
-                    $(this).addClass('background_selected');
-                } else {
-                    $(this).removeClass('background_selected');
-                }
-            });
-            
-        });
-    });
-</script>
     <!--Modal section-->
     <div class="bg-modal">
         <div class="modal-content">
@@ -173,50 +119,39 @@ $userlist = $objUser->GetAllUsersButMe();
     </div>
 
     <!--Modal section loppuu-->
-
-    <div class="navbar-other">
-        <div class="navbar-menu">
-            <div class="current-user-parent">
-            <a href="home.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
-            </div>
-            <div class="buttons">
-                <?php if(isset($_SESSION['userid'])) {
-                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
-                } else {
-                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
-                }
-                
-                ?>
-            </div>
-        </div>
-        <div class="search-toolbar">
+    <div class="search-toolbar">
         <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
+            <button onclick="myFunction()" class="dropbtn"><div class="drop-icons"><i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i> Koti</div> <i class="fas fa-angle-down"></i></button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="home.php">Kotisivu</a>
+                <a href="home.php?show=Etusivu">Etusivu</a>
                 <?php if(isset($_SESSION['userid'])) { 
                     echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
-                    echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
+                    echo '<a href="manage.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
                     echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
                      } ?>
                 
             </div>
             </div>
             <div class="search">
-                <button><i class="fas fa-search"></i></button>
-                <input type="text" placeholder="Etsi julkaisu...">
+                <input type="text" id="post-search" placeholder="Etsi julkaisu...">
+                <div class="post-category-list"></div>
+            </div>
+            <div class="buttons">
+                <?php if(isset($_SESSION['userid'])) {
+                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+                }else {
+                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                }
+                ?>
             </div>
             
-                 <button class="create">Luo uusi</button>
-            
         </div>
-    </div>
     <div class="home-other">
         <?php
         if(isset($_GET['/noexist'])) {
         echo "<div class='noexist-box'>
             <h1>Käyttäjä ei ole olemassa :(</h1>
-            <a href='home.php'><button class='logout'>Takaisin kotisivulle</button></a>
+            <a href='home.php?show=Etusivu'><button class='logout'>Takaisin kotisivulle</button></a>
             </div>";
         }
             echo
@@ -229,7 +164,7 @@ $userlist = $objUser->GetAllUsersButMe();
             <div class="profile-managment">';
 
             if (isset($_SESSION['userid']) && $_SESSION['userid'] == $userOnView[0]['user_id']) {
-                echo '<a href="edit.php?user=' . $_SESSION['userid'] . '" class="edit-btn">
+                echo '<a href="manage.php?user=' . $_SESSION['userid'] . '" class="edit-btn">
                 <button class="edit" type="submit" name="user" value="' . $_SESSION['userid'] . '">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-5 17l1.006-4.036 3.106 3.105-4.112.931zm5.16-1.879l-3.202-3.202 5.841-5.919 3.201 3.2-5.84 5.921z"/></svg>
                 </button>
@@ -245,14 +180,16 @@ $userlist = $objUser->GetAllUsersButMe();
               <button class="profile-create">Luo uusi</button>
             </div>
             <div class="discussion-page-users">
-            <a href="home.php" style="width: 100px;"><button class="profile-back" style="width: 100%;">Kotisivulle</button></a>
+            <a href="home.php?show=Etusivu" style="width: 100px;"><button class="profile-back" style="width: 100%;">Etusivulle</button></a>
             ';
-            
+
+            if (count($posts) == 0 ) {
+                echo '<div class="room" style="justify-content: center;" ><h1>Ei julkaisuja</h1></div>';
+            }
             foreach ($posts as $post) {
                 $mysqldate = strtotime($post['date']);
-                $phpdate = date('Y/m/d G:i A', $mysqldate);
+                $phpdate = date('d/m/Y G:i A', $mysqldate);
                 $comments = $postObj->getAllComments($post['post_id']);
-                $roomAmount = count($comments);
                 echo
                 '<div class="room-container" data-id="'. $post['post_id'] .'">';             
                 if (isset($_SESSION['userid']) && ($post['user_id'] === $_SESSION['userid'])) {
@@ -278,7 +215,7 @@ $userlist = $objUser->GetAllUsersButMe();
                         ' . $post['category'] . ' </div>
                     <div class="post-toolbar-users">
                     <i class="far fa-comment-alt"></i>
-                        <p> ' . $roomAmount . ' kommenttia </p>
+                        <p> ' . $comments['comment_amount'] . ' kommenttia </p>
                     </div>
                     </div>
                     </div>
@@ -287,7 +224,7 @@ $userlist = $objUser->GetAllUsersButMe();
             }
      
         ?>
-        <?php if (isset($_SESSION['userid']) && $_SESSION['userid'] == 0) {
+        <?php if (isset($_SESSION['userid']) && $_SESSION['userid'] !== 0) {
             echo "";
         } else {
         ?>
@@ -398,7 +335,7 @@ $userlist = $objUser->GetAllUsersButMe();
 </script>
 
 <a href="" class="scrollup">
-    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#4895ef" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#333" viewBox="0 0 24 24">
         <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z" />
     </svg>
 </a>

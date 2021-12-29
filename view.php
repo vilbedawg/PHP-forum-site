@@ -13,17 +13,7 @@ $roomNum = $_GET['room'];
 
 // Kaikki kommentit
 $objPost = new PostedContent();
-$allPosts = $objPost->getAllComments($roomNum);
-
-
-//Postauksen koodi
-if (isset($_POST['post'])) {
-    $content = $_POST['content'];
-    $post = new commentContr($content, $roomNum);
-    $post->PostComment();
-    header("Location: ?room=$roomNum&error=none");
-}
-
+$NumOfComments = $objPost->getAllComments($roomNum);
 
 $getCurrentRoom = new PostedContent();
 $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
@@ -34,60 +24,6 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
 
 
 <body>
-<script>
-    $(document).ready(function() {
-
-        $(".category-item").click(function(){
-                $("#category").val($(this).html());
-                $('#categorylist').hide();
-                $('.category-item').removeClass('background_selected');
-                $(this).addClass('background_selected');
-            });
-
-
-            $(document).on('click', '.list-group-item', function(){
-                $("#category").val($(this).html());
-                $('#categorylist').hide();            
-                $( ".category-item:contains('"+ $(this).html() +"')").addClass('background_selected');  
-            });
-        
-        $('#category').keyup(function() {
-            var query = $(this).val();
-            if(query != '')
-            {
-                $.ajax({
-                   url:"search.php",
-                   method: "POST",
-                   data: {query:query},
-                   success:function(data)
-                   {
-                       $('#categorylist').show();
-                       $('#categorylist').html(data);
-                   },
-                   error:function(data)
-                   {
-                        $('#categorylist').fadeIn();
-                        $('#categorylist').html('Jokin meni vikaan');
-                   }
-                });
-            } else {
-                $('#categorylist').hide();
-            }
-
-            $(".category-item").each(function () {
-                var item = $(this).text();
-                if ($("#category").val().indexOf(item) > -1)
-                {
-                    $(this).removeClass('background_selected');
-                    $(this).addClass('background_selected');
-                } else {
-                    $(this).removeClass('background_selected');
-                }
-            });
-            
-        });
-    });
-</script>
 <?php
 if (isset($_GET['edit'])) {
 ?>
@@ -193,54 +129,42 @@ if (isset($_GET['edit'])) {
 }
 ?>
    
-    <div class="navbar-other">
-        <div class="navbar-menu">
-            <div class="current-user-parent">
-                <a href="home.php"><h1>Rawr <i class="fa fa-rocket" aria-hidden="true" style="transform: rotate(45deg);"></i></h1></a>
-            </div>
-            <div class="buttons">
-                <?php if(isset($_SESSION['userid'])){
-                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
-                } else {
-                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
-                }?>
-                
-            </div>
-        </div>
-        <div class="search-toolbar">
+   <div class="search-toolbar">
         <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn"><i class="fa fa-home" aria-hidden="true"></i> Koti</button>
+            <button onclick="myFunction()" class="dropbtn"><div class="drop-icons"><i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i> Koti</div> <i class="fas fa-angle-down"></i></button>
             <div id="myDropdown" class="dropdown-content">
-                <a href="home.php">Kotisivu</a>
+                <a href="home.php?show=Etusivu">Etusivu</a>
                 <?php if(isset($_SESSION['userid'])) { 
                     echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
-                    echo '<a href="edit.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
+                    echo '<a href="manage.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
                     echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
                      } ?>
                 
             </div>
             </div>
             <div class="search">
-                <button><i class="fas fa-search"></i></button>
-                <input type="text" placeholder="Etsi julkaisu...">
+                <input type="text" id="post-search" placeholder="Etsi julkaisu...">
+                <div class="post-category-list"></div>
+            </div>
+            <div class="buttons">
+                <?php if(isset($_SESSION['userid'])) {
+                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+                }else {
+                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                }
+                ?>
             </div>
             
-                 <button class="create">Luo uusi</button>
-            
         </div>
-    </div>
-    <div class="all-content">
-
-
         <div class="all-comments">
             <div class="edit-toolbar">
-            <a href="home.php"><button class="profile-back" style="margin-bottom: 0; margin-left: 10px;">Kotisivulle</button></a>
+            <a href="home.php?show=Etusivu"><button class="profile-back" style="margin-bottom: 0; margin-left: 10px;">Etusivulle</button></a>
                 <?php
 
                 if (isset($_GET['edit'])) {
                     echo '<a href="view.php?room=' . $roomNum . '" class="close-view" style="margin-right: 20px;""><i class="fas fa-times"></i></a><a href="view.php?room=' . $roomNum . '" class="edit-toolbar-close">Peruuta</a>';
                 } else {
-                    echo '<a href="home.php" class="close-view"><i class="fas fa-times"></i></a><a href="home.php" class="edit-toolbar-close">Sulje</a>';
+                    echo '<a href="home.php?show=Etusivu" class="close-view"><i class="fas fa-times"></i></a><a href="home.php?show=Etusivu" class="edit-toolbar-close">Sulje</a>';
                 }
                 ?>
 
@@ -248,12 +172,9 @@ if (isset($_GET['edit'])) {
             <div class="room-header">
                 <div class='date-and-post'>
                     <div class='date'>
-                        
                     <a href="profile.php?user=<?php echo $currentRoom[0]['user_id'] ?> " class="username"><?php echo $currentRoom[0]['name'] ?> </a>
-                        
-                       
                         <p><?php $mysqldate = strtotime($currentRoom[0]['date']);
-                            $phpdate = date('Y/m/d G:i A', $mysqldate);
+                            $phpdate = date('d/m/Y G:i A', $mysqldate);
                             echo $phpdate; ?>
                         </p>
                     </div>
@@ -262,8 +183,8 @@ if (isset($_GET['edit'])) {
                 </div>
                 <div class='post-toolbar'>
                     <i class='far fa-comment-alt'></i>
-                    <?php $commentAmount = count($allPosts);
-                    echo "<p>" . $commentAmount . " kommenttia</p>";
+                    <?php $commentAmount = $NumOfComments['comment_amount'];
+                    echo "<p class='comment-amount'>" . $NumOfComments['comment_amount'] . " kommenttia</p>";
                     if(isset($_SESSION['userid']) && $_SESSION['userid'] == $currentRoom[0]['user_id']) {
                         echo "<a href='view.php?room=" . $roomNum . "&edit' class='post-toolbar-editpost'>Muokkaa</a>";
                         echo "<button class='post-toolbar-editpost' id='delete-post' data-id='". $roomNum ."'>Poista julkaisu</button>";
@@ -275,31 +196,19 @@ if (isset($_GET['edit'])) {
 
 
             <div class="discussion-section">
-
                 <div class="comment-form">
-                    <form class="form-post" method="POST">
-                        <?php
-                        if (!isset($_GET['error'])) {
-                            echo "";
-                        } else {
-                            $signupCheck = $_GET['error'];
-
-                            if ($signupCheck == "emptyinput") {
-                                echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
-                            }
-                            if ($signupCheck == "none") {
-                                echo "<div class='success-texti'><p>Kommenttisi on julkaistu</p></div>";
-                            }
-                        }
-                        ?>
+                    <form class="form-post" method="POST" id="comment">
+                    <div class="error-txt">
+                    </div>
                          <?php if (isset($_SESSION['userid'])) {
                         echo '
                         <div class="form-group">
                             <a id="comment"></a>
+                            <input type="hidden" id="post_id" value="'. $roomNum .'">
                             <textarea class="tinymce" name="content" id="topic" placeholder="Kerro ajatuksistasi..." rows="7" style="z-index: 99999;"></textarea>
                         </div>
                         <div class="post-comment">
-                            <input type="submit" name="post" value="Kommentoi" id="post">
+                        <input type="submit" name="post" value="Kommentoi" id="post">
                         </div> ';
                         } else {
                             echo '<p>kirjaudu sisään jotta voit kommentoida</p>';
@@ -310,41 +219,21 @@ if (isset($_GET['edit'])) {
                 <span class="post-hr" id="#commentsection">
                     <hr>
                 </span>
+                <div class="comment-container" style="width: 90%;">
+                
                 <?php
-                if (count($allPosts) == 0) {
+                if ($NumOfComments['comment_amount'] == 0) {
                     echo "<div class='empty-room'><p>Täällä on tyhjää</p></div>";
-                } else {
-                    foreach ($allPosts as $key => $userPost) {
-                        $mysqldate = strtotime($userPost['date']);
-                        $phpdate = date('Y/m/d G:i A', $mysqldate);
-                        echo "<div class='discussion-wrapper'>
-                 <div class='discussion'>
-                  <div class='date'>
-                   <p class='username'>" . $userPost['name'] . "</p>
-                   <p>" . $phpdate . "</p>
-                  </div>
-                  <div class='bodytext'><p>" . $userPost['content'] . "</p> </div>
-                  </div>
-                  <div class='discussion-reply'>
-                   <div class='date'>
-                    <p class='username'>Vilho Luoma</p>
-                    <p>1.1.2022</p>
-                    </div>
-                     <div class='bodytext'> <p> Testi </p> </div>
-                  </div>
-                </div>";
-                    }
-                }
-
+                } 
                 ?>
             </div>
+            </div>
             <a href="" class="scrollup">
-                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#4895ef" viewBox="0 0 24 24">
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#333" viewBox="0 0 24 24">
                     <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z" />
                 </svg>
             </a>
         </div>
-    </div>
 
 
     <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
@@ -354,30 +243,194 @@ if (isset($_GET['edit'])) {
     <script src="js/dropdown.js"></script>  
     
     
-    <script>
+<script>
+$(document).ready(function() {
+    
+    //delete post
+    $("#delete-post").click(function(){
+        var id = $(this).data('id');
+        if(confirm('Haluatko varmasti poistaa julkaisun?'))
+        {
+            $.ajax({
+            url: 'action.php',
+            type: 'GET',
+            data: {deleteid: id},
+            dataType: "html",
+            error: function() {
+                alert("Jokin meni vikaan");
+            },
+            success: function(data) {
+                alert("Julkaisu " + id + "poistettiin.");
+                window.location = "home.php?show=Etusivu"; 
+            }
+        });
+        }
+    });
+});
+</script>
+<script>
     $(document).ready(function() {
-        //delete post
-        $("#delete-post").click(function(){
-            var id = $(this).data('id');
-            if(confirm('Haluatko varmasti poistaa julkaisun?'))
-            {
+        
+            var amount = <?php echo $commentAmount; ?>;
+            var post_id = $('#post_id').val();
+            loadComments();
+            function loadComments() {
                 $.ajax({
-                url: 'action.php',
-                type: 'GET',
-                data: {deleteid: id},
-                dataType: "html",
+                    url: 'search.php',
+                    type: 'POST',
+                    data: {post_id: post_id},
+                    dataType: "text",
+                    error: function() {
+                        alert("Jokin meni vikaan");
+                    },
+                    success: function(data) {
+                        $('.comment-container').prepend(data);
+                        
+                        tinymce.remove();
+                        initializeTinyMce('textarea');
+                    }
+                });
+            }
+
+            
+        $(document).on('submit', '#comment',  function(e) {
+            e.preventDefault();
+            var comment = $('#topic').val();
+            if(comment.length > 10) {
+                $.ajax({
+                url: "search.php",
+                method: "POST",
+                data: { 
+                comment: comment,
+                id : post_id,
+                },
+                dataType: "text",
+                success: function(message) {
+                    amount++;
+                    $('.error-txt').stop().show();
+                    $('.error-txt').html(message);
+                    $('.error-txt').stop().delay( 1000 ).fadeOut("fast");
+                    $('.comment-amount').html(amount + ' kommenttia');
+                    $("#comment")[0].reset();
+                    $('.comment-container').children().remove(); 
+                    loadComments();   
+                },
+                error: function(message) {
+                    alert('jokin meni pieleen');
+                }
+            });
+            } else {
+                $('.error-txt').stop().show();
+                $('.error-txt').stop().html('<div class="error-texti"><p>Yli 3 merkkiä</p></div>');
+                $('.error-txt').stop().delay( 1000 ).fadeOut("fast");
+            }
+        });
+
+        $(document).on('submit', '.form-reply',  function(e) {
+            e.preventDefault();
+            var comment_id = $(this).find('#comment_id').val();
+            var reply = $(this).find('#reply-topic').val();
+            if(reply.length > 10) {
+                $.ajax({
+                url: "search.php",
+                method: "POST",
+                data: { 
+                reply: reply,
+                id : post_id,
+                comment_id : comment_id,
+                },
+                dataType: "text",
+                success: function(message) {
+                    amount++;
+                    message = $.parseJSON(message);
+                    $('.error-txt').stop().show();
+                    $('.error-txt').html(message.output);
+                    $('.error-txt').stop().delay( 1000 ).fadeOut("fast");
+                    $('.comment-amount').html(amount + ' kommenttia');
+                    $(e.target)[0].reset();
+                    $('.form-reply').hide();
+                    $(e.target).parent().find('.reply-section').append(message.newComment)
+                    $(e.target).prev().children('.reply').text('Vastaa');
+                    console.log($(e.target).parent());
+
+                },
+                error: function(message) {
+                    alert('jokin meni pieleen');
+                }
+            });
+            } else {
+                $('.error-txt').stop().show();
+                $('.error-txt').stop().html('<div class="error-texti"><p>Yli 3 merkkiä</p></div>');
+                $('.error-txt').stop().delay( 1000 ).fadeOut("fast");
+            }
+        });
+
+        $(document).on('click', '.reply-show', function(e){
+            e.preventDefault();
+            var parent_comment = $(this).attr('data-id');
+            var replySection =  $(e.target).closest('.discussion-wrapper').find('.reply-section');
+            $(e.target).toggleClass('showComments');
+            if ($(this).hasClass('showComments')){
+                $(this).text('Piilota');
+                replySection.show();
+            } else {
+                $(this).text('Näytä kommentit');
+                replySection.hide();
+            }
+            $.ajax({
+                    url: 'search.php',
+                    type: 'POST',
+                    data: {parent: parent_comment},
+                    dataType: "text",
+                    error: function() {
+                        alert("Jokin meni vikaan");
+                    },
+                    success: function(data) {
+                        replySection.html(data);
+                    }
+                });
+        });
+
+        $(document).on('click', '.delete-comment', (e) => {
+            var id = $(e.target).attr('data-id');
+            $.ajax({
+                url: 'search.php',
+                type: 'POST',
+                data: {
+                    delete_comment: id,
+                    isReply: isReply
+                },
+                dataType: 'text',
                 error: function() {
                     alert("Jokin meni vikaan");
                 },
                 success: function(data) {
-                    alert("Julkaisu " + id + "poistettiin.");
-                    window.location = "home.php"; 
+                    if (isReply) {
+                        $(e.target).parent().remove();
+                    } else {
+                        $(e.target).closest('.discussion-wrapper').remove();
+                    }
                 }
             });
+        });
+
+           
+        $(document).on('click', '.reply', (e) => {
+            var data = e.target.getAttribute("data-id");
+            $this = $(this).find('.form-reply.'+data+'');
+            $(e.target).toggleClass('replyField');
+            if ($(e.target).hasClass('replyField')){
+                $(e.target).text('Peruuta');
+                $( $this).show();
+            } else {
+                $(e.target).text('Vastaa');
+                $( $this).hide();
             }
         });
     });
+    
 </script>
+
 
     <script>
         $(document).ready(function() {

@@ -16,9 +16,10 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    top: 200px;
+    top: 90px;
     width: 100%;
 }
+
 
 
 .navbar-other {
@@ -28,22 +29,12 @@ body {
     z-index: 99998;
 }
 
-.navbar {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 110px;
-    width: 100%;
-    z-index: 5;
-    height: 80px;
-}
 
 
 .fixed {
-    position:fixed;
-    top: 40px; 
-    transition: all 1s cubic-bezier(.53,0,.57,1.01);
-    transform: translateZ(0);
-   
+    font-size: 24px;
+    transition: .1s cubic-bezier(.53,0,.57,1.01);
+    height: 50px;
 }
 
 
@@ -52,26 +43,47 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 20px;
+    font-size: 38px;
+    font-weight: 500;
     width: 100%;
-    height: 100%;
-    background-color: rgb(31, 31, 31);
+    background-color: #fff;
+    position: relative;
+    height: 100px;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.navbar-menu-hidden {
+    justify-content: space-between;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 500;
+    width: 100%;  
+    background-color: #fff;
+    position: sticky;
+    top: 0px;
+    height: 60px;
+    display: none;
+    z-index: 999;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
 .current-user-parent{
     margin-left: 10%;
-    
+    display: flex;
+    align-items: center;
 }
 
 .current-user-parent h1 {
-    color: #fff;
+    color: black;
+    font-size: 24px;
+    white-space: nowrap;
+    margin-left: 10px;
 }
 
 .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30%;
 }
 
 .create-form {
@@ -94,10 +106,12 @@ body {
     height: 40px;
     background-color: #fff;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
-    z-index: 99;
+    z-index: 99999;
     position: fixed;
+    top: 0;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
 
@@ -108,6 +122,11 @@ body {
     align-items: center;
     position: relative;
     cursor: pointer;
+    height: 40px;
+}
+
+#post-search:focus {
+    background-color: #CEE3F8;
 }
 
 
@@ -119,7 +138,7 @@ body {
 .search input {
     position: absolute;
     height: 35px;
-    width: calc(100% - 50px);
+    width: 100%;
     border: 1px solid #ccc;
     padding: 0 13px;
     font-size: 16px;
@@ -127,7 +146,6 @@ body {
     outline: none;
     opacity: .8;
     pointer-events: none;
-    margin-left: 48px;
     background-color: #ccc;
     
 }
@@ -177,11 +195,10 @@ body {
 
 
 .home-filler{
-    height: 70px;
-    background-color: #293241;
+    height: 140px;
     width: 100%;
-    position: absolute;
-    top: 40px;
+    z-index: 9998;
+    background-color: rgb(24, 24, 24);
 }
 
 .form-post {
@@ -192,6 +209,52 @@ body {
     height: 100%;
     width: 100%;
 }
+
+.form-reply {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+.comment-buttons {
+    display: flex;
+}
+
+.reply, .reply-show, .delete-comment, .reply-to-reply{
+    color: #4895ef;
+    cursor: pointer;
+    width: 55px;
+    border: 0;
+    background-color: transparent;
+    text-align: left;
+    margin-left: 15px;
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    height: 25px;
+}
+
+.reply-to-reply {
+    margin-left: 3px;
+    margin-top: 5px;
+}
+
+.delete-comment{
+    color: #aaa;
+}
+
+.delete-comment:hover {
+    color: #333;
+}
+
+.reply:hover, .reply-show:hover {
+    color: #333;
+}
+
+
 
 
 .form-group-box {
@@ -319,6 +382,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     padding: 7px 15px;
+    margin-top: 20px;
 }
 
 .ck {
@@ -438,15 +502,13 @@ body {
     padding: 5rem 1rem;
     width: 100%;
     position: absolute;
-    top: 300px;
+    top: 200px;
 }
 
 .home-other {
     display: flex;
-    justify-content: flex-end;
-    padding-top: 1rem;
     width: 100%;
-    margin-top: 200px;
+    margin-top: 100px;
 }
 
 .discussion-page{
@@ -505,9 +567,6 @@ body {
       background-color: #fff;
       padding: 20px;
       width: 800px;
-  }
-  .room-header p{
-    margin-left: 5px;
   }
    
 
@@ -655,7 +714,7 @@ body {
      height: 50px;
      background-color: #F8F8F8;
      position: fixed;
-     top: 150px;
+     top: 40px;
      z-index: 995;
      color: black;
      display: flex;
@@ -741,7 +800,7 @@ body {
 }
 
 .username {
-    margin-right: 10px;
+    margin-right: 5px;
     font-weight: 500;
     font-size: 12px;
     color: black;
@@ -767,28 +826,33 @@ body {
     border-bottom-right-radius: 5px;
 }
 
+
 .discussion-wrapper {
     width: 90%;
-    border-left: 2px solid #333;
+    /* border-left: 2px solid #333; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-bottom: 50px;
-    padding: 10px;
+    padding: 20px;
+    border-radius: 2px;
+    margin-left: 20px;
 }
 
 
 .discussion {
-    width: 70%;
+    width: 100%;
     margin-left: 10px;
+    position: relative;
 }
 
 .discussion-reply {
     width: 70%;
-    margin-left: 15px;
-    margin-top: 20px;
+    margin-left: 45px;
+    margin-top: 10px;
     padding: 10px;
+    position: relative;
 }
+
 
 .bodytext p{
     word-wrap: break-word;
@@ -1116,14 +1180,47 @@ body {
         top: 154px;
         z-index: 100;
     }
+
+    .post-category-list {
+        width: 100%;
+        padding: 5px;
+        background-color: #fff;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        display: none;
+        position: absolute;
+        top: 40px;
+        z-index: 100;
+        max-height: 500px;
+        overflow-y: scroll;
+    }
     .list-group-item {
         padding: 5px;
         background-color: #CEE3F8;
         cursor: pointer;
+        border-radius: 5px;
+    }
+    .post-row {
+        padding: 10px;
+        border: 1px solid #ccc;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-radius: 5px;
+        margin: 2px;
+    }
+    .post-row-1 {
+        font-weight: 500;
     }
 
-    .list-group-item:hover {
-            background-color: #869bb3;
+    .post-row-3 {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .list-group-item:hover, .post-row:hover {
+            background-color: #f1f1f1;
     }
 
     .category-item:nth-child(odd) {
@@ -1182,7 +1279,6 @@ body {
     .side-bar {
         margin-top: 50px;
         width: 300px;
-        height: 500px;
         background-color: #fff;
         border-radius: 5px;
         position: relative;
@@ -1301,7 +1397,6 @@ body {
 .profile-managment img {
     width: 70px;
     height: 70px;
-    border: 1px solid #aaa;
     border-radius: 50%;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
@@ -1309,6 +1404,34 @@ body {
     margin-left: 10px;
     align-self: flex-start;
 }
+
+
+.comment-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    overflow:hidden;
+    margin-left: 10px;
+    position: absolute;
+    left: -70px;
+    top: 0;
+}
+
+.reply-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    overflow:hidden;
+    margin-left: 10px;
+    position: absolute;
+    left: -40px;
+    top: 5px;
+}
+
 
 
 
@@ -1319,6 +1442,7 @@ body {
     height: 50px;
     justify-content: space-between;
     align-self: flex-start;
+    padding-left: 10px;
 }
 
 .user-details {
@@ -1533,9 +1657,9 @@ body {
 .user-list-body {
     width: 100%;
     position: fixed;
-    top: 0;
+    bottom: 0;
     right: 0;
-    z-index: 998;
+    z-index: 999 !important;
 }
 
 .every-user {
@@ -1652,12 +1776,11 @@ body {
     justify-content: center;
     position: relative;
     background-color: #324960;
-    margin-top: 150px;
 }
 
 .edit-page-close {
     position: absolute;
-    top: 20px;
+    top: 60px;
     right: 30px;
     font-size: 24px;
     cursor: pointer;
@@ -1715,17 +1838,31 @@ body {
 }
 
 .dropbtn {
-    background-color: #3498DB;
-    color: white;
-    padding: 10px;
+    background-color: #fff;
+    color: black;
+    font-weight: 500;
+    padding: 8px;
     font-size: 16px;
     border: none;
     cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
+
+  .drop-icons {
+    pointer-events: none;
+  }
+
+  .dropbtn i {
+    pointer-events: none;
+  }
+
   
   .dropbtn:hover, .dropbtn:focus {
-    background-color: #2980B9;
+    border-color: #333;
   }
   
   .dropdown {
@@ -1737,7 +1874,7 @@ body {
     display: none;
     position: absolute;
     background-color: #f1f1f1;
-    min-width: 160px;
+    min-width: 200px;
     overflow: auto;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -1758,3 +1895,43 @@ body {
   .new-mark {
       position: absolute;
   }
+
+  .sort-table {
+      width: 100%;
+      height: 60px;
+      background-color: #fff;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .sort-table a {
+        padding: 10px;
+        font-weight: 500;
+        color: black;
+    }
+
+    .sort-table a:first-child {
+        margin-left: 20px;
+    }
+   
+    .like-buttons {
+        position: absolute;
+        top: 5px;
+        z-index: 2;
+        left: 5px;
+        display: flex;
+        flex-direction: column;
+        height: 100px;
+        justify-content: space-around;
+        font-size: 33px;
+        color: #333;
+    }
+
+    .like-buttons i:hover {
+        color: #ee6c4d;
+        cursor: pointer;
+    }
+
+

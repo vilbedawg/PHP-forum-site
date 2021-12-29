@@ -62,19 +62,34 @@ class PostedContent extends Dbh
         return $allPostsNewest;
     }
 
-
-    public function getAllComments($roomNum){
-        $roomNum = str_split($roomNum, 100);
-        $stmt = $this->connect()->prepare("SELECT * FROM comments WHERE post_id = ? ORDER BY date ASC;");
-        if(!$stmt->execute($roomNum)){
+    public function getCategoryPostsOldest($category){
+        $category = str_split($category, 100);
+        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date ASC;");
+        if(!$stmt->execute($category)) {
             $stmt = null;
             header("location: login.php?error=stmtfailed");
             exit();
         }
-        $allComments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $allComments;
+        $allPostsNewest = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $allPostsNewest;
     }
 
+
+    public function getAllComments($roomNum){
+        $stmt = $this->connect()->prepare("SELECT 
+                                            (SELECT COUNT(*) FROM comments WHERE post_id = ?) 
+                                            + 
+                                            (SELECT COUNT(*) FROM replies WHERE post_id = ?)
+                                            as comment_amount
+                                            ");
+        if(!$stmt->execute(array($roomNum, $roomNum))){
+            $stmt = null;
+            header("location: login.php?error=stmtfailed");
+            exit();
+        }
+        $allComments = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $allComments;
+    }
 
 }
 
