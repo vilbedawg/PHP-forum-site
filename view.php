@@ -170,7 +170,7 @@ if (isset($_GET['edit'])) {
 
             </div>
             <div class="room-header">
-                <div class='date-and-post'>
+                <div class='date-and-post' style='margin-left: 0;'>
                     <div class='date'>
                     <a href="profile.php?user=<?php echo $currentRoom[0]['user_id'] ?> " class="username"><?php echo $currentRoom[0]['name'] ?> </a>
                         <p><?php $mysqldate = strtotime($currentRoom[0]['date']);
@@ -179,7 +179,7 @@ if (isset($_GET['edit'])) {
                         </p>
                     </div>
                     <h1 class='room-header-h1'><?php echo $currentRoom[0]['title']; ?></h1>
-                    <p class='room-header-p'> <?php echo $currentRoom[0]['topic']; ?> </p>
+                    <div class='room-header-p'><?php echo $currentRoom[0]['topic']; ?> </div>
                 </div>
                 <div class='post-toolbar'>
                     <i class='far fa-comment-alt'></i>
@@ -248,11 +248,24 @@ $(document).ready(function() {
     
     //delete post
     $("#delete-post").click(function(){
-        var id = $(this).data('id');
+        var str = $('#post-content');
         if(confirm('Haluatko varmasti poistaa julkaisun?'))
         {
+        $('.room-header-p').children().find("img").each(function(){ 
+           var imgName = $(this).attr('src');
             $.ajax({
-            url: 'action.php',
+                url: 'search.php',
+                type: 'POST',
+                data: {imgName: imgName},
+                dataType: "html",
+                success: function(data) {
+                }
+            });
+        });
+
+        var id = $(this).data('id');
+            $.ajax({
+            url: 'search.php',
             type: 'GET',
             data: {deleteid: id},
             dataType: "html",
@@ -351,7 +364,6 @@ $(document).ready(function() {
                     $('.form-reply').hide();
                     $(e.target).parent().find('.reply-section').append(message.newComment)
                     $(e.target).prev().children('.reply').text('Vastaa');
-                    console.log($(e.target).parent());
 
                 },
                 error: function(message) {

@@ -201,9 +201,27 @@ $userOnView = $objUser->GetViewedUser();
                     </div>
                 </div>
             </form>
+            <form method="post" id="passwordChange" style="display:none; padding-top: 53px;">
+                <div class="field input">
+                    <label>Uusi salasana</label>
+                    <div class="form-group" style="padding-bottom: 15px; position: relative;">
+                    <i class="fas fa-eye"></i>
+                    <input type="password" name="password" id="Password" style="border-radius: 5px;">
+                    </div>
+                    <label>Uusi salasana uudelleen</label>
+                    <div class="form-group">
+                    <input type="password" name="passwordRepeat" id="PasswordVerify" >
+                    <input type="hidden" name="userid" value="<?php echo $userOnView[0]['user_id']; ?>">
+                    <div class="field button">
+                    <input type="submit" name="submitPassword" value="Päivitä" id="submitPassword">
+                    </div>
+                    </div>
+                </div>
+            </form>
                 </div>
                 <!-- // -->
-                <button class="logout" style="margin-right: 0; font-size: 16px;">Vaihda salasana</button>
+            <button class="logout" id="pwdEdit" style="margin-right: 0; font-size: 16px;">Vaihda salasana</button>
+
             </div>
         </div>
     </div>
@@ -211,12 +229,12 @@ $userOnView = $objUser->GetViewedUser();
 
 <script type="text/javascript">
     $(document).ready(function() {
+        var id = $('#userid').val();
         $("#nameSubmit").on('submit', function(e) {
             e.preventDefault();
             var name = $('#name').val();
-            var id = $('#userid').val();
             $.ajax({
-                url: "action.php",
+                url: "search.php",
                 method: "POST",
                 data: { 
                 name: name,
@@ -237,9 +255,8 @@ $userOnView = $objUser->GetViewedUser();
         $("#emailSubmit").on('submit', function(e) {
             e.preventDefault();
             var email = $('#email').val();
-            var id = $('#userid').val();
             $.ajax({
-                url: "action.php",
+                url: "search.php",
                 method: "POST",
                 data: { 
                 email: email,
@@ -280,11 +297,52 @@ $userOnView = $objUser->GetViewedUser();
             });  
             $("#imagesubmit")[0].reset();
         });
+
+        $('#pwdEdit').on('click', function(e) {
+            var pwdForm = $('#passwordChange');
+            $(e.target).toggleClass('pwdFormShow');
+            if ($(this).hasClass('pwdFormShow')){
+                $(this).text('Peruuta');
+                $(pwdForm).show();
+            } else {
+                $(this).text('Vaihda Salasana');
+                $(pwdForm).hide();
+            }
+        });
+
+
+        $("#passwordChange").on('submit', function(e){
+            e.preventDefault();
+            var pass = $('#Password').val();
+            var pass2 = $('#PasswordVerify').val();
+            if(pass != pass2) {
+                $('.error-txt').stop().show();
+                $('.error-txt').stop().html('<div class="error-texti"><p>Salasana ei täsmää</p></div>');
+                $('.error-txt').stop().delay( 1000 ).fadeOut("fast");
+                $('#Password, #PasswordVerify').css({'border-color' : 'red'});
+            } else {
+                $.ajax({
+                    url: 'search.php',
+                    type: 'POST',
+                    data: {
+                        password: pass,
+                        id: id
+                    },
+                    dataType: "text",
+                    error: function() {
+                        alert("Jokin meni vikaan");
+                    },
+                    success: function(data) {
+                        console.log(pass);
+                    }
+                });
+            }
+         });
+
     });    
 </script>
 <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
 <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
 <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
-<script src="js/dropdown.js"></script>  
 <script src="js/app.js"></script>
 </body>

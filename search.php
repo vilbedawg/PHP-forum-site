@@ -3,7 +3,117 @@ session_start();
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
 $user = new Users();
+$error = '';
 date_default_timezone_set('Europe/Helsinki');
+
+
+
+//Käyttäjän poistaminen
+if(isset($_GET['id'])) {
+  $id = $_GET['id'];
+  $stmt = $user->connect()->prepare('DELETE FROM users WHERE user_id = :id;');
+  $stmt->execute(array(':id' => $id));
+  exit();
+} 
+
+//julkaisun poistaminen
+if(isset($_GET['deleteid'])) {
+  $id = $_GET['deleteid'];
+  $stmt = $user->connect()->prepare('DELETE FROM posts WHERE post_id = :id;');
+  $stmt->execute(array(':id' => $id));
+  exit();
+}
+
+if(isset($_POST['imgName'])) {
+$postImage = $_POST['imgName'];
+
+  if(file_exists($postImage)){
+    unlink($postImage);
+  } else {
+    echo 'Tiedostoa ei löytynyt';
+  }
+
+}
+
+
+//käyttäjänimen päivitys
+if(isset($_POST['name'])) { 
+  $checkName = new Signup();
+  
+  if(!$checkName->checkUser($_POST['name'])) {
+      $error = "<div class='error-texti'><p>Käyttäjänimi jo käytössä</p></div>";
+  }
+
+  //ainakin yksi non-whitespace kirjain
+  else if(!preg_match('/^[-a-zA-Z0-9-()]+(\s+[-a-zA-Z0-9-()]+)*$/', $_POST['name'])) {
+      $error = "<div class='error-texti'><p>Väärän muotoinen nimi</p></div>";
+  }
+
+  //3-14 merkkiä
+  else if(strlen($_POST['name']) <= 2 || (strlen($_POST['name'])) >= 15) {
+      $error = "<div class='error-texti'><p>Käyttäjänimen tulee sisältää 3-14 merkkiä</p></div>";
+  }
+
+  if($error == ""){
+      //jos error = false
+      $stmt =  $user->connect()->prepare("UPDATE users SET name = :name WHERE user_id = :user_id");
+          $stmt->bindParam(':name', $_POST['name']);
+          $stmt->bindParam(':user_id', $_POST['id'], PDO::PARAM_INT);
+          if(!$stmt->execute())  {
+              $stmt = null;
+              $error = "<div class='error-texti'><p>STMT FAILED</p></div>";
+              exit();
+          } 
+      $error = "<div class='success-texti'><p>Tallennettu</p></div>";
+      echo $error;
+
+  } else{
+      //Jos error == true
+      echo $error;
+  }
+  exit();  
+}
+
+
+//sähköpostin päivitys
+if(isset($_POST['email'])){
+  $email = $_POST['email'];
+  $user = new Signup();
+  if(!$user->checkEmail($email)) {
+      $error = "<div class='error-texti'><p>Sähköposti käytössä</p></div>";
+  }
+
+  else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $error = "<div class='error-texti'><p>Väärän muotoinen sähköposti</p></div>";
+  }
+
+  if($error == "") {
+      $stmt =  $user->connect()->prepare("UPDATE users SET email = :email WHERE user_id = :user_id");
+          $stmt->bindParam(':email', $_POST['email']);
+          $stmt->bindParam(':user_id', $_POST['id'], PDO::PARAM_INT);
+          if(!$stmt->execute())  {
+              $stmt = null;
+              $error = "<div class='error-texti'><p>STMT FAILED</p></div>";
+              exit();
+          }
+      $error = "<div class='success-texti'><p>Tallennettu</p></div>";
+      echo $error;
+  } else {
+      //Jos error == true
+      echo $error;
+  }
+  exit();
+}
+
+
+//salasanan päivitys
+if(isset($_POST['password'])) {
+  $pwd = $_POST['password'];
+  echo $pwd;
+}
+
+
+
 
 //Hakukentän täyttö
 if (isset($_POST['query'])) {
@@ -21,6 +131,9 @@ if (isset($_POST['query'])) {
   }
 }
 
+
+
+//Julkaisujen haku
 if (isset($_POST['postquery'])) {
   $inpText = $_POST['postquery'];
   $output = '';

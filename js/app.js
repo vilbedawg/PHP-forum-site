@@ -133,19 +133,6 @@ $("#category").keyup(function () {
   });
 });
 
-$.ajax({
-  url: "search.php",
-  method: "POST",
-  data: { query: query },
-  success: function (data) {
-    $("#categorylist").show();
-    $("#categorylist").html(data);
-  },
-  error: function (data) {
-    $("#categorylist").fadeIn();
-    $("#categorylist").html("Jokin meni vikaan");
-  },
-});
 
 
 //----------------------------//
@@ -158,6 +145,10 @@ $( document ).ready(function() {
                             'max-width' : '100%'                        
     });
     $('.date-and-users img').css({'height' : 'auto',
+                            'max-width' : '100%'
+                            
+    });
+    $('.room-header-p img').css({'height' : 'auto',
                             'max-width' : '100%'
                             
     });
@@ -272,6 +263,28 @@ toggleBtn.onclick = () => {
         toggleBtn.classList.remove("active");
     }
 }
+
+
+
+
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+  }
+
+  window.addEventListener("click", function(event) {
+      if (!event.target.matches('.dropbtn', '.drop-icons')) {
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+          }
+          }
+      }
+  });
+
+
 
 
 //----------------------------//
