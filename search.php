@@ -347,7 +347,7 @@ function createCommentRow($data) {
                     <div class='bodytext'>" . $dataR['content'] . "</div>
                     <div class='comment-buttons'>
                     <button class='reply' id='reply' onclick='reply(this)' data-id='" . $dataR['comment_id'] . "' style='margin-left: 3px;'>Vastaa</button>
-                    <button class='delete-comment' user-id='" . $data['user_id'] . "' onclick='isReply = true;' data-id='" . $dataR['id'] . "'>Poista</button>
+                    <button class='delete-comment' user-id='" . $dataR['user_id'] . "' onclick='isReply = true;' data-id='" . $dataR['id'] . "'>Poista</button>
                     </div>
                     </div>
                     ";

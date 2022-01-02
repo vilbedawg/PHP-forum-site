@@ -243,6 +243,66 @@ $(document).ready(function(){
 });
 
 
+//----------------------------//
+//Like system
+$('#like, #dislike, #liked, #disliked').on('click', function(e) {
+  e.stopPropagation();
+  likeID = $(this).parents().data('id');
+  clickedBtn = $(this);
+  
+  if($(clickedBtn).is('#like')) {
+      action = 'like';
+  }
+  else if($(clickedBtn).is('#liked')){
+      action = 'unlike';
+  } 
+  else if ($(clickedBtn).is('#dislike')) {
+      action = 'dislike';
+  } 
+  else if($(clickedBtn).is('#disliked')){
+      action = 'undislike';
+  }
+  $.ajax({
+      url: "search.php",
+      method: "POST",
+      
+      data: {
+           likeID: likeID,
+           action: action 
+      },
+      success: function (data) {
+          if (action == 'like') {
+              $(clickedBtn).css({'color' : '#ee6c4d'});
+              $(clickedBtn).parent().find('#dislike').css({'color' : '#333'});
+              $(clickedBtn).parent().find('#disliked').css({'color' : '#333'});
+              $(clickedBtn).parent().find('#disliked').attr('id', 'dislike');
+              $(clickedBtn).attr('id', 'liked');
+              $(clickedBtn).next('.like-amount').text(data);
+
+          } else if (action == 'dislike') {
+              $(clickedBtn).css({'color' : '#ee6c4d'});
+              $(clickedBtn).parent().find('#like').css({'color' : '#333'});
+              $(clickedBtn).parent().find('#liked').css({'color' : '#333'});
+              $(clickedBtn).parent().find('#liked').attr('id', );
+              $(clickedBtn).attr('id', 'disliked');
+              $(clickedBtn).parent().find('#liked').attr('id', 'like');
+              $(clickedBtn).prev('.like-amount').text(data);
+
+          } else if(action == 'unlike') {
+              $(clickedBtn).css({'color' : '#333'});
+              $(clickedBtn).attr('id', 'like');
+              $(clickedBtn).next('.like-amount').text(data);
+
+          } else if(action == 'undislike') {
+              $(clickedBtn).css({'color' : '#333'});
+              $(clickedBtn).attr('id', 'dislike');
+              $(clickedBtn).prev('.like-amount').text(data);
+          }
+      }
+  });
+});
+
+
 
 //----------------------------//
 //Piilota/näytä salasana

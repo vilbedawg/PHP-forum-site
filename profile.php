@@ -195,14 +195,33 @@ $userlist = $objUser->GetAllUsersButMe();
                 $mysqldate = strtotime($post['date']);
                 $phpdate = date('d/m/Y G:i A', $mysqldate);
                 $comments = $postObj->getAllComments($post['post_id']);
+                $likes = $postObj->getLikes($post['post_id']);
+                $likeStatus = $postObj->userLiked($_SESSION['userid'], $post['post_id']);
                 echo
-                '<div class="room-container" data-id="'. $post['post_id'] .'">';             
-                if (isset($_SESSION['userid']) && ($post['user_id'] === $_SESSION['userid'])) {
+                '<div class="room-container" data-id="'. $post['post_id'] .'">
+                <div class="like-buttons">';
+
+                    if($likeStatus == 'like') {
+                        echo "<i class='fas fa-long-arrow-alt-up' id='liked' style='color: #ee6c4d;'></i>
+                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
+                        <i class='fas fa-long-arrow-alt-down' id='dislike'></i>
+                        </div>";
+                    } else if($likeStatus == 'dislike') {
+                        echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
+                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
+                        <i class='fas fa-long-arrow-alt-down' id='disliked' style='color: #ee6c4d;'></i>
+                        </div>";
+                    } else {
+                        echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
+                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
+                        <i class='fas fa-long-arrow-alt-down' id='dislike'></i>
+                        </div>";
+                    }
+                    if (isset($_SESSION['userid']) && ($post['user_id'] === $_SESSION['userid'])) {
                     echo '<div class="delete-post" data-id="'. $post['post_id'] .'">           
                     <button class="delete-post-btn" id="delete-post"><i class="fa fa-times" aria-hidden="true"></i></div></button>
                     <div class="edit-post" data-id="'. $post['post_id'] .'">
-                    <button class="edit-post-btn"><i class="fas fa-edit"></i></div></button>
-                    ';
+                    <button class="edit-post-btn"><i class="fas fa-edit"></i></div></button>';
                     }
                     echo
                     ' 

@@ -13,9 +13,7 @@ $roomNum = $_GET['room'];
 // Kaikki kommentit
 $objPost = new PostedContent();
 $NumOfComments = $objPost->getAllComments($roomNum);
-
-$getCurrentRoom = new PostedContent();
-$currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
+$currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
 
 ?>
 
@@ -157,6 +155,7 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
         </div>
 
     </div>
+    
     <div class="all-comments">
         <div class="edit-toolbar">
             <a href="home.php?show=Etusivu"><button class="profile-back" style="margin-bottom: 0; margin-left: 10px;">Etusivulle</button></a>
@@ -171,6 +170,28 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
 
         </div>
         <div class="room-header">
+            <?php
+            $likes = $objPost->getLikes($currentRoom[0]['post_id']);
+            $likeStatus = $objPost->userLiked($_SESSION['userid'], $currentRoom[0]['post_id']);
+            echo "<div class='like-buttons' data-id='". $currentRoom[0]['post_id'] ."' style='left: 9px;'>";
+            if($likeStatus == 'like') {
+            echo "<i class='fas fa-long-arrow-alt-up' id='liked' style='color: #ee6c4d;'></i>
+            <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
+            <i class='fas fa-long-arrow-alt-down' id='dislike'></i>
+            </div>";
+            } else if($likeStatus == 'dislike') {
+            echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
+            <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
+            <i class='fas fa-long-arrow-alt-down' id='disliked' style='color: #ee6c4d;'></i>
+            </div>";
+            } else {
+            echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
+            <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
+            <i class='fas fa-long-arrow-alt-down' id='dislike'></i>
+            </div>";
+            }
+        ?>
+
             <div class='date-and-post' style='margin-left: 0;'>
                 <div class='date'>
                     <a href="profile.php?user=<?php echo $currentRoom[0]['user_id'] ?> " class="username"><?php echo $currentRoom[0]['name'] ?> </a>
@@ -190,11 +211,12 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
                     echo "<a href='view.php?room=" . $roomNum . "&edit' class='post-toolbar-editpost'>Muokkaa</a>";
                     echo "<button class='post-toolbar-editpost' id='delete-post' data-id='" . $roomNum . "'>Poista julkaisu</button>";
                 }
+
                 ?>
-            </div>
+        </div>
         </div>
 
-
+       
 
         <div class="discussion-section">
             <div class="comment-form">
@@ -317,14 +339,14 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
                             $('.bodytext img').css({'height' : 'auto',
                                             'max-width' : '100%',
                                             'max-height' : '300px'
-                                    });
+                            });
                         }  
                     });
                     
                     $(document).on('submit', '#comment', function(e) {
                         e.preventDefault();
                         var comment = $('#topic').val();
-                        if (comment.length > 10) {
+                        if (comment.length > 9) {
                             $.ajax({
                                 url: "search.php",
                                 method: "POST",
@@ -363,7 +385,7 @@ $currentRoom = $getCurrentRoom->GetPostByCurrentRoomID($roomNum);
                         e.preventDefault();
                         var comment_id = $('.form-reply').attr('data-id');
                         var reply = $('#reply-topic').val();
-                        if (reply.length > 10) {
+                        if (reply.length > 9) {
                             $.ajax({
                                 url: "search.php",
                                 method: "POST",

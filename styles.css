@@ -307,7 +307,6 @@ body {
 
 .form-post textarea {
     width: 100%;
-    resize: none;
     font-size: 16px;
     border: 1px solid #333;
     padding: 15px;
@@ -588,8 +587,9 @@ body {
       flex-direction: column;
       justify-content: space-between;
       background-color: #fff;
-      padding: 20px;
+      padding: 30px 40px 10px 40px;
       width: 800px;
+      position: relative;
   }
    
 
@@ -627,8 +627,6 @@ body {
       display: flex;
       align-items: center;
       font-size: 14px;
-      margin-left: 10px;
-      padding-bottom: 10px;
   }
 
   .post-toolbar p:hover {
@@ -671,7 +669,7 @@ body {
 .date-and-post{
     display: flex;
     flex-direction: column;
-    padding: 0px 10px 30px 10px;
+    padding-bottom: 30px;
     justify-content: space-between;
     align-self: flex-start;
     width: 100%;
