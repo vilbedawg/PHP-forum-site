@@ -138,11 +138,9 @@ $("#category").keyup(function () {
 //----------------------------//
 //maximi kuvan suuruus
 $( document ).ready(function() {
-    $('.bodytext img').css({'height' : 'auto',
-                            'max-width' : '100%'
-    });
     $('.bodytext-users img').css({'height' : 'auto',
-                            'max-width' : '100%'                        
+                            'max-width' : '100%',
+                            'max-height' : '500px'                        
     });
     $('.date-and-users img').css({'height' : 'auto',
                             'max-width' : '100%'
@@ -152,6 +150,7 @@ $( document ).ready(function() {
                             'max-width' : '100%'
                             
     });
+
 });
 
 //----------------------------//

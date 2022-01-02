@@ -8,6 +8,54 @@ date_default_timezone_set('Europe/Helsinki');
 
 
 
+//Tykkäys
+if(isset($_POST['likeID'])) {
+  $action = $_POST['action'];
+  $post_id = $_POST['likeID'];
+  
+  switch ($action) {
+    case 'like':
+      $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, post_id, rating_action) VALUES (?, ?, ?)
+                                        ON DUPLICATE KEY UPDATE rating_action="like"');
+      $stmt->execute(array($_SESSION['userid'], $post_id, $action));
+      break;
+
+    case 'dislike':
+      $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, post_id, rating_action) VALUES (?, ?, ?)
+                                        ON DUPLICATE KEY UPDATE rating_action="dislike"');
+      $stmt->execute(array($_SESSION['userid'], $post_id, $action));
+      break;
+
+    case 'unlike':
+      $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND post_id = :post_id');
+      $stmt->bindParam(':user_id', $_SESSION['userid']);
+      $stmt->bindParam(':post_id', $post_id);
+      $stmt->execute();
+      break;
+
+    case 'undislike':
+      $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND post_id = :post_id');
+      $stmt->bindParam(':user_id', $_SESSION['userid']);
+      $stmt->bindParam(':post_id', $post_id);
+      $stmt->execute();
+      break;
+    default;
+      break;
+  }
+  echo getRating($post_id);
+  exit(0);
+}
+
+function getRating($id){
+  global $user;
+  
+  $likes = $user->connect()->prepare("SELECT (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'like') -
+                                            (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'dislike') AS amount");
+  $likes->execute(array($id, $id));
+  $likeCount = $likes->fetchAll(PDO::FETCH_ASSOC);
+  return ($likeCount[0]['amount']);
+}
+
 //Käyttäjän poistaminen
 if(isset($_GET['id'])) {
   $id = $_GET['id'];
@@ -65,13 +113,9 @@ if(isset($_POST['name'])) {
               exit();
           } 
       $error = "<div class='success-texti'><p>Tallennettu</p></div>";
-      echo $error;
+  } 
 
-  } else{
-      //Jos error == true
-      echo $error;
-  }
-  exit();  
+  exit($error);  
 }
 
 
@@ -97,19 +141,41 @@ if(isset($_POST['email'])){
               exit();
           }
       $error = "<div class='success-texti'><p>Tallennettu</p></div>";
-      echo $error;
-  } else {
-      //Jos error == true
-      echo $error;
   }
-  exit();
+
+  exit($error);
 }
 
 
 //salasanan päivitys
 if(isset($_POST['password'])) {
   $pwd = $_POST['password'];
-  echo $pwd;
+  $stmt = $user->connect()->prepare("SELECT password FROM users WHERE user_id = ? LIMIT 1");
+  $stmt->execute(array($_POST['id']));
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  $oldpwd = $result['password'];
+  $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
+  
+  if(strlen($pwd) < 4 ) {
+      $error = "<div class='error-texti'><p>Salasnan tulee olla vähintään 4 merkkiä</p></div>";
+      exit($error);
+  }
+
+  if(password_verify($pwd, $oldpwd)) {
+      $error = "<div class='error-texti'><p>Et voi käyttää vanhaa salasanasi</p></div>";
+      exit($error);
+  } 
+
+   $stmt =  $user->connect()->prepare("UPDATE users SET password = :password WHERE user_id = :user_id");
+          $stmt->bindParam(':password', $hashedPwd);
+          $stmt->bindParam(':user_id', $_POST['id'], PDO::PARAM_INT);
+          if(!$stmt->execute())  {
+              $stmt = null;
+              $error = "<div class='error-texti'><p>STMT FAILED</p></div>";
+              exit();
+          }
+      $error = "<div class='success-texti'><p>Salasanasi on vaihdettu</p></div>";
+      exit($error);
 }
 
 
@@ -160,7 +226,7 @@ if (isset($_POST['postquery'])) {
 //kommentin poistaminen
 if(isset($_POST['delete_comment'])) {
   if(($_POST['isReply']) == 'true') {
-    $stmt = $user->connect()->prepare('DELETE FROM replies WHERE comment_id = ?;');
+    $stmt = $user->connect()->prepare('DELETE FROM replies WHERE id = ?;');
     $stmt->execute(array($_POST['delete_comment']));
     exit();
   } else {
@@ -189,9 +255,11 @@ if (isset($_POST['comment'])) {
   else {
     $output = "<div class='success-texti'><p>Kommenttisi on tallennettu</p></div>";
   }
-
-      echo $output;
-      exit();
+    $stmt = $user->connect()->prepare("SELECT * FROM comment_owner ORDER BY comment_id DESC LIMIT 1");
+    
+    $stmt->execute();
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    exit(createCommentRow($data));
 }
   
   
@@ -199,44 +267,107 @@ if (isset($_POST['comment'])) {
 //uusi vastaus
 if(isset($_POST['reply'])){
 
-    $stmt =  $user->connect()->prepare('INSERT INTO replies (comment_id, post_id, reply, created, user_id, name)
+    $stmt =  $user->connect()->prepare('INSERT INTO replies (comment_id, post_id, content, date, user_id, name)
         VALUES (?, ?, ?, ?, ?, ?);');
-    if (!$stmt->execute(array($_POST['comment_id'], $_POST['id'], $_POST['reply'], date('Y-m-d H:i:s'), $_SESSION['userid'], $_SESSION['name']))) {
-      $stmt = null;
-      $output = "<div class='error-texti'><p>STMT FAILED</p></div>";
-      exit();
-    }
-    $output = "<div class='success-texti'><p>Kommenttisi on tallennettu</p></div>";
 
-    function newComment()
-    {
-      $newCommen =
+    $stmt->execute(array($_POST['comment_id'], $_POST['id'], $_POST['reply'], date('Y-m-d H:i:s'), $_SESSION['userid'], $_SESSION['name']));
+    $stmt = null;
+
+    $stmt = $user->connect()->prepare("SELECT r.user_id as comment_owner, r.comment_id, r.id, r.post_id, r.content, 
+    r.date, u.user_id, u.name, u.image
+    FROM replies AS r
+    INNER JOIN users AS u 
+    ON r.user_id = u.user_id
+    ORDER BY r.id
+    DESC LIMIT 1");
+  
+    $stmt->execute();
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+    $newComment =
         "<div class='discussion-reply'>
               <div class='date'>
-                <p class='username'>" . $_SESSION['name'] . "</p>
-                <p>" . date('Y/m/d G:i A') . "</p>
+                <p class='username'>" . $data['name'] . "</p>
+                <p>" . date('d/m/Y G:i A') . "</p>
               </div>
-              <img src='". $_SESSION['image'] ."' class='reply-img'></img>
-              <div class='bodytext'>" . $_POST['reply'] . "</div>
+              <img src='". $data['image'] ."' class='reply-img'></img>
+              <div class='bodytext'>" . $data['content'] . "</div>
+              <button class='reply' id='reply' onclick='reply(this)' data-id='" . $data['comment_id'] . "' style='margin-left: 3px;'>Vastaa</button>
+              <button class='delete-comment' user-id='" . $data['user_id'] . "' onclick='isReply = true;' data-id='" . $data['id'] . "'>Poista</button>
               </div>
               ";
              
-
-      return $newCommen;
-    }
-
-  
-
-  $arr = array('output' => $output, 'newComment' => newComment());
-  echo json_encode($arr);
+    echo $newComment;
 }
 
 
+function createCommentRow($data) {
+  global $user;
+  $mysqldate = strtotime($data['date']);
+  $phpdate = date('d/m/Y G:i A', $mysqldate);
+
+  $stmt = $user->connect()->prepare("SELECT r.user_id as comment_owner, r.comment_id, r.id, r.post_id, r.content, 
+  r.date, u.user_id, u.name, u.image
+  FROM replies AS r
+  INNER JOIN users AS u 
+  ON r.user_id = u.user_id
+  WHERE comment_id = ?
+  ORDER BY date ASC;");
+
+  $stmt->execute(array($data['comment_id']));
+  $allReplies = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $response = "
+              <div class='discussion-wrapper' id='" . $data['comment_id'] . "'>
+              <div class='discussion'>
+                <div class='date'>
+                <a href='profile.php?user=" . $data['user_id'] . "' class='username'>" . $data['name'] . "</a>
+                <p>" . $phpdate . "</p>
+                </div>
+                <img src='". $data['image'] ."' class='comment-img'></img>
+                <div class='bodytext'><p>" . $data['content'] . "</p> </div>
+                </div>
+                <div class='comment-buttons'>
+                <button class='reply' onclick='reply(this)' data-id='" . $data['comment_id'] . "'>Vastaa</button>
+                <button class='delete-comment' onclick='isReply = false;' user-id='" . $data['user_id'] . "' data-id='" . $data['comment_id'] . "'>Poista</button>
+                </div>
+                <button class='reply-show' data-id='" . count($allReplies) . "' style='white-space: nowrap; margin-top: 5px; display: none;'>Näytä ". count($allReplies) ." Kommentti</button>
+                <div class='reply-section' style='display: none;'>
+                "; 
+               
+  foreach($allReplies as $dataR) {
+    $mysqldate = strtotime($dataR['date']);
+    $phpdate = date('d/m/Y G:i A', $mysqldate);
+    $response .=  "<div class='discussion-reply'>
+                    <div class='date'>
+                    <a href='profile.php?user=" . $dataR['user_id'] . "' class='username'>" . $dataR['name'] . "</a>
+                      <p>" . $phpdate . "</p>
+                    </div>
+                    <img src='". $dataR['image'] ."' class='reply-img'></img>
+                    <div class='bodytext'>" . $dataR['content'] . "</div>
+                    <div class='comment-buttons'>
+                    <button class='reply' id='reply' onclick='reply(this)' data-id='" . $dataR['comment_id'] . "' style='margin-left: 3px;'>Vastaa</button>
+                    <button class='delete-comment' user-id='" . $data['user_id'] . "' onclick='isReply = true;' data-id='" . $dataR['id'] . "'>Poista</button>
+                    </div>
+                    </div>
+                    ";
+  }
+
+  $response .= "
+            </div>
+            </div>
+          </div>
+      ";
+
+  echo $response;
+}
 
 
 
 //Haetaan kommentit
 if (isset($_POST['post_id'])) {
+  $response ='';
+  $output = '';
   $stmt = $user->connect()->prepare("SELECT * FROM comment_owner WHERE post_id = ? ORDER BY date DESC");
   
   if (!$stmt->execute(array($_POST['post_id']))) {
@@ -245,86 +376,15 @@ if (isset($_POST['post_id'])) {
     exit();
   }
   $allComments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  
-
-  foreach ($allComments as $userPost) {
-
-    $mysqldate = strtotime($userPost['date']);
-    $phpdate = date('d/m/Y G:i A', $mysqldate);
-    echo "<div class='discussion-wrapper' id='" . $userPost['comment_id'] . "'>
-                <div class='discussion'>
-                  <div class='date'>
-                  <a href='profile.php?user=" . $userPost['comment_id'] . "' class='username'>" . $userPost['name'] . "</a>
-                  <p>" . $phpdate . "</p>
-                  </div>
-                  <img src='". $userPost['image'] ."' class='comment-img'></img>
-                  <div class='bodytext'><p>" . $userPost['content'] . "</p> </div>
-                  </div>
-                  <div class='comment-buttons'>
-                  <button class='reply' data-id='" . $userPost['comment_id'] . "'>Vastaa</button>
-                  <button class='reply-show' data-id='" . $userPost['comment_id'] . "' style='width: 130px;'>Näytä kommentit </button>
-                  "; if($_SESSION['userid'] == $userPost['user_id']) {
-                    echo "<button class='delete-comment' onclick='isReply = false;' data-id='" . $userPost['comment_id'] . "'>Poista</button>";
-                  }
-                    echo 
-                    "</div>
-                    <form class='form-reply " . $userPost['comment_id'] . "' method='POST' id='reply' style='display: none; width: 80%; padding-top: 10px; padding-left: 10px;'>
-                    <input type='hidden' id='post_id' value='" . $_POST['post_id'] . "'>
-                    <input type='hidden' id='comment_id' value='" . $userPost['comment_id'] . "'>
-                    <textarea class='tinymce' name='content' id='reply-topic' placeholder='Kerro ajatuksistasi...' rows='7' style='z-index: 99999;'></textarea>
-                    <div class='post-comment' style='align-self: flex-end;'>
-                        <input type='submit' name='post' value='Vastaa' id='reply' onclick='reply=true;'>
-                    </div>
-                    </form>
-                    <div class='reply-section'>
-                    </div>
-                </div> 
-                </div>";
+ 
+  foreach($allComments as $row) {
+    $response .= createCommentRow($row);
   }
+
+  exit($response);
   
 }
 
 
-if(isset($_POST['parent'])) {
-  $stmt = $user->connect()->prepare("SELECT r.user_id as comment_owner, r.comment_id, r.post_id, r.reply, 
-                                      r.created, r.rating, u.user_id, u.name, u.image
-                                      FROM replies AS r
-                                      INNER JOIN users AS u 
-                                      ON r.user_id = u.user_id
-                                      WHERE comment_id = ?
-                                      ORDER BY created ASC;");
-  
-  if (!$stmt->execute(array($_POST['parent']))) {
-    $stmt = null;
-    $output = "<div class='error-texti'><p>STMT FAILED</p></div>";
-    exit();
-  }
-  $allReplies = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  if ($allReplies == null) {
-    echo "<div class='discussion-reply'> 
-          <p>Ei vastauksia</p>
-          </div>";
-  } else {
 
-    foreach ($allReplies as $userReply) {
-      $mysqldate = strtotime($userReply['created']);
-      $phpdate = date('d/m/Y G:i A', $mysqldate);
-      echo "<div class='discussion-reply'>
-            <div class='date'>
-              <p class='username'>" . $userReply['name'] . "</p>
-              <p>" . $phpdate . "</p>
-            </div>
-            <img src='". $userReply['image'] ."' class='reply-img'></img>
-            <div class='bodytext'>" . $userReply['reply'] . "</div>
-            <button class='reply-to-reply' data-id='" . $userReply['comment_id'] . "'>Vastaa</button>";
-             if($_SESSION['userid'] == $userReply['user_id']) {
-              echo "<button class='delete-comment' onclick='isReply = true;' data-id='" . $userReply['comment_id'] . "'>Poista</button>";
-            }
-            echo 
-            "</div>
-            </div>
-            ";
-    }
-  }
 
-}

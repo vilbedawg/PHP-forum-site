@@ -13,17 +13,6 @@ class post extends Dbh
         }
     }
 
-    protected function PostCommentToDB($content, $roomNum) { 
-        $stmt =  $this->connect()->prepare('INSERT INTO comments (post_id, user_id, name, date, content)
-        VALUES (?, ?, ?, ?, ?);');
-        
-        if(!$stmt->execute(array($roomNum, $_SESSION['userid'], $_SESSION['name'], date('Y-m-d H:i:s'), $content)))  {
-            $stmt = null;
-            header("location: index.php?error=stmtfailed");
-            exit();
-        }
-    } 
-
     protected function updateTopicToDB($category, $subject, $topic, $roomNum) { 
         $category = ucwords(strtolower($category));
         $time = date('Y-m-d H:i:s');

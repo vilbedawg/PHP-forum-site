@@ -216,11 +216,27 @@ $onliners = $objUser->GetAllOnliners();
                 $mysqldate = strtotime($post['date']);
                 $phpdate = date('d/m/Y G:i A', $mysqldate);
                 $comments = $postObj->getAllComments($post['post_id']);
+                $likes = $postObj->getLikes($post['post_id']);
+                $likeStatus = $postObj->userLiked($_SESSION['userid'], $post['post_id']);
                 echo "<div class='room-container' data-id='". $post['post_id'] ."'>
-                    <div class='like-buttons'>
-                    <i class='fas fa-long-arrow-alt-up'></i>
-                    <i class='fas fa-long-arrow-alt-down'></i>
-                    </div>
+                    <div class='like-buttons'>";
+                    
+                    if($likeStatus == 'like') {
+                        echo "<i class='fas fa-long-arrow-alt-up' id='liked' style='color: #ee6c4d;'></i>
+                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
+                        <i class='fas fa-long-arrow-alt-down' id='dislike'></i>";
+                    } else if($likeStatus == 'dislike') {
+                        echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
+                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
+                        <i class='fas fa-long-arrow-alt-down' id='disliked' style='color: #ee6c4d;'></i>";
+                    } else {
+                        echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
+                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
+                        <i class='fas fa-long-arrow-alt-down' id='dislike'></i>";
+                    }
+                    echo
+
+                    "</div>
                         <div class='room'>
                                 <div class='date-and-post'>
                                     <div class='date-users'>
@@ -293,10 +309,66 @@ $onliners = $objUser->GetAllOnliners();
         <script src="js/app.js"></script>
         <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
         <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
-        <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
-        <script src="js/dropdown.js"></script>  
+        <script type="text/javascript" src="tinymce\init-tinymce.js"></script> 
         <script>
         $(document).ready(function() {
+            $('#like, #dislike, #liked, #disliked').on('click', function(e) {
+                e.stopPropagation();
+                likeID = $(this).parents('.room-container').data('id');
+                clickedBtn = $(this);
+                
+                if($(clickedBtn).is('#like')) {
+                    action = 'like';
+                }
+                else if($(clickedBtn).is('#liked')){
+                    action = 'unlike';
+                } 
+                else if ($(clickedBtn).is('#dislike')) {
+                    action = 'dislike';
+                } 
+                else if($(clickedBtn).is('#disliked')){
+                    action = 'undislike';
+                }
+                $.ajax({
+                    url: "search.php",
+                    method: "POST",
+                    
+                    data: {
+                         likeID: likeID,
+                         action: action 
+                    },
+                    success: function (data) {
+                        if (action == 'like') {
+                            $(clickedBtn).css({'color' : '#ee6c4d'});
+                            $(clickedBtn).parent().find('#dislike').css({'color' : '#333'});
+                            $(clickedBtn).parent().find('#disliked').css({'color' : '#333'});
+                            $(clickedBtn).parent().find('#disliked').attr('id', 'dislike');
+                            $(clickedBtn).attr('id', 'liked');
+                            $(clickedBtn).next('.like-amount').text(data);
+
+                        } else if (action == 'dislike') {
+                            $(clickedBtn).css({'color' : '#ee6c4d'});
+                            $(clickedBtn).parent().find('#like').css({'color' : '#333'});
+                            $(clickedBtn).parent().find('#liked').css({'color' : '#333'});
+                            $(clickedBtn).parent().find('#liked').attr('id', );
+                            $(clickedBtn).attr('id', 'disliked');
+                            $(clickedBtn).parent().find('#liked').attr('id', 'like');
+                            $(clickedBtn).prev('.like-amount').text(data);
+
+                        } else if(action == 'unlike') {
+                            $(clickedBtn).css({'color' : '#333'});
+                            $(clickedBtn).attr('id', 'like');
+                            $(clickedBtn).next('.like-amount').text(data);
+
+                        } else if(action == 'undislike') {
+                            $(clickedBtn).css({'color' : '#333'});
+                            $(clickedBtn).attr('id', 'dislike');
+                            $(clickedBtn).prev('.like-amount').text(data);
+                        }
+                    }
+                });
+            });
+
             $("p").has("img").css({"textAlign" : "center",
                                     "background" : "black",
                                     "margin-left" : "0",
@@ -309,7 +381,7 @@ $onliners = $objUser->GetAllOnliners();
             //----------------------------//
             //room container linkit
             $(".username-users").on('click', function(e){
-                    e.preventDefault;
+                    e.preventDefault();
                     e.stopPropagation();
                     var id = $(this).data('id');
                     window.location = "profile.php?user="+id;

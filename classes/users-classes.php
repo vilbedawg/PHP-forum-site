@@ -104,7 +104,8 @@
                 exit();
             }
             if(!$user = $stmt->fetchAll(PDO::FETCH_ASSOC)){
-                header("location: profile.php?/noexist");
+                header("Location: home.php?show=Etusivu#user=noexist");
+                exit();
             }
             return $user;
             
@@ -119,7 +120,8 @@
                 exit();
             }
             if(!$recentPost = $stmt->fetchAll(PDO::FETCH_ASSOC)){
-                header("location: profile.php?/noexist");
+                header("Location: home.php?show=Etusivu#user=noexist");
+                exit();
             }
             return $recentPost;
             

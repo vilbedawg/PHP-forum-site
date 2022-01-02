@@ -4,7 +4,7 @@ class PostedContent extends Dbh
 {
     public function GetPostByCurrentRoomID($roomNum){
         $roomarray = str_split($roomNum, 100);
-        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE post_id = ? ORDER BY date ASC;");
+        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE post_id = ? ORDER BY date DESC;");
         if(!$stmt->execute($roomarray)){
             $stmt = null;
             header("location: login.php?error=stmtfailed");
@@ -17,7 +17,7 @@ class PostedContent extends Dbh
     
     public function GetAllPostsByID($user){
         $user = str_split($user, 100);
-        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE user_id = ? ORDER BY date ASC;");
+        $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE user_id = ? ORDER BY date DESC;");
         if(!$stmt->execute($user)) {
             $stmt = null;
             header("location: login.php?error=stmtfailed");
@@ -91,6 +91,31 @@ class PostedContent extends Dbh
         return $allComments;
     }
 
+    public function getLikes($id){
+        $stmt = $this->connect()->prepare("SELECT (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'like') -
+                                            (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'dislike') AS amount");
+        if(!$stmt->execute(array($id, $id))) {
+            $stmt = null;
+            header("location: login.php?error=stmtfailed");
+            exit();
+        }
+        $likeCount = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $likeCount;
+    }
+
+    public function userLiked($userid, $postid){
+        $stmt = $this->connect()->prepare("SELECT rating_action FROM rating_info WHERE user_id = :user_id AND post_id = :post_id");
+        $stmt->bindParam(':user_id', $userid);
+        $stmt->bindParam(':post_id', $postid);
+        if(!$stmt->execute()) {
+            $stmt = null;
+            header("location: login.php?error=stmtfailed");
+            exit();
+        }
+        $likeCount = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $likeCount['rating_action'] ?? null;
+    }
 }
 
 

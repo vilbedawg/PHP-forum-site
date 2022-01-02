@@ -161,22 +161,27 @@ $userlist = $objUser->GetAllUsersButMe();
             <div class="profile-status">
                 <h1>Käyttäjätiedot</h1>
             </div>
-            <div class="profile-managment">';
+            <div class="profile-managment">
+            <span style="display: flex; align-self: flex-start;">
+            <img src="' . $userOnView[0]['image'] . '"></img>
+            <p style="font-size: 20px; align-self: center; padding-left: 5px;"><b>' . $userOnView[0]['name'] . '</b></p>
+            </span>
+              <div class="profile-details">
+              <p> ' . $userOnView[0]['email'] . ' </p>
+              <p style="font-size: 14px;"> Käyttäjä luotu ' .  date('m/d/Y', strtotime($userOnView[0]['created'])) . ' </p>
+              </div>
+              </div> 
+              <hr>
+              ';
 
             if (isset($_SESSION['userid']) && $_SESSION['userid'] == $userOnView[0]['user_id']) {
                 echo '<a href="manage.php?user=' . $_SESSION['userid'] . '" class="edit-btn">
                 <button class="edit" type="submit" name="user" value="' . $_SESSION['userid'] . '">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-5 17l1.006-4.036 3.106 3.105-4.112.931zm5.16-1.879l-3.202-3.202 5.841-5.919 3.201 3.2-5.84 5.921z"/></svg>
+                    Muokkaa profiilia
                 </button>
                 </a>';
             }
-        echo ' <img src="' . $userOnView[0]['image'] . '"></img>
-              <div class="profile-details">
-              <p><b>' . $userOnView[0]['name'] . '</b></p>
-              <p> ' . $userOnView[0]['email'] . ' </p>
-              </div>
-              </div> 
-              <hr>
+        echo ' 
               <button class="profile-create">Luo uusi</button>
             </div>
             <div class="discussion-page-users">
@@ -201,7 +206,7 @@ $userlist = $objUser->GetAllUsersButMe();
                     }
                     echo
                     ' 
-                <div class="room">
+                    <div class="room">
                     <div class="date-and-post">
                         <div class="date-users">
                         <p class="username-users">' . $post['name'] . '</p>
@@ -224,7 +229,7 @@ $userlist = $objUser->GetAllUsersButMe();
             }
      
         ?>
-        <?php if (isset($_SESSION['userid']) && $_SESSION['userid'] !== 0) {
+        <?php if (isset($_SESSION['userid']) && $_SESSION['userid'] == 0) {
             echo "";
         } else {
         ?>
@@ -232,18 +237,17 @@ $userlist = $objUser->GetAllUsersButMe();
             <section class="user-list-body">
                 <div class="user-list-arrows">
                     <div class="show-list">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                            <path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" />
-                        </svg>
-                    </div>
-                    <div class="hide-list">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                             <path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z" />
                         </svg>
                     </div>
+                    <div class="hide-list">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" />
+                    </svg>
+                    </div>
                 </div>
                 <div class="every-user">
-                    <h2 class="user-list-h2">Käyttäjälista</h2>
                     <div class="table-wrapper">
                         <table class="fl-table">
                             <thead>
@@ -289,10 +293,10 @@ $userlist = $objUser->GetAllUsersButMe();
     $(document).ready(function() {
         $(".delete").click(function(){
             var id = $(this).parents("tr").attr("id");
-            if(confirm(' Haluatko varmasti poistaa käyttäjän? ?'))
+            if(confirm(' Haluatko varmasti poistaa käyttäjän ?'))
             {
                 $.ajax({
-                url: 'action.php',
+                url: 'search.php',
                 type: 'GET',
                 data: {id: id},
                 error: function() {
@@ -317,8 +321,21 @@ $userlist = $objUser->GetAllUsersButMe();
             var room = $(this).parent();
             if(confirm('Haluatko varmasti poistaa julkaisun?'))
             {
+                thisPost = $(this).parents('.room-container').find('.bodytext-users');
+                $(thisPost).find("img").each(function () {
+                    var imgName = $(this).attr('src');
+                    $.ajax({
+                        url: 'search.php',
+                        type: 'POST',
+                        data: {
+                            imgName: imgName
+                        },
+                        dataType: "html",
+                        success: function(data) {}
+                    });
+                });
                 $.ajax({
-                url: 'action.php',
+                url: 'search.php',
                 type: 'GET',
                 data: {deleteid: id},
                 dataType: "html",
@@ -343,7 +360,7 @@ $userlist = $objUser->GetAllUsersButMe();
 <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
 <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
 <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
-<script src="js/dropdown.js"></script>  
+ 
 <script>
 //----------------------------//
 //room container linkit
@@ -359,8 +376,14 @@ $(document).ready(function(){
             var id = $(this).data('id');
             window.location = "view.php?room="+id;
     });
-    $("p").has("img").css({
-            "textAlign": "center",
+    $("p").has("img").css({"textAlign" : "center",
+    "background" : "black",
+    "margin-left" : "0",
+    "color" : "transparent",
+    });
+    $("p").has("iframe").css({"textAlign" : "center",
+        "background" : "black",
+        "margin-left" : "0",
     });
 });
 </script>

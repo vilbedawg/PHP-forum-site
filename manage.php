@@ -1,9 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION["userid"])) {
-    header("location: login.php");
-    exit();
-}
+
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
 require_once "includes/header.php";
@@ -11,7 +8,15 @@ require_once "includes/header.php";
 $objUser = new Users;
 $objUser->setUserID($_GET['user']);
 $userOnView = $objUser->GetViewedUser();
+if (!isset($_SESSION["userid"])) {
+    header("location: profile.php?user=". $userOnView[0]['user_id'] ."");
+    exit();
+}
 
+if($_SESSION["userid"] !== $userOnView[0]['user_id']) {
+    header("location: profile.php?user=". $userOnView[0]['user_id'] ."");
+    exit();
+}
 
 
 ?>
@@ -114,7 +119,6 @@ $userOnView = $objUser->GetViewedUser();
             </div>
         </div>
     </div>
-
     <!--Modal section loppuu-->
     <div class="search-toolbar">
         <div class="dropdown">
@@ -150,8 +154,7 @@ $userOnView = $objUser->GetViewedUser();
             <a href="profile.php?user=<?php echo $userOnView[0]['user_id']; ?>"><i class="fa fa-times" aria-hidden="true"></i></a>
         </div>
         <h1 class="edit-user-title"> <?php echo $userOnView[0]['name'] ?> </h1>
-        <div class="error-txt">
-        </div>
+        <div class="error-txt" style="display: none;"></div>
         <div class="edit-page-box1">
         <div class="user-details">
             <h1>Profiilikuva</h1>
@@ -201,7 +204,7 @@ $userOnView = $objUser->GetViewedUser();
                     </div>
                 </div>
             </form>
-            <form method="post" id="passwordChange" style="display:none; padding-top: 53px;">
+            <form method="post" id="passwordChange" style="display:none; padding-top: 10px;">
                 <div class="field input">
                     <label>Uusi salasana</label>
                     <div class="form-group" style="padding-bottom: 15px; position: relative;">
@@ -287,6 +290,7 @@ $userOnView = $objUser->GetViewedUser();
                 data = $.parseJSON(data);
                     $('.error-txt').stop().show();
                     $('.error-txt').stop().html(data.error);
+                    $('.error-txt').stop().delay( 1000 ).fadeOut("fast");
                     $('.user-managment img').replaceWith(data.img);
                     $("#oldimg").val(data.img);
                 },
@@ -302,11 +306,12 @@ $userOnView = $objUser->GetViewedUser();
             var pwdForm = $('#passwordChange');
             $(e.target).toggleClass('pwdFormShow');
             if ($(this).hasClass('pwdFormShow')){
-                $(this).text('Peruuta');
+                $(this).text('Sulje');
                 $(pwdForm).show();
             } else {
                 $(this).text('Vaihda Salasana');
                 $(pwdForm).hide();
+                $(pwdForm)[0].reset();
             }
         });
 
@@ -315,12 +320,7 @@ $userOnView = $objUser->GetViewedUser();
             e.preventDefault();
             var pass = $('#Password').val();
             var pass2 = $('#PasswordVerify').val();
-            if(pass != pass2) {
-                $('.error-txt').stop().show();
-                $('.error-txt').stop().html('<div class="error-texti"><p>Salasana ei täsmää</p></div>');
-                $('.error-txt').stop().delay( 1000 ).fadeOut("fast");
-                $('#Password, #PasswordVerify').css({'border-color' : 'red'});
-            } else {
+            if(pass === pass2) {
                 $.ajax({
                     url: 'search.php',
                     type: 'POST',
@@ -333,10 +333,18 @@ $userOnView = $objUser->GetViewedUser();
                         alert("Jokin meni vikaan");
                     },
                     success: function(data) {
-                        console.log(pass);
+                        $('.error-txt').stop().show();
+                        $('.error-txt').stop().html(data);
+                        $('.error-txt').stop().delay( 3000 ).fadeOut("fast");
+                        $("#passwordChange")[0].reset();
                     }
                 });
-            }
+            } else {
+                $('.error-txt').stop().show();
+                $('.error-txt').stop().html('<div class="error-texti"><p>Salasana ei täsmää</p></div>');
+                $('.error-txt').stop().delay( 3000 ).fadeOut("fast");
+                $('#Password, #PasswordVerify').css({'border-color' : 'red'});
+            } 
          });
 
     });    
