@@ -2,7 +2,8 @@
 session_start();
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
-$user = new Users();
+$user = new Users;
+$postObj= new PostedContent;
 $error = '';
 date_default_timezone_set('Europe/Helsinki');
 
@@ -11,50 +12,150 @@ date_default_timezone_set('Europe/Helsinki');
 //Tykkäys
 if(isset($_POST['likeID'])) {
   $action = $_POST['action'];
-  $post_id = $_POST['likeID'];
+  $id = $_POST['likeID'];
+  $isComment = $_POST['isComment'];
+  $isReply = $_POST['isReplyID'];
+ 
+  //JULKAISU
+  if($isComment == 'false' && $isReply == 'false') 
+  {
+    switch ($action) {
+      case 'like':
+        $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, post_id, rating_action) VALUES (?, ?, ?)
+                                          ON DUPLICATE KEY UPDATE rating_action = "like"');
+        $stmt->execute(array($_SESSION['userid'], $id, $action));
+        break;
   
-  switch ($action) {
-    case 'like':
-      $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, post_id, rating_action) VALUES (?, ?, ?)
-                                        ON DUPLICATE KEY UPDATE rating_action="like"');
-      $stmt->execute(array($_SESSION['userid'], $post_id, $action));
-      break;
+      case 'dislike':
+        $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, post_id, rating_action) VALUES (?, ?, ?)
+                                          ON DUPLICATE KEY UPDATE rating_action="dislike"');
+        $stmt->execute(array($_SESSION['userid'], $id, $action));
+        break;
+  
+      case 'unlike':
+        $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND post_id = :post_id');
+        $stmt->bindParam(':user_id', $_SESSION['userid']);
+        $stmt->bindParam(':post_id', $id);
+        $stmt->execute();
+        break;
+  
+      case 'undislike':
+        $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND post_id = :post_id');
+        $stmt->bindParam(':user_id', $_SESSION['userid']);
+        $stmt->bindParam(':post_id', $id);
+        $stmt->execute();
+        break;
+      default;
+        break;
+    }
+    echo getPostRating($id);
+    exit(0);
+  } 
+  //KOMMENTTI
+  else if ($isComment == 'true' && $isReply =='false')
+  {
+    switch ($action) {
+      case 'like':
+        $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, comment_id, rating_action) VALUES (?, ?, ?)
+                                          ON DUPLICATE KEY UPDATE rating_action="like"');
+        $stmt->execute(array($_SESSION['userid'], $id, $action));
+        break;
+  
+      case 'dislike':
+        $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, comment_id, rating_action) VALUES (?, ?, ?)
+                                          ON DUPLICATE KEY UPDATE rating_action="dislike"');
+        $stmt->execute(array($_SESSION['userid'], $id, $action));
+        break;
+  
+      case 'unlike':
+        $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND comment_id = :comment_id');
+        $stmt->bindParam(':user_id', $_SESSION['userid']);
+        $stmt->bindParam(':comment_id', $id);
+        $stmt->execute();
+        break;
+  
+      case 'undislike':
+        $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND comment_id = :comment_id');
+        $stmt->bindParam(':user_id', $_SESSION['userid']);
+        $stmt->bindParam(':comment_id', $id);
+        $stmt->execute();
+        break;
 
-    case 'dislike':
-      $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, post_id, rating_action) VALUES (?, ?, ?)
-                                        ON DUPLICATE KEY UPDATE rating_action="dislike"');
-      $stmt->execute(array($_SESSION['userid'], $post_id, $action));
-      break;
+      default;
+        break;
+    }
+    echo getCmtRating($id, $isReply);
+    exit(0);
+  } 
+  //KOMMENTTI VASTAUS
+  else 
+  {
+    switch ($action) {
+      case 'like':
+        $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, reply_id, rating_action) VALUES (?, ?, ?)
+                                          ON DUPLICATE KEY UPDATE rating_action="like"');
+        $stmt->execute(array($_SESSION['userid'], $id, $action));
+        break;
+  
+      case 'dislike':
+        $stmt = $user->connect()->prepare('INSERT INTO rating_info (user_id, reply_id, rating_action) VALUES (?, ?, ?)
+                                          ON DUPLICATE KEY UPDATE rating_action="dislike"');
+        $stmt->execute(array($_SESSION['userid'], $id, $action));
+        break;
+  
+      case 'unlike':
+        $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND reply_id = :reply_id');
+        $stmt->bindParam(':user_id', $_SESSION['userid']);
+        $stmt->bindParam(':reply_id', $id);
+        $stmt->execute();
+        break;
+  
+      case 'undislike':
+        $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND reply_id = :reply_id');
+        $stmt->bindParam(':user_id', $_SESSION['userid']);
+        $stmt->bindParam(':reply_id', $id);
+        $stmt->execute();
+        break;
 
-    case 'unlike':
-      $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND post_id = :post_id');
-      $stmt->bindParam(':user_id', $_SESSION['userid']);
-      $stmt->bindParam(':post_id', $post_id);
-      $stmt->execute();
-      break;
-
-    case 'undislike':
-      $stmt = $user->connect()->prepare('DELETE FROM rating_info WHERE user_id = :user_id AND post_id = :post_id');
-      $stmt->bindParam(':user_id', $_SESSION['userid']);
-      $stmt->bindParam(':post_id', $post_id);
-      $stmt->execute();
-      break;
-    default;
-      break;
+      default;
+        break;
+    }
+    echo getCmtRating($id, $isReply);
+    exit(0);
   }
-  echo getRating($post_id);
-  exit(0);
+  
 }
 
-function getRating($id){
+function getPostRating($id){
   global $user;
-  
-  $likes = $user->connect()->prepare("SELECT (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'like') -
-                                            (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'dislike') AS amount");
+  $likes = $user->connect()->prepare("SELECT 
+                                      (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'like') -
+                                      (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'dislike') 
+                                      AS amount");
   $likes->execute(array($id, $id));
   $likeCount = $likes->fetchAll(PDO::FETCH_ASSOC);
   return ($likeCount[0]['amount']);
 }
+
+function getCmtRating($id, $cmtType){
+  global $user;
+  if ($cmtType == 'false') {
+  $likes = $user->connect()->prepare("SELECT 
+                                      (SELECT COUNT(*) FROM rating_info WHERE comment_id = ? AND rating_action = 'like') -
+                                      (SELECT COUNT(*) FROM rating_info WHERE comment_id = ? AND rating_action = 'dislike')
+                                      AS amount");
+  } else {
+     $likes = $user->connect()->prepare("SELECT 
+                                      (SELECT COUNT(*) FROM rating_info WHERE reply_id = ? AND rating_action = 'like') -
+                                      (SELECT COUNT(*) FROM rating_info WHERE reply_id = ? AND rating_action = 'dislike')
+                                      AS amount");
+  }
+  $likes->execute(array($id, $id));
+  $likeCount = $likes->fetchAll(PDO::FETCH_ASSOC);
+  return ($likeCount[0]['amount']);
+}
+
+
 
 //Käyttäjän poistaminen
 if(isset($_GET['id'])) {
@@ -242,8 +343,6 @@ if(isset($_POST['delete_comment'])) {
 if (isset($_POST['comment'])) {
 
   $output = '';
-
-  //Uusi kommentti
   $stmt =  $user->connect()->prepare('INSERT INTO comments (post_id, user_id, name, date, content)
   VALUES (?, ?, ?, ?, ?);');
 
@@ -283,7 +382,12 @@ if(isset($_POST['reply'])){
   
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-  
+    $likes = $postObj->getLikesReply($data['id']);
+    $likeStatus = null;
+    if(isset($_SESSION['userid'])) {
+      $likeStatus = $postObj->userLikedReply($_SESSION['userid'], $data['id']);
+    }
+
     $newComment =
         "<div class='discussion-reply'>
               <div class='date'>
@@ -292,8 +396,13 @@ if(isset($_POST['reply'])){
               </div>
               <img src='". $data['image'] ."' class='reply-img'></img>
               <div class='bodytext'>" . $data['content'] . "</div>
+              <div class='comment-buttons'>
               <button class='reply' id='reply' onclick='reply(this)' data-id='" . $data['comment_id'] . "' style='margin-left: 3px;'>Vastaa</button>
+              <div class='comment-like-buttons' data-id='" . $data['id'] . "'>
+              ". $postObj->likeStatusReply($likeStatus, $likes) ."
+              </div>
               <button class='delete-comment' user-id='" . $data['user_id'] . "' onclick='isReply = true;' data-id='" . $data['id'] . "'>Poista</button>
+              </div>
               </div>
               ";
              
@@ -303,6 +412,7 @@ if(isset($_POST['reply'])){
 
 function createCommentRow($data) {
   global $user;
+  global $postObj;
   $mysqldate = strtotime($data['date']);
   $phpdate = date('d/m/Y G:i A', $mysqldate);
 
@@ -317,6 +427,13 @@ function createCommentRow($data) {
   $stmt->execute(array($data['comment_id']));
   $allReplies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+  
+  $likes = $postObj->getLikesComment($data['comment_id']);
+  $likeStatus = null;
+  if(isset($_SESSION['userid'])) {
+    $likeStatus = $postObj->userLikedComment($_SESSION['userid'], $data['comment_id']);
+  }
+  
   $response = "
               <div class='discussion-wrapper' id='" . $data['comment_id'] . "'>
               <div class='discussion'>
@@ -329,15 +446,25 @@ function createCommentRow($data) {
                 </div>
                 <div class='comment-buttons'>
                 <button class='reply' onclick='reply(this)' data-id='" . $data['comment_id'] . "'>Vastaa</button>
+                <div class='comment-like-buttons' data-id='" . $data['comment_id'] . "'>
+                ". $postObj->likeStatusComment($likeStatus, $likes) ."
+                </div>
                 <button class='delete-comment' onclick='isReply = false;' user-id='" . $data['user_id'] . "' data-id='" . $data['comment_id'] . "'>Poista</button>
                 </div>
                 <button class='reply-show' data-id='" . count($allReplies) . "' style='white-space: nowrap; margin-top: 5px; display: none;'>Näytä ". count($allReplies) ." Kommentti</button>
                 <div class='reply-section' style='display: none;'>
                 "; 
                
+                
   foreach($allReplies as $dataR) {
+    $likes = $postObj->getLikesReply($dataR['id']);
     $mysqldate = strtotime($dataR['date']);
     $phpdate = date('d/m/Y G:i A', $mysqldate);
+    $likeStatus = null;
+    if(isset($_SESSION['userid'])) {
+      $likeStatus = $postObj->userLikedReply($_SESSION['userid'], $dataR['id']);
+    }
+
     $response .=  "<div class='discussion-reply'>
                     <div class='date'>
                     <a href='profile.php?user=" . $dataR['user_id'] . "' class='username'>" . $dataR['name'] . "</a>
@@ -347,6 +474,9 @@ function createCommentRow($data) {
                     <div class='bodytext'>" . $dataR['content'] . "</div>
                     <div class='comment-buttons'>
                     <button class='reply' id='reply' onclick='reply(this)' data-id='" . $dataR['comment_id'] . "' style='margin-left: 3px;'>Vastaa</button>
+                    <div class='comment-like-buttons' data-id='" . $dataR['id'] . "'>
+                    ". $postObj->likeStatusReply($likeStatus, $likes) ."
+                    </div>
                     <button class='delete-comment' user-id='" . $dataR['user_id'] . "' onclick='isReply = true;' data-id='" . $dataR['id'] . "'>Poista</button>
                     </div>
                     </div>

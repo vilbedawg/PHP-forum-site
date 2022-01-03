@@ -20,106 +20,7 @@ if($_SESSION["userid"] !== $userOnView[0]['user_id']) {
 
 
 ?>
-<body>
-  <!--Modal section-->
-  <div class="bg-modal">
-        <div class="modal-content">
-            <div class="modal-close"><i class="fas fa-times"></i>
-            </div>
-            <div class="modal-side-bar">
-            <div class="profile-status">
-                <h1>Kategoriat</h1>
-            </div>
-            <div class="modal-categories">
-                <div class="category-item">Yleinen</div>
-                <div class="category-item">Politiikka</div>
-                <div class="category-item">Valokuvaus</div>
-                <div class="category-item">Videot</div>
-                <div class="category-item">Tarinat</div>
-                <div class="category-item">Taide</div>
-                <div class="category-item">Pelit</div>
-                <div class="category-item">Elokuvat</div>
-                <div class="category-item">Musiikki</div>
-                <div class="category-item">Urheilu</div>
-                <div class="category-item">Harrastukset</div>
-                <div class="category-item" style="color: red;">NSFW</div>
-            </div>
-            </div>
-
-            <?php
-            if (isset($_POST['post'])) {
-                include_once "controllers/posts-contr.php";
-                $title = $_POST['subject'];
-                $topic = $_POST['topic'];
-                $category = $_POST['category'];
-                
-                $post = new PostsContr($title, $topic, $category);
-                $i = $post->PostTopic();
-                $objUser->setUserID($_SESSION['userid']);
-                $mostRecent = $objUser->GetMostRecent();
-                header('Location: view.php?room= '. $mostRecent[0]['MAX(post_id)'] .' ');
-            }
-
-            ?>
-            
-            <div class="create-form">
-                <form class="form-post" method="POST">
-                <div class="error-text">
-                    <?php
-                    if (!isset($_GET['error'])) {
-                        echo "";
-                    } else {
-                        $signupCheck = $_GET['error'];
-                        if ($signupCheck == "emptyinput") {
-                            echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
-                        }
-                        if ($signupCheck == "invalidTitle") {
-                            echo "<div class='error-texti'><p>Otsikko sisältää ei sallittuja kirjaimia</p></div>";
-                        }
-                        if ($signupCheck == "invalidLength") {
-                            echo "<div class='error-texti'><p>Otsikon täytyy olla 3-50 merkkiä</p></div>";
-                        }
-                        if ($signupCheck == "invalidCategory") {
-                            echo "<div class='error-texti'><p>Valitse jokin kategoria listalta</p></div>";
-                        }
-                    }
-                    ?>
-                </div>
-                <div class="form-group-box">
-                    <div class="form-group-upper">
-                        <label>Otsikko</label>
-                    <?php if(isset($_GET['title'])) {
-                         $formName = $_GET['title'];
-                        
-                        echo '<input type="text" name="subject" id="subject" value="'.$formName.'">';
-                        } else {
-                            echo '<input type="text" name="subject" id="subject"></input>';
-                        } ?>
-                        </div>
-                        <div class="form-group-upper" style="margin-bottom: 0;">
-                        <label>Valitse kategoria</label>
-                        <input type="text" name="category" id="category"> 
-                    </div>
-                    <div id="categorylist"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Aihe</label>
-                        <?php if(isset($_GET['topic'])) {
-                         $formContent = $_GET['topic'];
-                        echo '<textarea class="tinymce" name="topic" id="topic" rows="7">'. $formContent .'</textarea>';
-                        } else {
-                            echo '<textarea class="tinymce" name="topic" id="topic" rows="7"></textarea>';
-                        } ?>
-                        
-                        <div class="post-topic-button">
-                            <input type="submit" name="post" value="Julkaise" id="post">
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!--Modal section loppuu-->
+<body style="background-color: #324960;">
     <div class="search-toolbar">
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn"><div class="drop-icons"><i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i> Koti</div> <i class="fas fa-angle-down"></i></button>
@@ -130,7 +31,6 @@ if($_SESSION["userid"] !== $userOnView[0]['user_id']) {
                     echo '<a href="manage.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
                     echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
                      } ?>
-                
             </div>
             </div>
             <div class="search">
@@ -145,15 +45,15 @@ if($_SESSION["userid"] !== $userOnView[0]['user_id']) {
                 }
                 ?>
             </div>
-            
         </div>
-<div class="user-edit-page">
-
+ <div class="user-edit-page">
     <div class="user-managment">
+    <div class="delete-account" id="<?php echo $_SESSION['userid']; ?>">
+        <p>Poista tilini</p>
+    </div>
         <div class="edit-page-close">
-            <a href="profile.php?user=<?php echo $userOnView[0]['user_id']; ?>"><i class="fa fa-times" aria-hidden="true"></i></a>
+            <a href="profile.php?user=<?php echo $userOnView[0]['user_id']; ?>" style="color: #333; font-size: 18px;"><i class="fa fa-times" aria-hidden="true"></i> Sulje</a>
         </div>
-        <h1 class="edit-user-title"> <?php echo $userOnView[0]['name'] ?> </h1>
         <div class="error-txt" style="display: none;"></div>
         <div class="edit-page-box1">
         <div class="user-details">
@@ -178,7 +78,7 @@ if($_SESSION["userid"] !== $userOnView[0]['user_id']) {
     </div>
         <!-- nimen vaihto form -->
         <div class="user-form-container">
-        <h1>Käyttäjätiedot</h1>
+        <h1><?php echo $userOnView[0]['name'] ?> Käyttäjätiedot</h1>
         <div class="user-form-name">
             <form  method="post" id="nameSubmit">
                 <div class="field input">
@@ -224,7 +124,6 @@ if($_SESSION["userid"] !== $userOnView[0]['user_id']) {
                 </div>
                 <!-- // -->
             <button class="logout" id="pwdEdit" style="margin-right: 0; font-size: 16px;">Vaihda salasana</button>
-
             </div>
         </div>
     </div>
@@ -347,7 +246,25 @@ if($_SESSION["userid"] !== $userOnView[0]['user_id']) {
             } 
          });
 
-    });    
+        $(document).on('click', '.delete-account', function() {
+            var id = $(this).attr("id");
+            if(confirm(' Haluatko varmasti poistaa tilisi ?'))
+            {
+                $.ajax({
+                url: 'search.php',
+                type: 'GET',
+                data: {id: id},
+                error: function() {
+                    alert('Jokin meni vikaan');
+                },
+                success: function(data) {
+                        alert("Tilisi poistettiin onnistuneesti.");  
+                        window.location = 'login.php';
+                    }
+                });
+            }
+            });
+    });   
 </script>
 <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
 <script type="text/javascript" src="tinymce\tinymce.min.js"></script>

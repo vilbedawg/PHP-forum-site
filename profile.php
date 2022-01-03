@@ -19,106 +19,6 @@ $userlist = $objUser->GetAllUsersButMe();
 ?>
 
 <body>
-    <!--Modal section-->
-    <div class="bg-modal">
-        <div class="modal-content">
-            <div class="modal-close"><i class="fas fa-times"></i>
-            </div>
-            <div class="modal-side-bar">
-            <div class="profile-status">
-                <h1>Kategoriat</h1>
-            </div>
-            <div class="modal-categories">
-                <div class="category-item">Yleinen</div>
-                <div class="category-item">Politiikka</div>
-                <div class="category-item">Valokuvaus</div>
-                <div class="category-item">Videot</div>
-                <div class="category-item">Tarinat</div>
-                <div class="category-item">Taide</div>
-                <div class="category-item">Pelit</div>
-                <div class="category-item">Elokuvat</div>
-                <div class="category-item">Musiikki</div>
-                <div class="category-item">Urheilu</div>
-                <div class="category-item">Harrastukset</div>
-                <div class="category-item" style="color: red;">NSFW</div>
-            </div>
-            </div>
-
-            <?php
-            if (isset($_POST['post'])) {
-                include_once "controllers/posts-contr.php";
-                $title = $_POST['subject'];
-                $topic = $_POST['topic'];
-                $category = $_POST['category'];
-                
-                $post = new PostsContr($title, $topic, $category);
-                $i = $post->PostTopic();
-                $objUser->setUserID($_SESSION['userid']);
-                $mostRecent = $objUser->GetMostRecent();
-                header('Location: view.php?room= '. $mostRecent[0]['MAX(post_id)'] .' ');
-            }
-
-            ?>
-            
-            <div class="create-form">
-                <form class="form-post" method="POST">
-                <div class="error-text">
-                    <?php
-                    if (!isset($_GET['error'])) {
-                        echo "";
-                    } else {
-                        $signupCheck = $_GET['error'];
-                        if ($signupCheck == "emptyinput") {
-                            echo "<div class='error-texti'><p>Täytä kaikki kohdat</p></div>";
-                        }
-                        if ($signupCheck == "invalidTitle") {
-                            echo "<div class='error-texti'><p>Otsikko sisältää ei sallittuja kirjaimia</p></div>";
-                        }
-                        if ($signupCheck == "invalidLength") {
-                            echo "<div class='error-texti'><p>Otsikon täytyy olla 3-50 merkkiä</p></div>";
-                        }
-                        if ($signupCheck == "invalidCategory") {
-                            echo "<div class='error-texti'><p>Valitse jokin kategoria listalta</p></div>";
-                        }
-                    }
-                    ?>
-                </div>
-                <div class="form-group-box">
-                    <div class="form-group-upper">
-                        <label>Otsikko</label>
-                    <?php if(isset($_GET['title'])) {
-                         $formName = $_GET['title'];
-                        
-                        echo '<input type="text" name="subject" id="subject" value="'.$formName.'">';
-                        } else {
-                            echo '<input type="text" name="subject" id="subject"></input>';
-                        } ?>
-                        </div>
-                        <div class="form-group-upper" style="margin-bottom: 0;">
-                        <label>Valitse kategoria</label>
-                        <input type="text" name="category" id="category"> 
-                    </div>
-                    <div id="categorylist"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Aihe</label>
-                        <?php if(isset($_GET['topic'])) {
-                         $formContent = $_GET['topic'];
-                        echo '<textarea class="tinymce" name="topic" id="topic" rows="7">'. $formContent .'</textarea>';
-                        } else {
-                            echo '<textarea class="tinymce" name="topic" id="topic" rows="7"></textarea>';
-                        } ?>
-                        
-                        <div class="post-topic-button">
-                            <input type="submit" name="post" value="Julkaise" id="post">
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!--Modal section loppuu-->
     <div class="search-toolbar">
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn"><div class="drop-icons"><i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i> Koti</div> <i class="fas fa-angle-down"></i></button>
@@ -195,28 +95,17 @@ $userlist = $objUser->GetAllUsersButMe();
                 $mysqldate = strtotime($post['date']);
                 $phpdate = date('d/m/Y G:i A', $mysqldate);
                 $comments = $postObj->getAllComments($post['post_id']);
-                $likes = $postObj->getLikes($post['post_id']);
-                $likeStatus = $postObj->userLiked($_SESSION['userid'], $post['post_id']);
+                $likes = $postObj->getLikesPost($post['post_id']);
+                $likeStatus = null;
+                $status = null;
+                if(isset($_SESSION['userid'])) {
+                    $likeStatus = $postObj->userLikedPost($_SESSION['userid'], $post['post_id']);
+                    $status = $postObj->likeStatusPost($likeStatus, $likes);
+                }
                 echo
                 '<div class="room-container" data-id="'. $post['post_id'] .'">
-                <div class="like-buttons">';
+                  <div class="like-buttons" data-id="'. $post['post_id'] .'"> '. $status .'</div>';
 
-                    if($likeStatus == 'like') {
-                        echo "<i class='fas fa-long-arrow-alt-up' id='liked' style='color: #ee6c4d;'></i>
-                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
-                        <i class='fas fa-long-arrow-alt-down' id='dislike'></i>
-                        </div>";
-                    } else if($likeStatus == 'dislike') {
-                        echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
-                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
-                        <i class='fas fa-long-arrow-alt-down' id='disliked' style='color: #ee6c4d;'></i>
-                        </div>";
-                    } else {
-                        echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
-                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
-                        <i class='fas fa-long-arrow-alt-down' id='dislike'></i>
-                        </div>";
-                    }
                     if (isset($_SESSION['userid']) && ($post['user_id'] === $_SESSION['userid'])) {
                     echo '<div class="delete-post" data-id="'. $post['post_id'] .'">           
                     <button class="delete-post-btn" id="delete-post"><i class="fa fa-times" aria-hidden="true"></i></div></button>
@@ -226,7 +115,7 @@ $userlist = $objUser->GetAllUsersButMe();
                     echo
                     ' 
                     <div class="room">
-                    <div class="date-and-post">
+                    <div class="date-and-post" style="padding: 0px 12px;">
                         <div class="date-users">
                         <p class="username-users">' . $post['name'] . '</p>
                         <p>' . $phpdate . '</p>
@@ -237,8 +126,8 @@ $userlist = $objUser->GetAllUsersButMe();
                         <div class="post-footer">
                         <div class="hashtag">
                         ' . $post['category'] . ' </div>
-                    <div class="post-toolbar-users">
-                    <i class="far fa-comment-alt"></i>
+                        <div class="post-toolbar-users">
+                        <i class="far fa-comment-alt"></i>
                         <p> ' . $comments['comment_amount'] . ' kommenttia </p>
                     </div>
                     </div>
@@ -397,9 +286,10 @@ $(document).ready(function(){
     });
     $("p").has("img").css({"textAlign" : "center",
     "background" : "black",
-    "margin-left" : "0",
+    "margin" : "0",
     "color" : "transparent",
     });
+    
     $("p").has("iframe").css({"textAlign" : "center",
         "background" : "black",
         "margin-left" : "0",

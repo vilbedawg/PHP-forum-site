@@ -32,7 +32,11 @@ $(document).ready(function() {
         modal.show();
     }
 
-    $('.create').click(function() {
+    $(document).on('click', '.create, .profile-create', function() {
+        if (window.location.href.indexOf("user") > -1) {
+            window.location = 'home.php?show=Etusivu#newpost';
+        }
+        
         if (window.location.href.indexOf("room") > -1) {
             window.location = 'home.php?show=Etusivu#newpost';
         }
@@ -81,7 +85,6 @@ $(document).on('click', function(e) {
         $(searchbar).val('');
         $('.post-category-list').hide();
     }
-    
 });
 
 
@@ -245,11 +248,10 @@ $(document).ready(function(){
 
 //----------------------------//
 //Like system
-$('#like, #dislike, #liked, #disliked').on('click', function(e) {
+$(document).on('click', '#like, #dislike, #liked, #disliked', function(e) {
   e.stopPropagation();
   likeID = $(this).parents().data('id');
   clickedBtn = $(this);
-  
   if($(clickedBtn).is('#like')) {
       action = 'like';
   }
@@ -268,7 +270,9 @@ $('#like, #dislike, #liked, #disliked').on('click', function(e) {
       
       data: {
            likeID: likeID,
-           action: action 
+           action: action,
+           isComment: isComment,
+           isReplyID
       },
       success: function (data) {
           if (action == 'like') {

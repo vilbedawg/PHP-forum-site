@@ -152,9 +152,9 @@ $onliners = $objUser->GetAllOnliners();
     
         <div class="navbar-menu">
         <?php if(isset($_GET['show'])) {
-                echo '<p class="current-user-parent">'. $_GET['show'] .'</p>';
+                echo '<h1 class="current-user-parent">'. $_GET['show'] .'</h1>';
             } else {
-                echo '<p class="current-user-parent">Koti</p>';
+                echo '<h1 class="current-user-parent">Koti</h1>';
             } ?>
         </div>
         <div class="navbar-menu-hidden">
@@ -172,9 +172,9 @@ $onliners = $objUser->GetAllOnliners();
     <div class="home">                        
         <div class="discussion-page">
             <div class="sort-table">
-                <a href="home.php?show=<?php echo $_GET['show']; ?>&sort=New"><i class="fas fa-long-arrow-alt-up"></i> Uusin</a>
-                <a href="home.php?show=<?php echo $_GET['show']; ?>&sort=Old"><i class="fas fa-long-arrow-alt-down"></i> Vanhin</a>
-                <a href="home.php?show=<?php echo $_GET['show']; ?>&sort=Popular">Suosituin</a>
+                <a href="home.php?show=<?php echo $_GET['show']; ?>&sort=New" id="new"><i class="fas fa-long-arrow-alt-up"></i> Uusin</a>
+                <a href="home.php?show=<?php echo $_GET['show']; ?>&sort=Old" id="old"><i class="fas fa-long-arrow-alt-down"></i> Vanhin</a>
+                <a href="home.php?show=<?php echo $_GET['show']; ?>&sort=Popular" id="popular">Suosituin</a>
         </div>
             <?php
             $postObj = new PostedContent;
@@ -189,7 +189,7 @@ $onliners = $objUser->GetAllOnliners();
                     $posts = $postObj->getCategoryPostsOldest($_GET['show']);
                 }
                 else if($_GET['sort'] == 'Popular') {
-                    echo 'Popular';
+                    $posts = $postObj->getMostLikedPostByCategory($_GET['show']);
                 }
             } 
 
@@ -203,7 +203,7 @@ $onliners = $objUser->GetAllOnliners();
                     $posts = $postObj->getAllPostsByOldest();
                 }
                 else if($_GET['sort'] == 'Popular') {
-                    echo 'Popular';
+                    $posts = $postObj->getMostLikedPosts();
                 }
             }
             else
@@ -216,28 +216,19 @@ $onliners = $objUser->GetAllOnliners();
                 $mysqldate = strtotime($post['date']);
                 $phpdate = date('d/m/Y G:i A', $mysqldate);
                 $comments = $postObj->getAllComments($post['post_id']);
-                $likes = $postObj->getLikes($post['post_id']);
-                $likeStatus = $postObj->userLiked($_SESSION['userid'], $post['post_id']);
+                $likes = $postObj->getLikesPost($post['post_id']);
+                $likeStatus = null;
+                $status = null;
+                if(isset($_SESSION['userid'])) {
+                    $likeStatus = $postObj->userLikedPost($_SESSION['userid'], $post['post_id']);
+                    $status = $postObj->likeStatusPost($likeStatus, $likes);
+                }
                 echo "<div class='room-container' data-id='". $post['post_id'] ."'>
-                    <div class='like-buttons' data-id='". $post['post_id'] ."'>";
-                    if($likeStatus == 'like') {
-                        echo "<i class='fas fa-long-arrow-alt-up' id='liked' style='color: #ee6c4d;'></i>
-                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
-                        <i class='fas fa-long-arrow-alt-down' id='dislike'></i>";
-                    } else if($likeStatus == 'dislike') {
-                        echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
-                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
-                        <i class='fas fa-long-arrow-alt-down' id='disliked' style='color: #ee6c4d;'></i>";
-                    } else {
-                        echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
-                        <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
-                        <i class='fas fa-long-arrow-alt-down' id='dislike'></i>";
-                    }
-                    echo
-
-                    "</div>
+                    <div class='like-buttons' data-id='". $post['post_id'] ."'>
+                    ". $status ."
+                    </div>
                         <div class='room'>
-                                <div class='date-and-post'>
+                                <div class='date-and-post' style='padding: 0px 12px;'>
                                     <div class='date-users'>
                                         <p class='username-users' data-id='". $post['user_id'] ."'>" . $post['name'] . "</p>
                                         <p>" . $phpdate . "</p>
@@ -273,7 +264,7 @@ $onliners = $objUser->GetAllOnliners();
             <?php if(isset($_SESSION['userid'])){
                 echo '<div class="users-link"><button class="create" style="width: 90%; border-radius: 20px;">Luo uusi</button></div>
                       <a href="profile.php?user='. $_SESSION['userid'] .'"><div class="users-link"><button class="logout" style="width: 90%; border-radius: 20px; margin-left: 0;">Käyttäjätiedot</button></div><a>
-                      <p style="width: 70%; position: absolute; bottom: 5px; left: 5px;">Kirjautunut sisään käyttäjällä <b>'. $_SESSION['name'] .'</b></p>';
+                      <p style="width: 90%; position: absolute; bottom: 5px; left: 5px;">Kirjautunut sisään käyttäjällä <b>'. $_SESSION['name'] .'</b></p>';
             } else {
                 echo '<a href="login.php"><div class="users-link"><button class="logout" style="width: 90%; border-radius: 20px; margin-left: 0;">Kirjaudu sisään</button></div><a>';
             }?>
@@ -313,7 +304,7 @@ $onliners = $objUser->GetAllOnliners();
         $(document).ready(function() {
             $("p").has("img").css({"textAlign" : "center",
                                     "background" : "black",
-                                    "margin-left" : "0",
+                                    "margin" : "0",
                                     "color" : "transparent",
             });
             $("p").has("iframe").css({"textAlign" : "center",
@@ -322,13 +313,13 @@ $onliners = $objUser->GetAllOnliners();
             });  
             //----------------------------//
             //room container linkit
-            $(".username-users").on('click', function(e){
-                    e.preventDefault();
+            $(document).on('click', '.username-users', function(e){
                     e.stopPropagation();
                     var id = $(this).data('id');
                     window.location = "profile.php?user="+id;
                 });
-                $(".room-container").on('click', function(e){
+                $(document).on('click', ".room-container", function(e){
+                        e.stopPropagation();
                         e.preventDefault;
                         var id = $(this).data('id');
                         window.location = "view.php?room="+id;
@@ -338,7 +329,20 @@ $onliners = $objUser->GetAllOnliners();
                    if (hash == "#newpost") {
                     $('.bg-modal').css('display', 'flex');
                    }
-              
+
+                    if (window.location.href.indexOf("New") > -1) {
+                        $('#new').css({'background-color' : '#dddd',
+                                        'border-radius' : '10px'});
+                    } 
+                    else if (window.location.href.indexOf("Old") > -1) {
+                        $('#old').css({'background-color' : '#dddd',
+                                        'border-radius' : '10px'});
+                    }
+                    else if (window.location.href.indexOf("Popular") > -1) {
+                        $('#popular').css({'background-color' : '#dddd',
+                                        'border-radius' : '10px'});
+                    }
+                    
             });
         </script> 
 

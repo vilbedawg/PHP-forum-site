@@ -4,16 +4,16 @@ class Login extends Dbh {
 
  
     protected function getUser($name, $pwd) {
-        $stmt = $this->connect()->prepare('SELECT * FROM users WHERE name = ? OR email = ?;');
-
-        if(!$stmt->execute(array($name, $pwd)))  
+        $stmt = $this->connect()->prepare('SELECT * FROM users WHERE name = :name;');
+        $stmt->bindParam(':name', $name);
+        if(!$stmt->execute())  
         {
             $stmt = null;
             header("location: login.php?error=stmtfailed");
             exit();
         }  
         
-        if($stmt->rowCount() == 0)
+        if($stmt->rowCount() < 1)
         {
             $stmt = null;
             header("location: login.php?error=usernotfound");

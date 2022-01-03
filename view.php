@@ -5,7 +5,11 @@ require_once 'includes/autoload-classes.php';
 require_once "controllers/posts-contr.php";
 require_once "includes/header.php";
 
-
+if(isset($_SESSION['userid'])) {
+    $sessID = $_SESSION['userid'];
+} else {
+    $sessID = -1;
+}
 
 // kaikki postaukset 
 $roomNum = $_GET['room'];
@@ -20,7 +24,7 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
 
 
 
-<body>
+<body style="background-color: #2e2f30;">
     <?php
     if (isset($_GET['edit'])) {
     ?>
@@ -171,27 +175,16 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
         </div>
         <div class="room-header">
             <?php
-            $likes = $objPost->getLikes($currentRoom[0]['post_id']);
-            $likeStatus = $objPost->userLiked($_SESSION['userid'], $currentRoom[0]['post_id']);
-            echo "<div class='like-buttons' data-id='". $currentRoom[0]['post_id'] ."' style='left: 9px;'>";
-            if($likeStatus == 'like') {
-            echo "<i class='fas fa-long-arrow-alt-up' id='liked' style='color: #ee6c4d;'></i>
-            <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
-            <i class='fas fa-long-arrow-alt-down' id='dislike'></i>
-            </div>";
-            } else if($likeStatus == 'dislike') {
-            echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
-            <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
-            <i class='fas fa-long-arrow-alt-down' id='disliked' style='color: #ee6c4d;'></i>
-            </div>";
-            } else {
-            echo "<i class='fas fa-long-arrow-alt-up' id='like'></i>
-            <p style='font-size: 18px; text-align: center;' class='like-amount'>". $likes[0]['amount']  ."</p>
-            <i class='fas fa-long-arrow-alt-down' id='dislike'></i>
-            </div>";
+            $likes = $objPost->getLikesPost($currentRoom[0]['post_id']);
+            $likeStatus = null;
+            $status = null;
+            if(isset($_SESSION['userid'])) {
+                $likeStatus = $objPost->userLikedPost($_SESSION['userid'], $currentRoom[0]['post_id']);
+                $status = $objPost->likeStatusPost($likeStatus, $likes);
             }
+            echo "<div class='like-buttons' data-id='". $currentRoom[0]['post_id'] ."' style='left: 9px;'>
+            $status </div>";
         ?>
-
             <div class='date-and-post' style='margin-left: 0;'>
                 <div class='date'>
                     <a href="profile.php?user=<?php echo $currentRoom[0]['user_id'] ?> " class="username"><?php echo $currentRoom[0]['name'] ?> </a>
@@ -234,7 +227,10 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
                         <input type="submit" name="post" value="Kommentoi" id="post">
                         </div> ';
                     } else {
-                        echo '<p>kirjaudu sisään jotta voit kommentoida</p>';
+                        echo '<div class="form-group">
+                                <a id="comment"></a>
+                                <input type="hidden" id="post_id" value="' . $roomNum . '">
+                                </div>';
                     }
                     ?>
                 </form>
@@ -242,7 +238,7 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
             <span class="post-hr" id="#commentsection">
                 <hr>
             </span>
-            <div class="comment-container" style="width: 90%;">
+            <div class="comment-container">
                 <form class='form-reply' method='POST' id='reply' data-id="" style='display: none; padding-top: 10px; padding-left: 10px;'>
                     <textarea class='tinymce' name='content' id='reply-topic' placeholder='Kerro ajatuksistasi...' style='z-index: 99999;'></textarea>
                     <div class='post-comment' style='align-self: flex-end;'>
@@ -253,7 +249,7 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
             </div>
         </div>
         <a href="" class=" scrollup">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#333" viewBox="0 0 24 24">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#ee6c4d" viewBox="0 0 24 24">
                         <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z" />
                     </svg>
                     </a>
@@ -306,7 +302,7 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
             </script>
             <script>
                 $(document).ready(function() {
-                    var sessID = <?php echo $_SESSION['userid']; ?>;
+                    var sessID = <?php echo $sessID ?>;
                     var commentAmount = $('.form-reply').next().data('id');
                     var amount = <?php echo $commentAmount; ?>;
                     var post_id = $('#post_id').val();
@@ -340,6 +336,11 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
                                             'max-width' : '100%',
                                             'max-height' : '300px'
                             });
+
+                            // jos käyttäjä on offline tilassa
+                            if(sessID == -1) {
+                                $('.comment-buttons').remove();
+                            }
                         }  
                     });
                     
@@ -525,6 +526,7 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
                             }
                         });
                     });
+
                 });
 
                 function reply(caller) {
@@ -545,10 +547,6 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
                     $(caller).parents('.form-reply')[0].reset();
                     $(caller).parents('.form-reply').hide();
                 }
-
-
-                
-
             </script>
 
 
