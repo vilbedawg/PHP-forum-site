@@ -25,14 +25,15 @@ class Signup extends Dbh {
             header("location: login.php?error=stmtfailed");
             exit();
         }
-        $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        //asetetaan session muuttujat
         session_start();
-        $_SESSION["userid"] = $user[0]["user_id"];
-        $_SESSION["name"] = $user[0]["name"];
-        $_SESSION["email"] = $user[0]["email"];
-        $_SESSION["login"] = $user[0]["login_status"];
-        $_SESSION["last_login"] = $user[0]["last_login"];
-        $_SESSION["image"] = $user[0]["image"];
+        $_SESSION["userid"] = $user["user_id"];
+        $_SESSION["name"] = $user["name"];
+        $_SESSION["email"] = $user["email"];
+        $_SESSION["login"] = $user["login_status"];
+        $_SESSION["last_login"] = $user["last_login"];
+        $_SESSION["image"] = $user["image"];
         $stmt = null;
     }
 

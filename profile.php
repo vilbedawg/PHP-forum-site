@@ -2,8 +2,10 @@
 session_start();
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
-include_once "includes/header.php";
+require_once "includes/header.php";
 
+
+//määritellään oliot ja kutsutaan methodit
 $objUser = new Users;
 $users = $objUser->GetAllUsers();
 
@@ -19,48 +21,51 @@ $userlist = $objUser->GetAllUsersButMe();
 ?>
 
 <body>
-<span class="fixed-create"><button class="create" style=" border-radius: 50%; padding: 10px 15px;">+</button></span>
+    <span class="fixed-create"><button class="create" style=" border-radius: 50%; padding: 10px 15px;">+</button></span>
     <div class="search-toolbar">
         <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn"><div class="drop-icons"><i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i> Koti</div> <i class="fas fa-angle-down"></i></button>
+            <button onclick="myFunction()" class="dropbtn">
+                <div class="drop-icons"><i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i> Koti</div> <i class="fas fa-angle-down"></i>
+            </button>
             <div id="myDropdown" class="dropdown-content">
                 <a href="home.php?show=Etusivu">Etusivu</a>
-                <?php if(isset($_SESSION['userid'])) { 
-                    echo '<a href="profile.php?user='. $_SESSION['userid'] .'">Profiili</a>';
-                    echo '<a href="manage.php?user='. $_SESSION['userid'] .'">Muokkaa profiilia</a>';
+                <?php if (isset($_SESSION['userid'])) {
+                    echo '<a href="profile.php?user=' . $_SESSION['userid'] . '">Profiili</a>';
+                    echo '<a href="manage.php?user=' . $_SESSION['userid'] . '">Muokkaa profiilia</a>';
                     echo '<button class="create dropdown" style="width: 100%; border-radius: 0;">Luo uusi</button>';
-                     } ?>
-                
+                } ?>
+
             </div>
-            </div>
-            <div class="search">
-                <input type="text" id="post-search" placeholder="Etsi julkaisu...">
-                <div class="post-category-list"></div>
-            </div>
-            <div class="buttons">
-            <?php if(isset($_SESSION['userid'])) {
-                    echo '<a href="logout.php"><button class="logout"><i class="fas fa-sign-out-alt"></i></button></a>';
-                }else {
-                    echo '<a href="login.php"><button class="logout"><i class="fa fa-sign-in" aria-hidden="true"></i></button></a>';
-                }
-                ?>
-            </div>
-            
         </div>
+        <div class="search">
+            <input type="text" id="post-search" placeholder="Etsi julkaisu...">
+            <div class="post-category-list"></div>
+        </div>
+        <div class="buttons">
+            <?php if (isset($_SESSION['userid'])) {
+                echo '<a href="logout.php"><button class="logout"><i class="fas fa-sign-out-alt"></i></button></a>';
+            } else {
+                echo '<a href="login.php"><button class="logout"><i class="fa fa-sign-in" aria-hidden="true"></i></button></a>';
+            }
+            ?>
+        </div>
+
+    </div>
     <div class="home-other">
         <?php
-        if(isset($_GET['/noexist'])) {
-        echo "<div class='noexist-box'>
+        // jos käyttäjä poistettu tai ei olemassa, uudelleenohjataan käyttäjä etusivulle
+        if (isset($_GET['/noexist'])) {
+            echo "<div class='noexist-box'>
             <h1>Käyttäjä ei ole olemassa :(</h1>
             <a href='home.php?show=Etusivu'><button class='logout'>Takaisin kotisivulle</button></a>
             </div>";
         }
-            echo
-            '
+        echo
+        '
             <div class="home-users">
             <div class="profile">
             <div class="profile-status">
-                <h1>Käyttäjätiedot</h1>
+            <h1>Käyttäjätiedot</h1>
             </div>
             <div class="profile-managment">
             <span style="display: flex; align-self: flex-start;">
@@ -75,13 +80,14 @@ $userlist = $objUser->GetAllUsersButMe();
               <hr>
               ';
 
-            if (isset($_SESSION['userid']) && $_SESSION['userid'] == $userOnView[0]['user_id']) {
-                echo '<a href="manage.php?user=' . $_SESSION['userid'] . '" class="edit-btn">
+            // jos profiilin omistaja, näytetään muokkaa profiilia nappi
+        if (isset($_SESSION['userid']) && $_SESSION['userid'] == $userOnView[0]['user_id']) {
+            echo '<a href="manage.php?user=' . $_SESSION['userid'] . '" class="edit-btn">
                 <button class="edit" type="submit" name="user" value="' . $_SESSION['userid'] . '">
                     Muokkaa profiilia
                 </button>
                 </a>';
-            }
+        }
         echo ' 
               <button class="profile-create">Luo uusi</button>
             </div>
@@ -89,32 +95,33 @@ $userlist = $objUser->GetAllUsersButMe();
             <a href="home.php?show=Etusivu" style="width: 100px;"><button class="profile-back" style="width: 100%;">Etusivulle</button></a>
             ';
 
-            if (count($posts) == 0 ) {
-                echo '<div class="room" style="justify-content: center;" ><h1>Ei julkaisuja</h1></div>';
+        if (count($posts) == 0) {
+            echo '<div class="room" style="justify-content: center;" ><h1>Ei julkaisuja</h1></div>';
+        }
+        foreach ($posts as $post) {
+            $mysqldate = strtotime($post['date']);
+            $phpdate = date('d/m/Y G:i A', $mysqldate);
+            $comments = $postObj->getAllComments($post['post_id']);
+            $likes = $postObj->getLikesPost($post['post_id']);
+            $likeStatus = null;
+            $status = null;
+            if (isset($_SESSION['userid'])) {
+                $likeStatus = $postObj->userLikedPost($_SESSION['userid'], $post['post_id']);
+                $status = $postObj->likeStatusPost($likeStatus, $likes);
             }
-            foreach ($posts as $post) {
-                $mysqldate = strtotime($post['date']);
-                $phpdate = date('d/m/Y G:i A', $mysqldate);
-                $comments = $postObj->getAllComments($post['post_id']);
-                $likes = $postObj->getLikesPost($post['post_id']);
-                $likeStatus = null;
-                $status = null;
-                if(isset($_SESSION['userid'])) {
-                    $likeStatus = $postObj->userLikedPost($_SESSION['userid'], $post['post_id']);
-                    $status = $postObj->likeStatusPost($likeStatus, $likes);
-                }
-                echo
-                '<div class="room-container" data-id="'. $post['post_id'] .'">
-                  <div class="like-buttons" data-id="'. $post['post_id'] .'"> '. $status .'</div>';
+            echo
+            '<div class="room-container" data-id="' . $post['post_id'] . '">
+                  <div class="like-buttons" data-id="' . $post['post_id'] . '"> ' . $status . '</div>';
 
-                    if (isset($_SESSION['userid']) && ($post['user_id'] === $_SESSION['userid'])) {
-                    echo '<div class="delete-post" data-id="'. $post['post_id'] .'">           
+            // jos profiilin omistaja, näytetään edit ja delete napit
+            if (isset($_SESSION['userid']) && ($post['user_id'] === $_SESSION['userid'])) {
+                echo '<div class="delete-post" data-id="' . $post['post_id'] . '">           
                     <button class="delete-post-btn" id="delete-post"><i class="fa fa-times" aria-hidden="true"></i></div></button>
-                    <div class="edit-post" data-id="'. $post['post_id'] .'">
+                    <div class="edit-post" data-id="' . $post['post_id'] . '">
                     <button class="edit-post-btn"><i class="fas fa-edit"></i></div></button>';
-                    }
-                    echo
-                    ' 
+            }
+            echo
+            ' 
                     <div class="room">
                     <div class="date-and-post" style="padding: 0px 12px;">
                         <div class="date-users">
@@ -135,9 +142,10 @@ $userlist = $objUser->GetAllUsersButMe();
                     </div>
                 </div>
                 ';
-            }
-     
+        }
+
         ?>
+        <!-- Tässä tarkoituksena näyttää käyttäjälista vain admin käyttäjälle, minkä userid on 0 -->
         <?php if (isset($_SESSION['userid']) && $_SESSION['userid'] == 0) {
             echo "";
         } else {
@@ -146,14 +154,14 @@ $userlist = $objUser->GetAllUsersButMe();
             <section class="user-list-body">
                 <div class="user-list-arrows">
                     <div class="show-list">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                             <path d="M0 16.67l2.829 2.83 9.175-9.339 9.167 9.339 2.829-2.83-11.996-12.17z" />
                         </svg>
                     </div>
                     <div class="hide-list">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" />
-                    </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z" />
+                        </svg>
                     </div>
                 </div>
                 <div class="every-user">
@@ -171,7 +179,7 @@ $userlist = $objUser->GetAllUsersButMe();
                             </thead>
                             <tbody>
                                 <?php foreach ($userlist as $user) {
-                                    echo  "<tr id='". $user['user_id'] ."'>
+                                    echo  "<tr id='" . $user['user_id'] . "'>
                                             <td><a href='profile.php?user=" . $user['user_id'] . "' class='user-table-id'>" . $user['user_id'] . "</a></td>
                                             <td>" . $user['name'] . "</td>
                                             <td>" . $user['email'] . "</td>
@@ -184,7 +192,7 @@ $userlist = $objUser->GetAllUsersButMe();
                                     } ?>
                                     </td>
                                     <td>
-                                    <button class="delete">Poista käyttäjä</button>
+                                        <button class="delete">Poista käyttäjä</button>
                                     </td>
                                     </tr>
                                 <?php } ?>
@@ -200,38 +208,41 @@ $userlist = $objUser->GetAllUsersButMe();
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".delete").click(function(){
+        // käyttäjän poistaminen ajax
+        $(".delete").click(function() {
             var id = $(this).parents("tr").attr("id");
-            if(confirm(' Haluatko varmasti poistaa käyttäjän ?'))
-            {
+            if (confirm(' Haluatko varmasti poistaa käyttäjän ?')) {
                 $.ajax({
-                url: 'search.php',
-                type: 'GET',
-                data: {id: id},
-                error: function() {
-                    alert('Jokin meni vikaan');
-                },
-                success: function(data) {
-                        $("#"+id).remove();
-                        alert("Käyttäjä numero " + id + " poistettiin.");  
-                        $('.table-wrapper').stop().slideDown("normal", function(){
-                        $('.table-wrapper').css('display', 'flex');
-                        $(".show-list").hide();
-                        $(".hide-list").show();
-                    });
-                }
-            });
+                    url: 'search.php',
+                    type: 'GET',
+                    data: {
+                        id: id
+                    },
+                    error: function() {
+                        alert('Jokin meni vikaan');
+                    },
+                    success: function(data) {
+                        $("#" + id).remove();
+                        alert("Käyttäjä numero " + id + " poistettiin.");
+                        $('.table-wrapper').stop().slideDown("normal", function() {
+                            $('.table-wrapper').css('display', 'flex');
+                            $(".show-list").hide();
+                            $(".hide-list").show();
+                        });
+                    }
+                });
             }
         });
-        $(".delete-post").on('click', function(e){
+
+         // julkaisun poistaminen ajax
+        $(".delete-post").on('click', function(e) {
             e.preventDefault;
             e.stopPropagation();
             var id = $(this).data('id');
             var room = $(this).parent();
-            if(confirm('Haluatko varmasti poistaa julkaisun?'))
-            {
+            if (confirm('Haluatko varmasti poistaa julkaisun?')) {
                 thisPost = $(this).parents('.room-container').find('.bodytext-users');
-                $(thisPost).find("img").each(function () {
+                $(thisPost).find("img").each(function() {
                     var imgName = $(this).attr('src');
                     $.ajax({
                         url: 'search.php',
@@ -244,17 +255,19 @@ $userlist = $objUser->GetAllUsersButMe();
                     });
                 });
                 $.ajax({
-                url: 'search.php',
-                type: 'GET',
-                data: {deleteid: id},
-                dataType: "html",
-                error: function() {
-                    alert("Jokin meni vikaan");
-                },
-                success: function(data) {
-                    room.remove();
-                }
-            });
+                    url: 'search.php',
+                    type: 'GET',
+                    data: {
+                        deleteid: id
+                    },
+                    dataType: "html",
+                    error: function() {
+                        alert("Jokin meni vikaan");
+                    },
+                    success: function(data) {
+                        room.remove();
+                    }
+                });
             }
         });
     });
@@ -269,35 +282,38 @@ $userlist = $objUser->GetAllUsersButMe();
 <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
 <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
 <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
- 
+
 <script>
-//----------------------------//
-//room container linkit
-$(document).ready(function(){
-    $(".edit-post").on('click', function(e){
-        e.preventDefault;
-        e.stopPropagation();
-        var id = $(this).data('id');
-        window.location = "view.php?room="+id+"&edit";
-    });
-    $(".room-container").on('click', function(e){
+    //----------------------------//
+    //javascriptiä
+    $(document).ready(function() {
+        $(".edit-post").on('click', function(e) {
+            e.preventDefault;
+            e.stopPropagation();
+            var id = $(this).data('id');
+            window.location = "view.php?room=" + id + "&edit";
+        });
+        $(".room-container").on('click', function(e) {
             e.preventDefault;
             var id = $(this).data('id');
-            window.location = "view.php?room="+id;
+            window.location = "view.php?room=" + id;
+        });
+        $("p").has("img").css({
+            "textAlign": "center",
+            "background": "black",
+            "margin": "0",
+            "color": "transparent",
+        });
+
+        $("p").has("iframe").css({
+            "textAlign": "center",
+            "background": "black",
+            "margin-left": "0",
+        });
     });
-    $("p").has("img").css({"textAlign" : "center",
-    "background" : "black",
-    "margin" : "0",
-    "color" : "transparent",
-    });
-    
-    $("p").has("iframe").css({"textAlign" : "center",
-        "background" : "black",
-        "margin-left" : "0",
-    });
-});
 </script>
 </body>
 <?php
 ?>
+
 </html>

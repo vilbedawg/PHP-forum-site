@@ -2,6 +2,7 @@
 
 class PostedContent extends Dbh
 {
+    //$_GET paramaterilla haetaan julkaisun data
     public function GetPostByCurrentRoomID($roomNum){
         $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE post_id = ? ORDER BY date DESC;");
         if(!$stmt->execute(array($roomNum))){
@@ -13,7 +14,7 @@ class PostedContent extends Dbh
         return $allPosts;
     }
 
-    
+    //haetaan kaikki käyttäjän julkaisut
     public function GetAllPostsByID($user){
         $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE user_id = ? ORDER BY date DESC;");
         if(!$stmt->execute(array($user))) {
@@ -24,6 +25,7 @@ class PostedContent extends Dbh
         $allPostsOldest = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $allPostsOldest;
     }
+
 
     public function getAllPostsByOldest(){
         $stmt = $this->connect()->prepare("SELECT * FROM posts ORDER BY date ASC;");
@@ -47,6 +49,7 @@ class PostedContent extends Dbh
         return $allPostsNewest;
     }
 
+    //Haetaan julkaisut tykätyimmässä järjestyksessä. Mysql kyselyssä tulokset lajitellaan tykkäysten lukumäärän mukaan.
     public function getMostLikedPosts(){
         $stmt = $this->connect()->prepare("SELECT posts.*, COUNT(rating_info.post_id) AS like_count
                                             FROM posts LEFT JOIN rating_info
@@ -63,6 +66,7 @@ class PostedContent extends Dbh
     }
 
 
+    //GET parametrin avulla haetaan julkaisut kategorian mukaan
     public function getAllPostsByCategory($category){
         $stmt = $this->connect()->prepare("SELECT * FROM posts WHERE category = ? ORDER BY date DESC;");
         if(!$stmt->execute(array($category))) {
@@ -103,6 +107,7 @@ class PostedContent extends Dbh
     }
 
 
+    //Kommenttien lukumäärä
     public function getAllComments($roomNum){
         $stmt = $this->connect()->prepare("SELECT 
                                             (SELECT COUNT(*) FROM comments WHERE post_id = ?) 
@@ -119,6 +124,7 @@ class PostedContent extends Dbh
         return $allComments;
     }
 
+    // julkaisun lukumäärä
     public function getLikesPost($id){
         $stmt = $this->connect()->prepare("SELECT (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'like') -
                                             (SELECT COUNT(*) FROM rating_info WHERE post_id = ? AND rating_action = 'dislike') AS amount");
@@ -131,6 +137,7 @@ class PostedContent extends Dbh
         return $likeCount;
     }
 
+    // onko käyttäjä tykännyt julkaisusta
     public function userLikedPost($userid, $postid){
         $stmt = $this->connect()->prepare("SELECT rating_action FROM rating_info WHERE user_id = :user_id AND post_id = :post_id");
         $stmt->bindParam(':user_id', $userid);
@@ -145,6 +152,7 @@ class PostedContent extends Dbh
         return $likeCount['rating_action'] ?? null;
     }
 
+    //haetaan kommenttien tykkäykset
     public function getLikesComment($id){
         $stmt = $this->connect()->prepare("SELECT (SELECT COUNT(*) FROM rating_info WHERE comment_id = ? AND rating_action = 'like') -
                                             (SELECT COUNT(*) FROM rating_info WHERE comment_id = ? AND rating_action = 'dislike') AS amount");
@@ -157,6 +165,7 @@ class PostedContent extends Dbh
         return $likeCount;
     }
 
+    // onko käyttjä tykännyt kommentista
     public function userLikedComment($userid, $commentid){
         $stmt = $this->connect()->prepare("SELECT rating_action FROM rating_info WHERE user_id = :user_id AND comment_id = :comment_id");
         $stmt->bindParam(':user_id', $userid);
@@ -171,6 +180,7 @@ class PostedContent extends Dbh
         return $likeCount['rating_action'] ?? null;
     }
     
+    // haetaan vastausten tykkäykset
     public function getLikesReply($id){
         $stmt = $this->connect()->prepare("SELECT (SELECT COUNT(*) FROM rating_info WHERE reply_id = ? AND rating_action = 'like') -
                                             (SELECT COUNT(*) FROM rating_info WHERE reply_id = ? AND rating_action = 'dislike') AS amount");
@@ -183,6 +193,7 @@ class PostedContent extends Dbh
         return $likeCount;
     }
 
+      // onko käyttjä tykännyt vastauksesta
     public function userLikedReply($userid, $replyid){
         $stmt = $this->connect()->prepare("SELECT rating_action FROM rating_info WHERE user_id = :user_id AND reply_id = :reply_id");
         $stmt->bindParam(':user_id', $userid);
@@ -198,6 +209,7 @@ class PostedContent extends Dbh
     }
 
 
+    // Jos käyttäjä tykännyt tai ei tykännyt julkaisusta, ladataan eri data
     public function likeStatusPost($likeStatus, $likes) {
         if($likeStatus == 'like') {
             $result = "<i class='fas fa-long-arrow-alt-up' id='liked' onclick='isComment = false; isReplyID = false;' style='color: #ee6c4d;'></i>

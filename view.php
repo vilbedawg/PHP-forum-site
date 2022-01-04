@@ -5,7 +5,7 @@ require_once 'includes/autoload-classes.php';
 require_once "controllers/posts-contr.php";
 require_once "includes/header.php";
 
-if(isset($_SESSION['userid'])) {
+if (isset($_SESSION['userid'])) {
     $sessID = $_SESSION['userid'];
 } else {
     $sessID = -1;
@@ -18,7 +18,6 @@ $roomNum = $_GET['room'];
 $objPost = new PostedContent();
 $NumOfComments = $objPost->getAllComments($roomNum);
 $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
-
 
 
 ?>
@@ -34,6 +33,21 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
         <!--EDIT Modal section-->
         <div class="bg-modal">
             <div class="modal-content">
+                <button type="button" class="dropbtn-modal" onclick="modalMenu()" style="margin: 0px ">Kategoriat</button>
+                <div id="modalDropdown" class="modal-dropdown-content">
+                    <div class="category-item">Yleinen</div>
+                    <div class="category-item">Politiikka</div>
+                    <div class="category-item">Valokuvaus</div>
+                    <div class="category-item">Videot</div>
+                    <div class="category-item">Tarinat</div>
+                    <div class="category-item">Taide</div>
+                    <div class="category-item">Pelit</div>
+                    <div class="category-item">Elokuvat</div>
+                    <div class="category-item">Musiikki</div>
+                    <div class="category-item">Urheilu</div>
+                    <div class="category-item">Harrastukset</div>
+                    <div class="category-item" style="color: red;">NSFW</div>
+                </div>
                 <div class="modal-close"><i class="fas fa-times"></i>
                 </div>
                 <div class="modal-side-bar">
@@ -152,16 +166,16 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
             <div class="post-category-list"></div>
         </div>
         <div class="buttons">
-        <?php if(isset($_SESSION['userid'])) {
-                    echo '<a href="logout.php"><button class="logout"><i class="fas fa-sign-out-alt"></i></button></a>';
-                }else {
-                    echo '<a href="login.php"><button class="logout"><i class="fa fa-sign-in" aria-hidden="true"></i></button></a>';
-                }
-                ?>
+            <?php if (isset($_SESSION['userid'])) {
+                echo '<a href="logout.php"><button class="logout"><i class="fas fa-sign-out-alt"></i></button></a>';
+            } else {
+                echo '<a href="login.php"><button class="logout"><i class="fa fa-sign-in" aria-hidden="true"></i></button></a>';
+            }
+            ?>
         </div>
 
     </div>
-    
+
     <div class="all-comments">
         <div class="edit-toolbar">
             <a href="home.php?show=Etusivu"><button class="profile-back" style="margin-bottom: 0; margin-left: 10px;">Etusivulle</button></a>
@@ -180,13 +194,12 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
             $likes = $objPost->getLikesPost($currentRoom[0]['post_id']);
             $likeStatus = null;
             $status = null;
-            if(isset($_SESSION['userid'])) {
+            if (isset($_SESSION['userid'])) {
                 $likeStatus = $objPost->userLikedPost($_SESSION['userid'], $currentRoom[0]['post_id']);
                 $status = $objPost->likeStatusPost($likeStatus, $likes);
             }
-            echo "<div class='like-buttons' data-id='". $currentRoom[0]['post_id'] ."' style='left: 9px;'>
-            $status </div>";
-        ?>
+            echo "<div class='like-buttons' data-id='" . $currentRoom[0]['post_id'] . "' style='left: 9px;'> $status </div>";
+            ?>
             <div class='date-and-post' style='margin-left: 0;'>
                 <div class='date'>
                     <a href="profile.php?user=<?php echo $currentRoom[0]['user_id'] ?> " class="username"><?php echo $currentRoom[0]['name'] ?> </a>
@@ -208,16 +221,17 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
                 }
 
                 ?>
-        </div>
+            </div>
         </div>
 
-       
+
 
         <div class="discussion-section">
             <div class="comment-form">
                 <form class="form-post" method="POST" id="comment">
                     <div class="error-txt">
                     </div>
+                    <!-- jotta käyttäjä voi kommentoida, tulee hänen kirjautua sisään -->
                     <?php if (isset($_SESSION['userid'])) {
                         echo '
                         <div class="form-group">
@@ -241,6 +255,7 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
                 <hr>
             </span>
             <div class="comment-container">
+                <!-- vastaus lomake kommenttiin -->
                 <form class='form-reply' method='POST' id='reply' data-id="" style='display: none; padding-top: 10px; padding-left: 10px;'>
                     <textarea class='tinymce' name='content' id='reply-topic' placeholder='Kerro ajatuksistasi...' style='z-index: 99999;'></textarea>
                     <div class='post-comment' style='align-self: flex-end;'>
@@ -251,319 +266,359 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
             </div>
         </div>
         <a href="" class=" scrollup">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#ee6c4d" viewBox="0 0 24 24">
-                        <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z" />
-                    </svg>
-                    </a>
-            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#ee6c4d" viewBox="0 0 24 24">
+                <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z" />
+            </svg>
+        </a>
+    </div>
 
 
-            <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
-            <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
-            <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
-            <script src="js/app.js"></script>
+    <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
+    <script type="text/javascript" src="tinymce\tinymce.min.js"></script>
+    <script type="text/javascript" src="tinymce\init-tinymce.js"></script>
+    <script src="js/app.js"></script>
 
 
-            <script>
-                $(document).ready(function() {
-                    //delete post
-                    $("#delete-post").click(function() {
-                        var str = $('#post-content');
-                        if (confirm('Haluatko varmasti poistaa julkaisun?')) {
-                            $('.all-comments').find('img:not(.comment-img)').each(function () {
-                                var imgName = $(this).attr('src');
-                                $.ajax({
-                                    url: 'search.php',
-                                    type: 'POST',
-                                    data: {
-                                        imgName: imgName
-                                    },
-                                    dataType: "html",
-                                    success: function(data) {}
-                                });
-                            });
-                            var id = $(this).data('id');
-                            $.ajax({
-                                url: 'search.php',
-                                type: 'GET',
-                                data: {
-                                    deleteid: id
-                                },
-                                dataType: "html",
-                                error: function() {
-                                    alert("Jokin meni vikaan");
-                                },
-                                success: function(data) {
-                                    alert("Julkaisu " + id + "poistettiin.");
-                                    window.location = "home.php?show=Etusivu";
-                                }
-                            });
-                        }
-                    });
-                });
-            </script>
-            <script>
-                $(document).ready(function() {
-                    var sessID = <?php echo $sessID ?>;
-                    var commentAmount = $('.form-reply').next().data('id');
-                    var amount = <?php echo $commentAmount; ?>;
-                    var post_id = $('#post_id').val();
-                    $.ajax({
-                        url: 'search.php',
-                        type: 'POST',
-                        data: {
-                            post_id: post_id
-                        },
-                        dataType: "text",
-                        error: function() {
-                            alert("Jokin meni vikaan");
-                        },
-                        success: function(data) {
-                            $('.comment-container').prepend(data);
-                            tinymce.remove();
-                            initializeTinyMce('textarea');
-                            $('.reply-show').each(function() {
-                                if($(this).data('id') == 0) {
-                                   $(this).hide();
-                                } else {
-                                    $(this).show();
-                                }
-                            });
-                            $('.delete-comment').each(function () {
-                                if($(this).attr('user-id') != sessID) {
-                                    $(this).remove();
-                                }
-                            });
-                            $('.bodytext img').css({'height' : 'auto',
-                                            'max-width' : '100%',
-                                            'max-height' : '300px'
-                            });
-
-                            // jos käyttäjä on offline tilassa
-                            if(sessID == -1) {
-                                $('.comment-buttons').remove();
-                            }
-                        }  
-                    });
-                    
-                    $(document).on('submit', '#comment', function(e) {
-                        e.preventDefault();
-                        var comment = $('#topic').val();
-                        if (comment.length > 9) {
-                            $.ajax({
-                                url: "search.php",
-                                method: "POST",
-                                data: {
-                                    comment: comment,
-                                    id: post_id,
-                                },
-                                dataType: "text",
-                                success: function(message) {
-                                    amount++;
-                                    $('.error-txt').stop().show();
-                                    $('.error-txt').html('<div class="success-texti"><p>Kommenttisi on tallennettu</p></div>');
-                                    $('.error-txt').stop().delay(3000).fadeOut("fast");
-                                    $('.comment-amount').html(amount + ' kommenttia');
-                                    $('#comment')[0].reset();
-                                    $('.comment-container').prepend(message);
-                                    tinymce.remove();
-                                    initializeTinyMce('textarea');
-                                    $('.bodytext img').css({'height' : 'auto',
-                                            'max-width' : '100%',
-                                            'max-height' : '200px'
-                                    });
-                                },
-                                error: function(message) {
-                                    alert('jokin meni pieleen');
-                                }
-                            });
-                        } else {
-                            $('.error-txt').stop().show();
-                            $('.error-txt').stop().html('<div class="error-texti"><p>Yli 3 merkkiä</p></div>');
-                            $('.error-txt').stop().delay(1000).fadeOut("fast");
-                        }
-                    });
-
-                    $(document).on('submit', '.form-reply', function(e) {
-                        e.preventDefault();
-                        var comment_id = $('.form-reply').attr('data-id');
-                        var reply = $('#reply-topic').val();
-                        if (reply.length > 9) {
-                            $.ajax({
-                                url: "search.php",
-                                method: "POST",
-                                data: {
-                                    reply: reply,
-                                    id: post_id,
-                                    comment_id: comment_id,
-                                },
-                                dataType: "text",
-                                success: function(message) {
-                                    amount++;
-                                    newCommentAmount = $('.form-reply').parents('.discussion-wrapper').find('.reply-show').data()['id'] += 1;
-                                    btn = $(e.target).parents('.discussion-wrapper').find('.reply-show')
-                                    if (newCommentAmount == 1) {
-                                        if($(btn).hasClass('ShowComments')){
-                                         $(btn).text('Piilota ' + newCommentAmount + ' kommentti');
-                                        } else {
-                                        $(btn).text('Näytä ' + newCommentAmount + ' kommentti');
-                                        }
-                                    } else {
-                                        if($(btn).hasClass('ShowComments')){
-                                            $(btn).text('Piilota ' + newCommentAmount + ' kommenttia');
-                                        } else {
-                                            $(btn).text('Näytä ' + newCommentAmount + ' kommenttia');
-                                        }
-                                    }
-                                    $('.comment-amount').html(amount + ' kommenttia');
-                                    $(e.target)[0].reset();
-                                    $('.form-reply').hide();
-                                    $('.comment-amount').html(amount + ' kommenttia');
-                                    $(e.target).parents('.discussion-wrapper').find('.reply-section').append(message);
-                                    $(e.target).prev().children('.reply').text('Vastaa');
-                                    $('.form-reply').parents('.discussion-wrapper').find('.reply-show').show();
-                                    $('.bodytext img').css({'height' : 'auto',
-                                            'max-width' : '100%',
-                                            'max-height' : '300px'
-                                    });
-
-                                },
-                                error: function(message) {
-                                    alert('jokin meni pieleen');
-                                }
-                            });
-                        } else {
-                            $('.error-txt').stop().show();
-                            $('.error-txt').stop().html('<div class="error-texti"><p>Yli 3 merkkiä</p></div>');
-                            $('.error-txt').stop().delay(1000).fadeOut("fast");
-                        }
-                    });
-
-
-                    $(document).on('click', '.reply-show', function(e) {
-                        e.preventDefault();
-                        var replySection = $(e.target).closest('.discussion-wrapper').find('.reply-section');
-                        $(e.target).toggleClass('showComments');
-                        oldText = $(this).data('id');
-                        if ($(this).hasClass('showComments')) {
-                            if(oldText == 1) {
-                                $(this).text('Piilota ' + oldText + ' kommentti');
-                            } else {
-                                $(this).text('Piilota ' + oldText + ' kommenttia');
-                            }
-                            replySection.show();
-                        } else {
-                            if(oldText == 1) {
-                                $(this).text('Näytä ' + oldText + ' kommentti');
-                            } else {
-                                $(this).text('Näytä ' + oldText + ' kommenttia');
-                            }
-                            replySection.hide();
-                        }
-                    });
-                
-                    $(document).on('click', '.delete-comment', (e) => {
-                        var id = $(e.target).attr('data-id');
-                        //poistetaan kuvat
-                        if(isReply) {
-                            $(e.target).parents('.discussion-reply').find(".bodytext img").each(function () {
-                                var imgName = $(this).attr('src');
-                                $.ajax({
-                                    url: 'search.php',
-                                    type: 'POST',
-                                    data: {
-                                        imgName: imgName
-                                    },
-                                    dataType: "html",
-                                    success: function(data) {}
-                                });
-                            });
-                        } else { 
-                            $(e.target).parents('.discussion-wrapper').find(".bodytext img").each(function() {
-                                var imgName = $(this).attr('src');
-                                $.ajax({
-                                    url: 'search.php',
-                                    type: 'POST',
-                                    data: {
-                                        imgName: imgName
-                                    },
-                                    dataType: "html",
-                                    success: function(data) {}
-                                });
-                            });
-                        }
+    <script>
+        $(document).ready(function() {
+            //julkaisun poistaminen
+            $("#delete-post").click(function() {
+                var str = $('#post-content');
+                if (confirm('Haluatko varmasti poistaa julkaisun?')) {
+                    // poistetaan jokainen kuva joka ei ole profiilikuva julkaisusta
+                    $('.all-comments').find('img:not(.comment-img)').each(function() {
+                        var imgName = $(this).attr('src');
                         $.ajax({
                             url: 'search.php',
                             type: 'POST',
                             data: {
-                                delete_comment: id,
-                                isReply: isReply
+                                imgName: imgName
                             },
-                            dataType: 'text',
-                            error: function() {
-                                alert("Jokin meni vikaan");
-                            },
-                            success: function(data) {
-                                if (isReply) {
-                                    amount--;
-                                    $('.comment-amount').html(amount + ' kommenttia');
-                                    newCommentAmount = $(e.target).parents('.discussion-wrapper').find('.reply-show').data()['id'] -= 1;
-                                    if(newCommentAmount == 0) {
-                                        $(e.target).parents('.discussion-wrapper').find('.reply-show').hide();        
-                                    } else if (newCommentAmount == 1) {
-                                        $(e.target).parents('.discussion-wrapper').find('.reply-show').text('Piilota ' + newCommentAmount + ' kommentti');
-                                    } else {
-                                        $(e.target).parents('.discussion-wrapper').find('.reply-show').text('Piilota ' + newCommentAmount + ' kommenttia');
-                                    }
-                                    $(e.target).parents('.discussion-reply').remove();
+                            dataType: "html",
+                            success: function(data) {}
+                        });
+                    });
+                    // julkaisun poisto ajax
+                    var id = $(this).data('id');
+                    $.ajax({
+                        url: 'search.php',
+                        type: 'GET',
+                        data: {
+                            deleteid: id
+                        },
+                        dataType: "html",
+                        error: function() {
+                            alert("Jokin meni vikaan");
+                        },
+                        success: function(data) {
+                            alert("Julkaisu " + id + "poistettiin.");
+                            window.location = "home.php?show=Etusivu";
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            var sessID = <?php echo $sessID ?>;
+            var commentAmount = $('.form-reply').next().data('id');
+            var amount = <?php echo $commentAmount; ?>;
+            var post_id = $('#post_id').val();
+            //ladataan kommenttirivit
+            $.ajax({
+                url: 'search.php',
+                type: 'POST',
+                data: {
+                    post_id: post_id
+                },
+                dataType: "text",
+                error: function() {
+                    alert("Jokin meni vikaan");
+                },
+                success: function(data) {
+                    $('.comment-container').prepend(data);
+                    // ladataan tinymce texteditor uudelleen
+                    tinymce.remove();
+                    initializeTinyMce('textarea');
+                    $('.reply-show').each(function() {
+                        if ($(this).data('id') == 0) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                    // kommentin poistaminen näkyvissä vain sen omistajalle
+                    $('.delete-comment').each(function() {
+                        if ($(this).attr('user-id') != sessID) {
+                            $(this).remove();
+                        }
+                    });
+                    $('.bodytext img').css({
+                        'height': 'auto',
+                        'max-width': '100%',
+                        'max-height': '300px'
+                    });
+
+                    // jos käyttäjä on offline tilassa
+                    if (sessID == -1) {
+                        $('.comment-buttons').remove();
+                    }
+                }
+            });
+
+
+
+        
+            // kommentin julkaisu ajax
+            $(document).on('submit', '#comment', function(e) {
+                e.preventDefault();
+                var comment = $('#topic').val();
+                // kommenttiin sisältyy html tagit, joten vähintään 3 kirjainta == 9
+                if (comment.length > 9) {
+                    $.ajax({
+                        url: "search.php",
+                        method: "POST",
+                        data: {
+                            comment: comment,
+                            id: post_id,
+                        },
+                        dataType: "text",
+                        success: function(message) {
+                            if(message == "<div class='error-texti'><p>Yli 3 merkkiä</p></div>") {
+                                $('.error-txt').stop().show();
+                                $('.error-txt').html(message);
+                                $('.error-txt').stop().delay(3000).fadeOut("fast");
+                            } else {
+                                amount++;
+                                $('.error-txt').stop().show();
+                                $('.error-txt').html('<div class="success-texti"><p>Kommenttisi on tallennettu</p></div>');
+                                $('.error-txt').stop().delay(3000).fadeOut("fast");
+                                $('.comment-amount').html(amount + ' kommenttia');
+                                $('#comment')[0].reset();
+                                $('.comment-container').prepend(message);
+                                tinymce.remove();
+                                initializeTinyMce('textarea');
+                                $('.bodytext img').css({
+                                    'height': 'auto',
+                                    'max-width': '100%',
+                                    'max-height': '200px'
+                                });
+                            }
+                        },
+                        error: function(message) {
+                            alert('jokin meni pieleen');
+                        }
+                    });
+                } else {
+                    $('.error-txt').stop().show();
+                    $('.error-txt').stop().html('<div class="error-texti"><p>Yli 3 merkkiä</p></div>');
+                    $('.error-txt').stop().delay(1000).fadeOut("fast");
+                }
+            });
+
+            // vastaus kommenttiin ajax
+            $(document).on('submit', '.form-reply', function(e) {
+                e.preventDefault();
+                var comment_id = $('.form-reply').attr('data-id');
+                var reply = $('#reply-topic').val();
+                if (reply.length > 9) {
+                    $.ajax({
+                        url: "search.php",
+                        method: "POST",
+                        data: {
+                            reply: reply,
+                            id: post_id,
+                            comment_id: comment_id,
+                        },
+                        dataType: "text",
+                        success: function(message) {
+                            if(message == "<div class='error-texti'><p>Yli 3 merkkiä</p></div>") {
+                                $('.error-txt').stop().show();
+                                $('.error-txt').html(message);
+                                $('.error-txt').stop().delay(3000).fadeOut("fast");
+                            } else {
+                            amount++;
+                            newCommentAmount = $('.form-reply').parents('.discussion-wrapper').find('.reply-show').data()['id'] += 1;
+                            btn = $(e.target).parents('.discussion-wrapper').find('.reply-show')
+                            if (newCommentAmount == 1) {
+                                if ($(btn).hasClass('ShowComments')) {
+                                    $(btn).text('Piilota ' + newCommentAmount + ' kommentti');
                                 } else {
-                                    $(e.target).closest('.discussion-wrapper').remove();
-                                    allReplies = $(e.target).parents('.discussion-wrapper').find('.reply-section');
-                                    $(allReplies).children().each(function (e) {
-                                        amount--;
-                                    });
-                                    amount--;
-                                    $('.comment-amount').html(amount + ' kommenttia');
+                                    $(btn).text('Näytä ' + newCommentAmount + ' kommentti');
                                 }
+                            } else {
+                                if ($(btn).hasClass('ShowComments')) {
+                                    $(btn).text('Piilota ' + newCommentAmount + ' kommenttia');
+                                } else {
+                                    $(btn).text('Näytä ' + newCommentAmount + ' kommenttia');
+                                }
+                            }
+                            $('.comment-amount').html(amount + ' kommenttia');
+                            $(e.target)[0].reset();
+                            $('.form-reply').hide();
+                            $('.comment-amount').html(amount + ' kommenttia');
+                            $(e.target).parents('.discussion-wrapper').find('.reply-section').append(message);
+                            $(e.target).prev().children('.reply').text('Vastaa');
+                            $('.form-reply').parents('.discussion-wrapper').find('.reply-show').show();
+                            $('.error-txt').stop().show();
+                            $('.error-txt').html('<div class="success-texti"><p>Kommenttisi on tallennettu</p></div>');
+                            $('.error-txt').stop().delay(3000).fadeOut("fast");
+                            $('.bodytext img').css({
+                                'height': 'auto',
+                                'max-width': '100%',
+                                'max-height': '300px'
+                            });
+                            }
+
+                        },
+                        error: function(message) {
+                            alert('jokin meni pieleen');
+                        }
+                    });
+                } else {
+                    $('.error-txt').stop().show();
+                    $('.error-txt').stop().html('<div class="error-texti"><p>Yli 3 merkkiä</p></div>');
+                    $('.error-txt').stop().delay(1000).fadeOut("fast");
+                }
+            });
+
+
+            // näytä vastausrivit
+            $(document).on('click', '.reply-show', function(e) {
+                e.preventDefault();
+                var replySection = $(e.target).closest('.discussion-wrapper').find('.reply-section');
+                $(e.target).toggleClass('showComments');
+                oldText = $(this).data('id');
+                if ($(this).hasClass('showComments')) {
+                    if (oldText == 1) {
+                        $(this).text('Piilota ' + oldText + ' kommentti');
+                    } else {
+                        $(this).text('Piilota ' + oldText + ' kommenttia');
+                    }
+                    replySection.show();
+                } else {
+                    if (oldText == 1) {
+                        $(this).text('Näytä ' + oldText + ' kommentti');
+                    } else {
+                        $(this).text('Näytä ' + oldText + ' kommenttia');
+                    }
+                    replySection.hide();
+                }
+            });
+
+            // kommentin poistaminen
+            $(document).on('click', '.delete-comment', (e) => {
+                $(".comment-container").append($('.form-reply').hide());
+                var id = $(e.target).attr('data-id');
+                //poistetaan kuvat
+                if (isReply) {
+                    $(e.target).parents('.discussion-reply').find(".bodytext img").each(function() {
+                        var imgName = $(this).attr('src');
+                        $.ajax({
+                            url: 'search.php',
+                            type: 'POST',
+                            data: {
+                                imgName: imgName
+                            },
+                            dataType: "html",
+                            success: function(data) {
+                                $(".comment-container").append($('.form-reply'));
                             }
                         });
                     });
-
-                });
-
-                function reply(caller) {
-                    commentID = $(caller).data('id');
-                    formField = $(caller).parent();
-                    $(".form-reply").insertAfter($(formField));
-                    $(".form-reply").attr('data-id',commentID);
-                    tinymce.remove();
-                    initializeTinyMce('textarea');
-                    if($(caller).is('#reply')) {
-                        replytoWho = $(caller).parents('.discussion-reply').find('.username').text()
-                        $('#reply-topic').val('@'+replytoWho);
-                    }
-                    $('.form-reply').show();
-                }
-
-                function closeReply(caller) {
-                    $(caller).parents('.form-reply')[0].reset();
-                    $(caller).parents('.form-reply').hide();
-                }
-            </script>
-
-
-            <script>
-                $(document).ready(function() {
-                    $("p").has("img").css({
-                        "textAlign": "center",
-                        "margin-bottom": "10px"
-                    });
-                    setTimeout(function() {
-                        $('.success-texti').fadeOut(500, function() {
-                            $(this).remove();
+                } else {
+                    $(e.target).parents('.discussion-wrapper').find(".bodytext img").each(function() {
+                        var imgName = $(this).attr('src');
+                        $.ajax({
+                            url: 'search.php',
+                            type: 'POST',
+                            data: {
+                                imgName: imgName
+                            },
+                            dataType: "html",
+                            success: function(data) {
+                            }
                         });
-                    }, 2000);
-                    
+                    });
+                }
+                $.ajax({
+                    url: 'search.php',
+                    type: 'POST',
+                    data: {
+                        delete_comment: id,
+                        isReply: isReply
+                    },
+                    dataType: 'text',
+                    error: function() {
+                        alert("Jokin meni vikaan");
+                    },
+                    success: function(data) {
+                        if (isReply) {
+                            amount--;
+                            $('.comment-amount').html(amount + ' kommenttia');
+                            newCommentAmount = $(e.target).parents('.discussion-wrapper').find('.reply-show').data()['id'] -= 1;
+                            if (newCommentAmount == 0) {
+                                $(e.target).parents('.discussion-wrapper').find('.reply-show').hide();
+                            } else if (newCommentAmount == 1) {
+                                $(e.target).parents('.discussion-wrapper').find('.reply-show').text('Piilota ' + newCommentAmount + ' kommentti');
+                            } else {
+                                $(e.target).parents('.discussion-wrapper').find('.reply-show').text('Piilota ' + newCommentAmount + ' kommenttia');
+                            }
+                            $(e.target).parents('.discussion-reply').remove();
+                        } else {
+                            $(e.target).closest('.discussion-wrapper').remove();
+                            allReplies = $(e.target).parents('.discussion-wrapper').find('.reply-section');
+                            $(allReplies).children().each(function(e) {
+                                amount--;
+                            });
+                            amount--;
+                            $('.comment-amount').html(amount + ' kommenttia');
+                        }
+                    }
                 });
-            </script>
+            });
+
+        });
+
+        // vastauslomakkeen avausfunktio
+        function reply(caller) {
+            commentID = $(caller).data('id');
+            formField = $(caller).parent();
+            $(".form-reply").insertAfter($(formField));
+            $(".form-reply").attr('data-id', commentID);
+            tinymce.remove();
+            initializeTinyMce('textarea');
+            if ($(caller).is('#reply')) {
+                replytoWho = $(caller).parents('.discussion-reply').find('.username').text()
+                $('#reply-topic').val('@' + replytoWho);
+            }
+            $('.form-reply').show();
+        }
+
+        //vastauslomakkeen sulkemisfunktio
+        function closeReply(caller) {
+            $(caller).parents('.form-reply')[0].reset();
+            $(caller).parents('.form-reply').hide();
+            $(".comment-container").append($('.form-reply'));
+        }
+
+       
+    </script>
+
+
+    <script>
+        $(document).ready(function() {
+            $("p").has("img").css({
+                "textAlign": "center",
+                "margin-bottom": "10px"
+            });
+            setTimeout(function() {
+                $('.success-texti').fadeOut(500, function() {
+                    $(this).remove();
+                });
+            }, 2000);
+
+        });
+    </script>
 </body>

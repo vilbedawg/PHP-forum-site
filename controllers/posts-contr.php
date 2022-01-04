@@ -1,4 +1,6 @@
 <?php
+
+    // post olio
     class PostsContr extends post
     {
         private $subject;

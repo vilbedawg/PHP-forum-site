@@ -1,5 +1,6 @@
 <?php
 
+    // login olio
     class loginContr extends Login {
         private $name;
         private $pwd;

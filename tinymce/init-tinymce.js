@@ -1,3 +1,4 @@
+// kääritään funktioon, jotta voidaan kutsua ja ladata dynaamisesti ladattuihin tekstialueisiin.
 initializeTinyMce();
 function initializeTinyMce(selector){
     if(selector == undefined){selector = 'textarea';} {

@@ -19,6 +19,8 @@ class Login extends Dbh {
             header("location: login.php?error=usernotfound");
             exit();
         }
+
+        //salasanan tarkistus
         $pwdHashed = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $checkPwd = password_verify($pwd, $pwdHashed[0]["password"]);
 
@@ -31,10 +33,10 @@ class Login extends Dbh {
         }
 
 
-        elseif($checkPwd == true) 
+        else if($checkPwd == true) 
         {
+        
             $stmt = $this->connect()->prepare('SELECT * FROM users WHERE name = ? OR email = ? AND password = ?;');
-
             if(!$stmt->execute(array($name, $name, $pwd)))  
             {
                 $stmt = null;
@@ -49,15 +51,15 @@ class Login extends Dbh {
                 exit();
             }
 
-            $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
            
             session_start();
-            $_SESSION["userid"] = $user[0]["user_id"];
+            $_SESSION["userid"] = $user["user_id"];
             $banned = 3;
             $online = 1;
 
-            if($user[0]['login_status'] == $banned) {
+            if($user['login_status'] == $banned) {
                 $stmt = null;
                 header("location: login.php?error=banned");
                 exit();
@@ -65,6 +67,7 @@ class Login extends Dbh {
 
             
 
+            //päivitetään login status
             $sql = 'UPDATE users SET login_status = :login_status WHERE user_id = :userid;';
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(':login_status', $online);
@@ -78,18 +81,17 @@ class Login extends Dbh {
             } 
 
             $stmt = $this->connect()->prepare('SELECT * FROM users WHERE name = ?;');
-            $stmt->bindParam('?', $name);
             if(!$stmt->execute(array($name))){
                 $stmt = null;
                 header("location: login.php?error=stmtfailed");
                 exit();
             }
-            $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $_SESSION["name"] = $user[0]["name"];
-            $_SESSION["email"] = $user[0]["email"];
-            $_SESSION["login"] = $user[0]["login_status"];
-            $_SESSION["last_login"] = $user[0]["last_login"];
-            $_SESSION["image"] = $user[0]["image"];
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $_SESSION["name"] = $user["name"];
+            $_SESSION["email"] = $user["email"];
+            $_SESSION["login"] = $user["login_status"];
+            $_SESSION["last_login"] = $user["last_login"];
+            $_SESSION["image"] = $user["image"];
             $stmt = null;
         }
 

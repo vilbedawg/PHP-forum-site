@@ -1,5 +1,6 @@
 <?php
 
+    // signup olio
     class SignupContr extends Signup {
         private $name;
         private $email;

@@ -14,25 +14,29 @@ if(isset($_FILES)){
     $i = $user->GetViewedUser();
     $oldImage = $i[0]['image'];
 
-    //Verify extension
+    //verifoidaan pääte
     $extensions = array("gif", "jpg", "png", "jpeg");
     reset($_FILES);
     $temp = current($_FILES);
 
 
+    //onko tiedosto ladattu
     if(!is_uploaded_file($temp['tmp_name'])) {
         $error = "<div class='error-texti'><p>Valitse kuva</p></div>";
     }
 
+    //sisältääkö ei sallittuja kirjaimia
     else if(preg_match("/([^\w\s\d\-_~,;:\[\]\(\).])|([\.]{2,})/", $temp['name'])){
         $error = "<div class='error-texti'><p>Kuvan nimi sisältää ei-sallittuja kirjaimia</p></div>";
     }
   
+    // onko väärän muotoinen tiedosto
     else if(!in_array(strtolower(pathinfo($temp['name'], PATHINFO_EXTENSION)), $extensions)){
         $error = "<div class='error-texti'><p>Väärä kuvan tiedostomuoto, vain jpg, jpeg, png</p></div>";
     }
 
 
+    // sallitaan vain alle 1000kt suuruiset kuvat
     else if($temp['size'] > 1000000) {
         $error = "<div class='error-texti'><p>Kuva liian iso, max 1000mb</p></div>";
     }
@@ -43,10 +47,10 @@ if(isset($_FILES)){
         $withoutExt = md5(time().$temp['name']);
         $newFile = $withoutExt . ".".$fileExt;
 
-        
 
         $filetowrite = $imageFolder . $newFile;
         if(move_uploaded_file($temp['tmp_name'], $filetowrite)) {
+            //jos vanha kuva on olemassa ja se ei ole default kuva, tuhotaan se vaihdon yhteydessä
             if(file_exists($oldImage)){
                 if($oldImage !== "images/profile_images/default.jpg"){
                    unlink($oldImage);

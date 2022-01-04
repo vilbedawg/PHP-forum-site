@@ -1,15 +1,17 @@
 <?php
-// Allowed origins to upload images
+// editoriin syötettävä kuva ja sen lataus kansioon
+
+// hyväksytyt osoitteet
 $accepted_origins = array("http://localhost:8080", "http://107.161.82.130", "http://localhost");
 
-// Images upload path
+// kuvan latauskansio
 $imageFolder = "images/";
 
 reset($_FILES);
 $temp = current($_FILES);
 if(is_uploaded_file($temp['tmp_name'])){
     if(isset($_SERVER['HTTP_ORIGIN'])){
-        // Same-origin requests won't set an origin. If the origin is set, it must be valid.
+        // Samannimiset origin-pyynnöt eivät aseta originia, vaan sen täytyy olla kelvollinen
         if(in_array($_SERVER['HTTP_ORIGIN'], $accepted_origins)){
             header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
         }else{
@@ -18,31 +20,33 @@ if(is_uploaded_file($temp['tmp_name'])){
         }
     }
   
-    // Sanitize input
+    // filtteröidään syöte
     if(preg_match("/([^\w\s\d\-_~,;:\[\]\(\).])|([\.]{2,})/", $temp['name'])){
         header("HTTP/1.1 400 Invalid file name.");
         return;
     }
   
-    // Verify extension
+    // verifoidaan tiedostopääte
     $extensions = array("gif", "jpg", "png", "jpeg");
     if(!in_array(strtolower(pathinfo($temp['name'], PATHINFO_EXTENSION)), $extensions)){
         header("HTTP/1.1 400 Invalid extension.");
         return;
     }
 
+    //luodaan uusi nimi tiedostolle
     $fileExt = pathinfo($temp['name'], PATHINFO_EXTENSION);
     $withoutExt = md5(time().$temp['name']);
     $newFile = $withoutExt . ".".$fileExt;
 
-    // Accept upload if there was no origin, or if it is an accepted origin
+
+    // siirretään tiedosto
     $filetowrite = $imageFolder . $newFile;
     move_uploaded_file($temp['tmp_name'], $filetowrite);
   
-    // Respond to the successful upload with JSON.
+    // vastataan onnistuneeseen lataukseen JSON:illa
     echo json_encode(array('location' => $filetowrite));
 } else {
-    // Notify editor that the upload failed
+    // kerrotaan editorille, että lataus epäonnistui
     header("HTTP/1.1 500 Server Error");
 }
 

@@ -1,6 +1,7 @@
 <?php
 class post extends Dbh
 {
+    //Julkaisu mysql kyselyt
     protected function PostTopicToDB($category, $subject, $topic) { 
         $category = ucwords(strtolower($category));
         $stmt =  $this->connect()->prepare("INSERT INTO posts (name, email, user_id, date, category, title, topic)
@@ -13,6 +14,7 @@ class post extends Dbh
         }
     }
 
+    //julkaisu päivitys mysql
     protected function updateTopicToDB($category, $subject, $topic, $roomNum) { 
         $category = ucwords(strtolower($category));
         $time = date('Y-m-d H:i:s');

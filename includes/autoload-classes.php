@@ -1,4 +1,5 @@
 <?php
+//automaattinen luokkien liittäminen ja lataaminen 
 spl_autoload_register('AutoLoader');
 function AutoLoader($className) {
     $path = "classes/";

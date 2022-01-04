@@ -1443,7 +1443,6 @@ body, html {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        padding: 40px;
         align-items: center;
         position: relative;
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
@@ -1477,7 +1476,6 @@ body, html {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
     background-color: #fff;
     padding: 20px;
-    height: 500px;
     position: relative;
 }
 
@@ -1868,7 +1866,7 @@ body, html {
 
 .user-edit-page {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     position: relative;
@@ -2042,6 +2040,7 @@ body, html {
         bottom: 1%;
         right: 2%;
         cursor: pointer;
+        z-index: 10;
     }
 
     .delete-account:hover {
@@ -2079,8 +2078,6 @@ body, html {
         justify-content: space-around;
         align-items: flex-start;
     }
-
-   
 
     .fixed-create {
         position: fixed;
@@ -2226,7 +2223,6 @@ body, html {
 
     .edit-page-box1 {
         flex-wrap: wrap;
-        height: auto;
     }
 
     .user-form-container{
@@ -2255,6 +2251,10 @@ body, html {
         width: 90%;
     }
 
+    #pwdEdit {
+        width: 50%;
+        font-size: 12px !important;
+    }
 }
 
 /*770px*/
@@ -2293,7 +2293,7 @@ body, html {
     .edit {
         right: 0px;
         width: 50%;
-        bottom: 10px;
+        bottom: 135px;
         transform: none;
         width: 150px;
         font-size: 12px;
@@ -2337,7 +2337,7 @@ body, html {
 
 
     .date-users {
-        font-size: 13px;
+        font-size: 10px;
     }
     .user-post {
         font-size: 16px;
@@ -2375,4 +2375,27 @@ body, html {
     .comment-amount {
         font-size: 12px;
     }
+}
+
+@media screen and (max-device-width:  31em) {
+    .room-header {
+        padding: 30px;
+    }
+
+    .like-buttons {
+        left: 2px;
+    }
+
+
+    .field .button-img {
+        margin-top: 5px;
+    }
+
+    .user-details {
+        padding: 10px;
+    }
+    .user-form-container {
+        padding: 10px;
+    }
+
 }
