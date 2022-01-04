@@ -12,7 +12,6 @@ $objUser->setloginStatus(1);
 $onliners = $objUser->GetAllOnliners();
 
 
-
 ?>
 
 <body>

@@ -1,0 +1,17 @@
+{
+    "name": "vilho/harkka",
+    "autoload": {
+        "psr-4": {
+            "Vilho\\Harkka\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vilho Luoma",
+            "email": "vilho.luoma@gmail.com"
+        }
+    ],
+    "require": {
+        "nesbot/carbon": "^2.55"
+    }
+}

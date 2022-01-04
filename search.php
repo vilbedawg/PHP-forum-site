@@ -4,6 +4,8 @@ session_start();
 
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
+require 'vendor/autoload.php';
+use Carbon\Carbon;
 $user = new Users;
 $postObj = new PostedContent;
 $error = '';
@@ -345,8 +347,10 @@ if (isset($_POST['delete_comment'])) {
 }
 
 
+
+
+// onko pelkkää välilyöntiä
 function cleanComment($comment) {
-  // onko pelkkää välilyöntiä
   $cleanComment = str_replace(['<p>', '</p>'], '', $comment);
   foreach (array($cleanComment) as $string)
   {
@@ -360,10 +364,15 @@ function cleanComment($comment) {
   }
 }
 
+//carbon API
+function getTimeAgo($date) {
+    $dt = Carbon::parse($date)->locale('fi');
+    return $dt->diffForHumans();
+}
+
 
 //Kommentin lisääminen
 if (isset($_POST['comment'])) {
-
 
 
   if(cleanComment($_POST['comment']) == true) 
@@ -425,11 +434,13 @@ if (isset($_POST['reply'])) {
     $likeStatus = $postObj->userLikedReply($_SESSION['userid'], $data['id']);
   }
 
+  
+
   $newComment =
     "<div class='discussion-reply'>
               <div class='date'>
                 <p class='username'>" . $data['name'] . "</p>
-                <p>" . date('d/m/Y G:i A') . "</p>
+                <p>" . getTimeAgo($data['date']) . "</p>
               </div>
               <img src='" . $data['image'] . "' class='reply-img'></img>
               <div class='bodytext'>" . $data['content'] . "</div>
@@ -451,9 +462,7 @@ function createCommentRow($data)
 {
   global $user;
   global $postObj;
-  $mysqldate = strtotime($data['date']);
-  $phpdate = date('d/m/Y G:i A', $mysqldate);
-
+  
   $stmt = $user->connect()->prepare("SELECT r.user_id as comment_owner, r.comment_id, r.id, r.post_id, r.content, 
   r.date, u.user_id, u.name, u.image
   FROM replies AS r
@@ -464,7 +473,7 @@ function createCommentRow($data)
 
   $stmt->execute(array($data['comment_id']));
   $allReplies = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+ 
 
   $likes = $postObj->getLikesComment($data['comment_id']);
   $likeStatus = null;
@@ -477,7 +486,7 @@ function createCommentRow($data)
               <div class='discussion'>
                 <div class='date'>
                 <a href='profile.php?user=" . $data['user_id'] . "' class='username'>" . $data['name'] . "</a>
-                <p>" . $phpdate . "</p>
+                <p>" . getTimeAgo($data['date']) . "</p>
                 </div>
                 <img src='" . $data['image'] . "' class='comment-img'></img>
                 <div class='bodytext'><p>" . $data['content'] . "</p> </div>
@@ -497,8 +506,6 @@ function createCommentRow($data)
   // haetaan jokainen vastaus kommenttiin
   foreach ($allReplies as $dataR) {
     $likes = $postObj->getLikesReply($dataR['id']);
-    $mysqldate = strtotime($dataR['date']);
-    $phpdate = date('d/m/Y G:i A', $mysqldate);
     $likeStatus = null;
     if (isset($_SESSION['userid'])) {
       $likeStatus = $postObj->userLikedReply($_SESSION['userid'], $dataR['id']);
@@ -507,7 +514,7 @@ function createCommentRow($data)
     $response .=  "<div class='discussion-reply'>
                     <div class='date'>
                     <a href='profile.php?user=" . $dataR['user_id'] . "' class='username'>" . $dataR['name'] . "</a>
-                      <p>" . $phpdate . "</p>
+                      <p>" . getTimeAgo($dataR['date']) . "</p>
                     </div>
                     <img src='" . $dataR['image'] . "' class='reply-img'></img>
                     <div class='bodytext'>" . $dataR['content'] . "</div>
