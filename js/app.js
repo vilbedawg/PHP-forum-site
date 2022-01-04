@@ -184,9 +184,6 @@ $(window).bind('scroll', function () {
 
 
 
-
-
-
 $(window).bind('scroll', function () {
   if ($(window).scrollTop() > 250) {
       $('.profile').addClass('profile-fixed');
@@ -329,7 +326,8 @@ toggleBtn.onclick = () => {
 
 
 
-
+//----------------------------//
+//dropdown menut
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
   }
