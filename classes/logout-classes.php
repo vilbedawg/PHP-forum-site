@@ -17,8 +17,6 @@ class Logout extends Dbh
             header("location: login.php?error=stmtfailed");
             exit();
         } 
-        
-
     }
 }
 

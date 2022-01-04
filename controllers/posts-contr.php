@@ -20,24 +20,24 @@
 
         if($this->emptyPostInput() == false)
         {
-            header("location: ?error=emptyinput&title=$titleNoHTML&topic=$topicNoHTML");
+            header("location: home.php?show=Etusivu&error=emptyinput&title=$titleNoHTML&topic=$topicNoHTML");
             exit();
         }
 
         if($this->invalidTitle() == false) 
         {
-            header("location: ?error=invalidTitle&title=$titleNoHTML&topic=$topicNoHTML");
+            header("location:  home.php?show=Etusivu&error=invalidTitle&title=$titleNoHTML&topic=$topicNoHTML");
             exit();
         }
 
         if($this->invalidLength() == false) 
             {
-                header("location: ?error=invalidLength&title=$titleNoHTML&topic=$topicNoHTML");
+                header("location:  home.php?show=Etusivu&error=invalidLength&title=$titleNoHTML&topic=$topicNoHTML");
                 exit();
             }
         if($this->invalidCategory() == false) 
         {
-            header("location: ?error=invalidCategory&title=$titleNoHTML&topic=$topicNoHTML");
+            header("location:  home.php?show=Etusivu&error=invalidCategory&title=$titleNoHTML&topic=$topicNoHTML");
             exit();
         }
         

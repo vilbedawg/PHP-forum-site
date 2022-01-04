@@ -409,7 +409,6 @@ if(isset($_POST['reply'])){
     echo $newComment;
 }
 
-
 function createCommentRow($data) {
   global $user;
   global $postObj;

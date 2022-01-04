@@ -55,6 +55,7 @@
             $this->setUser($this->name, $this->email, $this->pwd); 
         }
         
+        //onko tyhjät kentät
         private function emptyInput() {
             $result = 0;
             if(empty($this->name) || empty($this->email) || empty($this->pwd) || empty($this->pwd2)) {
@@ -65,6 +66,7 @@
             return $result;
         }
 
+        //sisältääkö nimi ei sallittuja merkkejä
         private function invalidName() {
             $result = 0;
             if(!preg_match('/(?!^$)([^\s]){5,}$/', $this->name))
@@ -76,6 +78,7 @@
             return $result;
         }
 
+        //onko kunnollinen sähköposti
         private function invalidEmail() {
             $result = 0;
             if(!filter_var($this->email, FILTER_VALIDATE_EMAIL))
@@ -87,6 +90,7 @@
             return $result;
         }
 
+        //salasana pituus
         private function pwdLength() {
             $result = 0;
             if(strlen($this->pwd) < 4 )
@@ -97,6 +101,8 @@
             }
             return $result;
         }
+
+        //mätsääkö salasana
         private function pwdMatch() {
             $result = 0;
             if($this->pwd !== $this->pwd2)
@@ -108,6 +114,7 @@
             return $result;
         }
 
+        //onko nimi jo käytössä
         private function checkNameTaken() {
             $result = 0;
             if(!$this->checkUser($this->name))
@@ -119,6 +126,7 @@
             return $result;
         }
 
+        //Onko sähköposti jo käytössä
         private function checkEmailTaken() {
             $result = 0;
             if(!$this->checkEmail($this->email))

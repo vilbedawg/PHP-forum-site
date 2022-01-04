@@ -17,10 +17,24 @@ $onliners = $objUser->GetAllOnliners();
 ?>
 <body>
 
-
     <!--Modal section-->
     <div class="bg-modal">
         <div class="modal-content">
+        <button type="button" class="dropbtn-modal" onclick="modalMenu()" style="margin: 0px ">Kategoriat</button>
+            <div id="modalDropdown" class="modal-dropdown-content">
+                <div class="category-item">Yleinen</div>
+                <div class="category-item">Politiikka</div>
+                <div class="category-item">Valokuvaus</div>
+                <div class="category-item">Videot</div>
+                <div class="category-item">Tarinat</div>
+                <div class="category-item">Taide</div>
+                <div class="category-item">Pelit</div>
+                <div class="category-item">Elokuvat</div>
+                <div class="category-item">Musiikki</div>
+                <div class="category-item">Urheilu</div>
+                <div class="category-item">Harrastukset</div>
+                <div class="category-item" style="color: red;">NSFW</div>
+            </div>
             <div class="modal-close"><i class="fas fa-times"></i>
             </div>
             <div class="modal-side-bar">
@@ -139,9 +153,9 @@ $onliners = $objUser->GetAllOnliners();
             </div>
             <div class="buttons">
                 <?php if(isset($_SESSION['userid'])) {
-                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+                    echo '<a href="logout.php"><button class="logout"><i class="fas fa-sign-out-alt"></i></button></a>';
                 }else {
-                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                    echo '<a href="login.php"><button class="logout"><i class="fa fa-sign-in" aria-hidden="true"></i></button></a>';
                 }
                 ?>
             </div>
@@ -295,7 +309,31 @@ $onliners = $objUser->GetAllOnliners();
         <a href="" class="scrollup">
         <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="#333" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 7.58l5.995 5.988-1.416 1.414-4.579-4.574-4.59 4.574-1.416-1.414 6.006-5.988z"/></svg>
         </a>
-
+        
+        <div class="footer-bar">
+            <?php if(isset($_SESSION['userid'])) {
+                echo '<span><a href="profile.php?user='. $_SESSION['userid'] .'"><button class="logout" style="margin: 0; border: 1px solid #ccc; background-color: transparent;
+                box-shadow: none; padding: 10px 15px; color: black;">Käyttäjätiedot</button></a></span>';
+            } ?>
+            <span class="fixed-create"><button class="create" style=" border-radius: 50%; padding: 10px 15px;">+</button></span>
+            <span><button class="dropbtn-footer" onclick="footerMenu()" style="margin: 0px ">Kategoriat</button>
+            <div id="FooterDropdown" class="footer-dropdown-content">
+                <a href="home.php?sort=New&show=Etusivu" class="category-item" style="font-weight: 500;">Kaikki</a>
+                <a href="home.php?sort=New&show=Yleinen" class="category-item">Yleinen</a>
+                <a href="home.php?sort=New&show=Politiikka" class="category-item">Politiikka</a>
+                <a href="home.php?sort=New&show=Valokuvaus" class="category-item">Valokuvaus</a>
+                <a href="home.php?sort=New&show=Videot" class="category-item">Videot</a>
+                <a href="home.php?sort=New&show=Tarinat" class="category-item">Tarinat</a>
+                <a href="home.php?sort=New&show=Taide" class="category-item">Taide</a>
+                <a href="home.php?sort=New&show=Pelit" class="category-item">Pelit</a>
+                <a href="home.php?sort=New&show=Elokuvat" class="category-item">Elokuvat</a>
+                <a href="home.php?sort=New&show=Musiikki" class="category-item">Musiikki</a>
+                <a href="home.php?sort=New&show=Urheilu" class="category-item">Urheilu</a>
+                <a href="home.php?sort=New&show=Harrastukset" class="category-item">Harrastukset</a>
+                <a href="home.php?sort=New&show=NSFW" class="category-item">NSFW</a>
+            </div>
+            </span>
+        </div>
         <script src="js/app.js"></script>
         <script type="text/javascript" src="tinymce\jquery.tinymce.min.js"></script>
         <script type="text/javascript" src="tinymce\tinymce.min.js"></script>

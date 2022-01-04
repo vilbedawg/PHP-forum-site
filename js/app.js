@@ -348,6 +348,41 @@ function myFunction() {
   });
 
 
+  function footerMenu() {
+    document.getElementById("FooterDropdown").classList.toggle("showFooter");
+    }
+  
+    window.addEventListener("click", function(event) {
+        if (!event.target.matches('.dropbtn-footer')) {
+            var dropdowns = document.getElementsByClassName("footer-dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('showFooter')) {
+                openDropdown.classList.remove('showFooter');
+            }
+            }
+        }
+    });
+
+    function modalMenu() {
+        document.getElementById("modalDropdown").classList.toggle("showmodal");
+        }
+      
+        window.addEventListener("click", function(event) {
+            if (!event.target.matches('.dropbtn-modal')) {
+                var dropdowns = document.getElementsByClassName("modal-dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('showmodal')) {
+                    openDropdown.classList.remove('showmodal');
+                }
+                }
+            }
+        });
+
+
 
 
 //----------------------------//

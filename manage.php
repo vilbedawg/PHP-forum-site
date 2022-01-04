@@ -38,10 +38,10 @@ if($_SESSION["userid"] !== $userOnView[0]['user_id']) {
                 <div class="post-category-list"></div>
             </div>
             <div class="buttons">
-                <?php if(isset($_SESSION['userid'])) {
-                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+            <?php if(isset($_SESSION['userid'])) {
+                    echo '<a href="logout.php"><button class="logout"><i class="fas fa-sign-out-alt"></i></button></a>';
                 }else {
-                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                    echo '<a href="login.php"><button class="logout"><i class="fa fa-sign-in" aria-hidden="true"></i></button></a>';
                 }
                 ?>
             </div>

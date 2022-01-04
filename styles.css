@@ -17,9 +17,38 @@ form {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-body {
+body, html {
     background-color: #CEE3F8;
+    height: 100%;
 }
+
+::-webkit-scrollbar {
+    /* width */
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    /* Track */
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    /* Handle */
+    background: rgb(110, 110, 110);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    /* Handle on hover */
+    background: rgb(110, 110, 110);
+}
+
+::-webkit-scrollbar-track-piece {
+    /* not handle on */
+    background: rgb(1, 1, 1);
+}
+
 
 .all-comments {
     position: relative;
@@ -146,7 +175,6 @@ body {
 }
 
 .search input {
-    position: absolute;
     height: 35px;
     width: 100%;
     border: 1px solid #ccc;
@@ -176,16 +204,15 @@ body {
 }
 
 .search button{
-    width: 47px;
-    margin-right: 10px;
+    padding-right: 10px;
     border: none;
     outline: none;
     color: #4895ef;
     background: #fff;
     cursor: pointer;
     font-size: 17px;
-    border-radius: 5px ;
-    transition: .2s ease;
+    border-radius: 5px;
+    padding-left: 5px;
 }
 .search button:hover{
     color: #333;
@@ -250,9 +277,7 @@ body {
     cursor: pointer;
 }
 
-.like:hover {
-    color: #ee6c4d;
-}
+
 
 .reply, .reply-show, .delete-comment{
     color: #4895ef;
@@ -501,6 +526,7 @@ body {
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     margin-left: 10px;
 }
+
 
 .back {
     color: #fff;
@@ -1224,8 +1250,13 @@ body {
         font-family: Arial, Helvetica, sans-serif;
     } 
 
+    .dropbtn-modal {
+        display: none;
+    }
 
-
+    .modal-dropdown-content {
+        display: none;
+    }
 
         
     .category-item {
@@ -1550,7 +1581,6 @@ body {
     height: 550px;
     justify-content: space-around;
     align-items: flex-start;
-    padding-top: 30px;
 }
 
 
@@ -1838,7 +1868,7 @@ body {
 
 .user-edit-page {
     width: 100%;
-    height: 800px;
+    height: 100vh;
     display: flex;
     justify-content: center;
     position: relative;
@@ -1970,6 +2000,8 @@ body {
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      border-radius: 5px;
+      box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     }
 
     .sort-table a {
@@ -1995,10 +2027,15 @@ body {
         color: #333;
     }
 
-    .like-buttons i:hover {
-        color: #ee6c4d;
+    #like:hover, #dislike:hover  {
+        color: #ee6c4d !important;
         cursor: pointer;
     }
+    #liked:hover, #disliked:hover  {
+        color: #333 !important;
+        cursor: pointer;
+    }
+    
 
     .delete-account {
         position: absolute;
@@ -2011,3 +2048,331 @@ body {
         color: red;
     }
 
+    .footer-bar {
+        display: none;
+    }
+
+/*900px*/
+@media screen and (max-device-width: 56.25em) {
+    
+    .side-menu {
+       display: none;
+    }
+
+    .discussion-page {
+        width: 100%;
+    }
+
+    #nav-logout {
+        display: none;
+    }
+
+    .footer-bar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        background-color: #ffffff;
+        z-index: 9999;
+        justify-content: space-around;
+        align-items: flex-start;
+    }
+
+   
+
+    .fixed-create {
+        position: fixed;
+        bottom: 80px;
+        left: 3%;
+    }
+   
+    .dropbtn-footer {
+        background-color: transparent;
+        color: black;
+        font-weight: 500;
+        padding: 10px 15px;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+        width: 150px;
+        display: flex;
+        justify-content: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .footer-dropdown-content {
+        display: none;
+        position: absolute;
+        top: -585px;
+        background-color: #f1f1f1;
+        width: 150px;
+        overflow: auto;
+        z-index: 1;
+        max-width: 150px;
+    }
+
+    .footer-dropdown a:hover {background-color: #ddd;}
+  
+    .footer-dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+      
+    .showFooter {display: block;}
+
+
+    .dropbtn-modal {
+        background-color: transparent;
+        color: black;
+        font-weight: 500;
+        padding: 10px 15px;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+        width: 150px;
+        display: flex;
+        justify-content: space-between;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        position: absolute;
+        top: 12px;
+        left: 25px;
+        z-index: 9999999;
+
+    }
+
+    .modal-dropdown-content {
+        display: none;
+        position: absolute;
+        top: 50px;
+        left: 25px;
+        background-color: #f1f1f1;
+        width: 150px;
+        overflow: auto;
+        z-index: 9999999999;
+        max-width: 150px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 12px;
+    }
+
+    .modal-dropdown a:hover {background-color: #ddd;}
+  
+    .modal-dropdown-content a {
+        color: black;
+        padding: 6px 8px;
+        text-decoration: none;
+        display: block;
+      }
+      
+    .showmodal {display: block;}
+
+
+    .scrollup {
+        right: 0;
+        bottom: 30px;
+    }
+
+
+    .modal-close {
+        font-size: 25px;
+    }
+
+    .modal-side-bar {
+        display: none;
+    }
+
+    .create-form {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 100%;
+    }
+
+    .form-post .form-group-upper {
+        font-size: 12px;
+        margin-top: 3px;
+        margin-bottom: 10px;
+    }
+
+    .form-group-box {
+        height: auto;
+    }
+
+    .form-post .form-group label {
+        font-size: 12px;
+    }
+
+    .post-topic-button input {
+        font-size: 12px;
+        margin-top: 3px;
+    }
+
+    #categorylist {
+        top: 104px;
+    }
+
+    .form-post .form-group-upper input {
+        font-size: 12px;
+    }
+    .fixed-create {
+        z-index: 10;
+    }
+
+    .edit-page-box1 {
+        flex-wrap: wrap;
+        height: auto;
+    }
+
+    .user-form-container{
+        margin-left: 0;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .user-details {
+        width: 100%;
+        align-items: flex-start;
+    }
+
+    .user-details h1 {
+        margin-left: 20px;
+        margin-bottom: 10px;
+    }
+
+    .edit-toolbar {
+        width: 90%;
+    }
+    .room-header{
+        width: 90%;
+    }
+    .discussion-section {
+        width: 90%;
+    }
+
+}
+
+/*770px*/
+@media screen and (max-device-width: 48em) {
+    .home-users {
+        flex-wrap: wrap;
+    }
+
+    .post-row-3 {
+        font-size: 12px;
+    }
+
+    .profile {
+        width: 100%;
+        height: 220px;
+        background-color: #fff;
+        border-radius: 5px;
+        position: relative;
+        box-shadow: rgb(50 50 93 / 25%) 0px 2px 5px -1px, rgb(0 0 0 / 30%) 0px 1px 3px -1px;
+        margin-left: 0;
+        margin-top: 0;
+        border-radius: 0;
+    }
+
+    .profile-status {
+        border-radius: 0;
+    }
+    .profile-create {
+        right: 0px;
+        width: 50%;
+        bottom: 40px;
+        transform: none;
+        width: 200px;
+    }
+
+    .edit {
+        right: 0px;
+        width: 50%;
+        bottom: 10px;
+        transform: none;
+        width: 150px;
+        font-size: 12px;
+    }
+
+    .profile hr {
+        display: none;
+    }
+
+    .home-other {
+        margin-top: 40px;
+    }
+
+    .discussion-page-users {
+        margin-top: 10px;
+        padding: 5px;
+    }
+
+    .profile-create {
+        display: none;
+    }
+
+    .profile-back {
+        font-size: 12px;
+    }
+
+    .profile-details {
+        font-size: 14px;
+    }
+    .username-users {
+        font-size: 12px;
+    }
+
+    .edit-post-btn, .delete-post-btn {
+        transform: scale(1.5);
+    }
+
+    .delete-post-btn { 
+        top: 13px;
+    }
+
+
+    .date-users {
+        font-size: 13px;
+    }
+    .user-post {
+        font-size: 16px;
+        margin: 10px 0px;
+    }
+
+    .post-toolbar-users {
+        font-size: 12px;
+    }
+
+    .hashtag {
+        font-size: 12px;
+    }
+
+    .dropbtn {
+        width: 100px;
+    }
+
+    .dropdown-content {
+        min-width: 100px;
+    }
+
+    .bodytext-users p{
+        font-size: 14px;
+    }
+
+    .post-toolbar-editpost {
+        font-size: 12px;
+    }
+
+    #delete-post {
+        font-size: 12px;
+    }
+
+    .comment-amount {
+        font-size: 12px;
+    }
+}

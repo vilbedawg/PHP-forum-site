@@ -19,6 +19,7 @@ $userlist = $objUser->GetAllUsersButMe();
 ?>
 
 <body>
+<span class="fixed-create"><button class="create" style=" border-radius: 50%; padding: 10px 15px;">+</button></span>
     <div class="search-toolbar">
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn"><div class="drop-icons"><i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i> Koti</div> <i class="fas fa-angle-down"></i></button>
@@ -37,10 +38,10 @@ $userlist = $objUser->GetAllUsersButMe();
                 <div class="post-category-list"></div>
             </div>
             <div class="buttons">
-                <?php if(isset($_SESSION['userid'])) {
-                    echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
+            <?php if(isset($_SESSION['userid'])) {
+                    echo '<a href="logout.php"><button class="logout"><i class="fas fa-sign-out-alt"></i></button></a>';
                 }else {
-                    echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
+                    echo '<a href="login.php"><button class="logout"><i class="fa fa-sign-in" aria-hidden="true"></i></button></a>';
                 }
                 ?>
             </div>

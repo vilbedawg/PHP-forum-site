@@ -19,12 +19,14 @@ $objPost = new PostedContent();
 $NumOfComments = $objPost->getAllComments($roomNum);
 $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
 
+
+
 ?>
 
 
 
 
-<body style="background-color: #2e2f30;">
+<body>
     <?php
     if (isset($_GET['edit'])) {
     ?>
@@ -150,12 +152,12 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
             <div class="post-category-list"></div>
         </div>
         <div class="buttons">
-            <?php if (isset($_SESSION['userid'])) {
-                echo '<a href="logout.php"><button class="logout">Kirjaudu ulos</button></a>';
-            } else {
-                echo '<a href="login.php"><button class="logout">Kirjaudu sisään</button></a>';
-            }
-            ?>
+        <?php if(isset($_SESSION['userid'])) {
+                    echo '<a href="logout.php"><button class="logout"><i class="fas fa-sign-out-alt"></i></button></a>';
+                }else {
+                    echo '<a href="login.php"><button class="logout"><i class="fa fa-sign-in" aria-hidden="true"></i></button></a>';
+                }
+                ?>
         </div>
 
     </div>
