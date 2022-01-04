@@ -19,7 +19,6 @@
        public function PostTopic() {
         $titleNoHTML = strip_tags($this->subject);
         $topicNoHTML = strip_tags($this->topic);
-
         if($this->emptyPostInput() == false)
         {
             header("location: home.php?show=Etusivu&error=emptyinput&title=$titleNoHTML&topic=$topicNoHTML");
@@ -89,7 +88,7 @@
 
         private function invalidCategory() {
             $result = 0;
-            $list = array('Yleinen', 'Politiikka', 'Valokuvaus', 'Videot', 'Tarinat', 'Taide', 'Pelit', 'Elokuvat', 'Musiikki', 'Urheilu', 'Harrastukset', 'NSFW');
+            $list = array('Yleinen', 'Politiikka', 'Valokuvaus', 'Videot', 'Tarinat', 'Taide', 'Pelit', 'Elokuvat', 'Musiikki', 'Urheilu', 'Harrastukset', 'Nsfw');
             $category = ucwords(strtolower($this->category));
             if(!in_array($category, $list)) {
                $result = false;

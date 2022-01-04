@@ -8,7 +8,7 @@ class Dbh {
             $username = "root";
             $password = "";
              //tarkista, että osoite on oikein
-            $dbh = new PDO('mysql:host=localhost;dbname=websocket', $username, $password);
+            $dbh = new PDO('mysql:host=localhost;dbname=harkka', $username, $password);
             $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $dbh;
         } catch(PDOException $e) {

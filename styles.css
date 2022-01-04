@@ -585,7 +585,7 @@ body, html {
 .home-other {
     display: flex;
     width: 100%;
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 .discussion-page{
@@ -872,7 +872,7 @@ body, html {
 
 .bodytext-users p {
     margin-left: 12px;
-    margin-right: 40%;
+    margin-right: 15%;
     font-size: 16px;
     text-align: left;
 }
@@ -2263,6 +2263,9 @@ body, html {
         flex-wrap: wrap;
     }
 
+    .discussion-page-users {
+        width: 100%;
+    }
     .post-row-3 {
         font-size: 12px;
     }

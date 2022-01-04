@@ -613,6 +613,10 @@ $currentRoom = $objPost->GetPostByCurrentRoomID($roomNum);
                 "textAlign": "center",
                 "margin-bottom": "10px"
             });
+            $("p").has("iframe").css({
+                "textAlign": "center",
+                "margin-bottom": "10px"
+            });
             setTimeout(function() {
                 $('.success-texti').fadeOut(500, function() {
                     $(this).remove();

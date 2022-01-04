@@ -146,7 +146,7 @@ $userlist = $objUser->GetAllUsersButMe();
 
         ?>
         <!-- Tässä tarkoituksena näyttää käyttäjälista vain admin käyttäjälle, minkä userid on 0 -->
-        <?php if (isset($_SESSION['userid']) && $_SESSION['userid'] == 0) {
+        <?php if (isset($_SESSION['userid']) && $_SESSION['userid'] != 0) {
             echo "";
         } else {
         ?>
