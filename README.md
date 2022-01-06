@@ -41,7 +41,7 @@ Tunnukset: admin/admin
   
 * Julkaisu
 
-  * Julkaisu voi sisältää melkein mitä vain.
+  * Julkaisu voi sisältää melkein mitä vain
   * Julkaisua voidaan kommentoida
   * Julkaisusta voidaan tykätä/ei tykätä
 
