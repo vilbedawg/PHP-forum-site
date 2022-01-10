@@ -309,6 +309,7 @@ $userlist = $objUser->GetAllUsersButMe();
             "textAlign": "center",
             "background": "black",
             "margin-left": "0",
+            "margin-bottom": "25px"
         });
     });
 </script>
