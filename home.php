@@ -150,6 +150,7 @@ $onliners = $objUser->GetAllOnliners();
             </div>
         </div>
         <div class="search">
+        <i class="fa fa-search" aria-hidden="true" style="position: absolute; z-index: 1; right: 20px;"></i>
             <input type="text" id="post-search" placeholder="Etsi julkaisu...">
             <div class="post-category-list"></div>
         </div>

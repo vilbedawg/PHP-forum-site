@@ -165,7 +165,7 @@ body, html {
 }
 
 #post-search:focus {
-    background-color: #CEE3F8;
+    background-color: #f6f6f6;
 }
 
 
@@ -1304,8 +1304,6 @@ body, html {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        border-radius: 5px;
-        margin: 2px;
     }
     .post-row-1 {
         font-weight: 700;
