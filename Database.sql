@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 05.01.2022 klo 14:31
+-- Generation Time: 10.01.2022 klo 12:02
 -- Palvelimen versio: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -18,19 +18,28 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `harkka`
+-- Database: `e2000693_harkka`
 --
+CREATE DATABASE IF NOT EXISTS `e2000693_harkka` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `e2000693_harkka`;
 
 -- --------------------------------------------------------
 
 --
 -- Rakenne taululle `categories`
 --
+-- Luotu: 21.12.2021 klo 13:25
+--
 
+DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `category_id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `categories`:
+--
 
 --
 -- Vedos taulusta `categories`
@@ -55,7 +64,10 @@ INSERT INTO `categories` (`category_id`, `name`) VALUES
 --
 -- Rakenne taululle `comments`
 --
+-- Luotu: 03.01.2022 klo 10:50
+--
 
+DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `comment_id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
@@ -64,6 +76,12 @@ CREATE TABLE `comments` (
   `date` datetime NOT NULL,
   `content` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `comments`:
+--   `post_id`
+--       `posts` -> `post_id`
+--
 
 --
 -- Vedos taulusta `comments`
@@ -88,6 +106,7 @@ INSERT INTO `comments` (`comment_id`, `post_id`, `user_id`, `name`, `date`, `con
 -- Näkymän vararakenne `comment_owner`
 -- (See below for the actual view)
 --
+DROP VIEW IF EXISTS `comment_owner`;
 CREATE TABLE `comment_owner` (
 `comment_owner` int(11)
 ,`comment_id` int(11)
@@ -104,7 +123,10 @@ CREATE TABLE `comment_owner` (
 --
 -- Rakenne taululle `posts`
 --
+-- Luotu: 04.01.2022 klo 14:19
+--
 
+DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   `post_id` int(11) NOT NULL,
   `name` varchar(60) NOT NULL,
@@ -115,6 +137,10 @@ CREATE TABLE `posts` (
   `title` varchar(50) NOT NULL,
   `topic` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `posts`:
+--
 
 --
 -- Vedos taulusta `posts`
@@ -133,7 +159,10 @@ INSERT INTO `posts` (`post_id`, `name`, `email`, `user_id`, `date`, `category`, 
 --
 -- Rakenne taululle `rating_info`
 --
+-- Luotu: 03.01.2022 klo 14:57
+--
 
+DROP TABLE IF EXISTS `rating_info`;
 CREATE TABLE `rating_info` (
   `user_id` int(11) DEFAULT NULL,
   `post_id` int(11) DEFAULT NULL,
@@ -142,6 +171,10 @@ CREATE TABLE `rating_info` (
   `reply_id` int(11) DEFAULT NULL,
   `like_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `rating_info`:
+--
 
 --
 -- Vedos taulusta `rating_info`
@@ -184,7 +217,10 @@ INSERT INTO `rating_info` (`user_id`, `post_id`, `rating_action`, `comment_id`, 
 --
 -- Rakenne taululle `replies`
 --
+-- Luotu: 04.01.2022 klo 14:37
+--
 
+DROP TABLE IF EXISTS `replies`;
 CREATE TABLE `replies` (
   `id` int(11) NOT NULL,
   `comment_id` int(11) NOT NULL,
@@ -194,6 +230,12 @@ CREATE TABLE `replies` (
   `user_id` int(11) NOT NULL,
   `name` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `replies`:
+--   `comment_id`
+--       `comments` -> `comment_id`
+--
 
 --
 -- Vedos taulusta `replies`
@@ -211,7 +253,10 @@ INSERT INTO `replies` (`id`, `comment_id`, `post_id`, `content`, `date`, `user_i
 --
 -- Rakenne taululle `users`
 --
+-- Luotu: 15.12.2021 klo 17:01
+--
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
@@ -222,6 +267,10 @@ CREATE TABLE `users` (
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- RELATIONSHIPS FOR TABLE `users`:
+--
 
 --
 -- Vedos taulusta `users`
@@ -239,6 +288,7 @@ INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `login_status`, `la
 --
 DROP TABLE IF EXISTS `comment_owner`;
 
+DROP VIEW IF EXISTS `comment_owner`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `comment_owner`  AS SELECT `c`.`user_id` AS `comment_owner`, `c`.`comment_id` AS `comment_id`, `c`.`post_id` AS `post_id`, `c`.`content` AS `content`, `c`.`date` AS `date`, `u`.`user_id` AS `user_id`, `u`.`name` AS `name`, `u`.`image` AS `image` FROM (`comments` `c` join `users` `u` on(`c`.`user_id` = `u`.`user_id`)) ORDER BY `c`.`date` DESC ;
 
 --
