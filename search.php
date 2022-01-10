@@ -393,7 +393,25 @@ if (isset($_POST['comment'])) {
     } else {
       $output = "<div class='success-texti'><p>Kommenttisi on tallennettu</p></div>";
     }
-    $stmt = $user->connect()->prepare("SELECT * FROM comment_owner ORDER BY comment_id DESC LIMIT 1");
+    $stmt = $user->connect()->prepare("SELECT
+                                        `c`.`user_id` AS `comment_owner`,
+                                        `c`.`comment_id` AS `comment_id`,
+                                        `c`.`post_id` AS `post_id`,
+                                        `c`.`content` AS `content`,
+                                        `c`.`date` AS `date`,
+                                        `u`.`user_id` AS `user_id`,
+                                        `u`.`name` AS `name`,
+                                        `u`.`image` AS `image`
+                                    FROM
+                                        (
+                                            `e2000693_harkka`.`comments` `c`
+                                        LEFT JOIN `e2000693_harkka`.`users` `u`
+                                        ON
+                                            (`c`.`user_id` = `u`.`user_id`)
+                                        )
+                                    ORDER BY
+                                        `c`.`date`
+                                    DESC");
 
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);   
