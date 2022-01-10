@@ -309,8 +309,8 @@ $userlist = $objUser->GetAllUsersButMe();
         $("p").has("iframe").css({
             "textAlign": "center",
             "background": "black",
-            "margin-left": "0",
-            "margin-bottom": "25px"
+            "margin": "auto",
+            "padding-bottom": "25px"
         });
     });
 </script>
