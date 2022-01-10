@@ -410,8 +410,8 @@ if (isset($_POST['comment'])) {
                                             (`c`.`user_id` = `u`.`user_id`)
                                         )
                                     ORDER BY
-                                        `c`.`date`
-                                    DESC");
+                                    `c`.`comment_id`
+                                    DESC LIMIT 1");
 
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);   
