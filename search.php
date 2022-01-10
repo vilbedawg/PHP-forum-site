@@ -562,7 +562,26 @@ function createCommentRow($data)
 if (isset($_POST['post_id'])) {
   $response = '';
   $output = '';
-  $stmt = $user->connect()->prepare("SELECT * FROM comment_owner WHERE post_id = ? ORDER BY date DESC");
+  $stmt = $user->connect()->prepare("SELECT
+                                      `c`.`user_id` AS `comment_owner`,
+                                      `c`.`comment_id` AS `comment_id`,
+                                      `c`.`post_id` AS `post_id`,
+                                      `c`.`content` AS `content`,
+                                      `c`.`date` AS `date`,
+                                      `u`.`user_id` AS `user_id`,
+                                      `u`.`name` AS `name`,
+                                      `u`.`image` AS `image`
+                                    FROM
+                                      (
+                                          `e2000693_harkka`.`comments` `c`
+                                      LEFT JOIN `e2000693_harkka`.`users` `u`
+                                      ON
+                                          (`c`.`user_id` = `u`.`user_id`)
+                                      )
+                                    WHERE post_id = ?
+                                    ORDER BY
+                                      `c`.`date`
+                                    DESC");
 
   if (!$stmt->execute(array($_POST['post_id']))) {
     $stmt = null;
