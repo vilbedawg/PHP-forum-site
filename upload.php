@@ -2,7 +2,7 @@
 // editoriin syötettävä kuva ja sen lataus kansioon
 
 // hyväksytyt osoitteet
-$accepted_origins = array("http://localhost:8080", "http://107.161.82.130", "http://localhost");
+$accepted_origins = array("http://localhost:8080", "http://107.161.82.130", "http://localhost", "https://www.cc.puv.fi");
 
 // kuvan latauskansio
 $imageFolder = "images/";
