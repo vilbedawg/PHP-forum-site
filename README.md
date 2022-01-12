@@ -15,7 +15,6 @@ Tunnukset: admin/admin
 
 * Muut kirjastot 
 
-  * Carbon API extension ajankäsittelyä varten
   * TinyMCE texteditor kirjasto
 
 
