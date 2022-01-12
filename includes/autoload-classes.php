@@ -4,10 +4,10 @@ spl_autoload_register('AutoLoader');
 function AutoLoader($className) {
     $path = "classes/";
     $ext = "-classes.php";
-    $fullPath = $path . $className . $ext;
+    $fullPath = $path . strtolower($className) . $ext;
 
     if(!file_exists($fullPath)) {
-        return false;
+        die($fullPath);
     }
 
     include_once $fullPath;
