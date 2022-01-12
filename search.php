@@ -370,6 +370,17 @@ function getTimeAgo($date) {
     return $dt->diffForHumans();
 }
 
+function commentAmount($comm) {
+  $commAmount = count($comm);
+  if ($commAmount > 1) {
+    $result = "{$commAmount} kommenttia";
+  } else {
+    $result = "{$commAmount} kommentti";
+  }
+
+  return $result;
+}
+
 
 //Kommentin lisääminen
 if (isset($_POST['comment'])) {
@@ -516,7 +527,7 @@ function createCommentRow($data)
                 </div>
                 <button class='delete-comment' onclick='isReply = false;' user-id='" . $data['user_id'] . "' data-id='" . $data['comment_id'] . "'>Poista</button>
                 </div>
-                <button class='reply-show' data-id='" . count($allReplies) . "' style='white-space: nowrap; margin-top: 5px; display: none;'>Näytä " . count($allReplies) . " Kommentti</button>
+                <button class='reply-show' data-id='" . count($allReplies) . "' style='white-space: nowrap; margin-top: 5px; display: none;'>Näytä " . commentAmount($allReplies) . "</button>
                 <div class='reply-section' style='display: none;'>
                 ";
 
