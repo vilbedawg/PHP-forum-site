@@ -1,6 +1,5 @@
 # PHP-forum-site
 
-## [Sivu](https://www.cc.puv.fi/~e2000693/PHP-forum-site-master/home.php?show=Etusivu)
 
 Redditin inspiroima keskustelupalsta. Verkkosivusto toteutettu PHP:n olio-ohjelmoinnin periaatteita seuraten, sekä toimivat CRUD-operaatiot Ajax methodia käyttäen.
 Tietokantana käytetty MySQL-tietokantaa.
@@ -16,7 +15,6 @@ Tunnukset: admin/admin
 
 * Muut kirjastot 
 
-  * Carbon API extension ajankäsittelyä varten
   * TinyMCE texteditor kirjasto
 
 

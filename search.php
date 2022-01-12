@@ -1,11 +1,13 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 // Kaikki palvelimen ajax koodit
 
 require_once 'classes/database.php';
 require_once 'includes/autoload-classes.php';
-require 'vendor/autoload.php';
-use Carbon\Carbon;
 $user = new Users;
 $postObj = new PostedContent;
 $error = '';
@@ -364,10 +366,75 @@ function cleanComment($comment) {
   }
 }
 
-//carbon API
+
+// olisin käyttänyt Carbon api extensionia, mutta koululla käytössä php 7.0 ja en jaksanut enää ruveta uudestaan säätämään eri version kanssa.
 function getTimeAgo($date) {
-    $dt = Carbon::parse($date)->locale('fi');
-    return $dt->diffForHumans();
+  $time_ago = strtotime($date);
+  $cur_time   = time();
+  $time_elapsed   = $cur_time - $time_ago;
+  $seconds    = $time_elapsed ;
+  $minutes    = round($time_elapsed / 60 );
+  $hours      = round($time_elapsed / 3600);
+  $days       = round($time_elapsed / 86400 );
+  $weeks      = round($time_elapsed / 604800);
+  $months     = round($time_elapsed / 2600640 );
+  $years      = round($time_elapsed / 31207680 );
+  // sekuntit
+  if($seconds <= 10){
+      return "Juuri nyt";
+  }
+  else if ($seconds <= 60){
+    return "$seconds sekuntia sitten";
+  }
+  // minuutit
+  else if($minutes <=60){
+      if($minutes==1){
+          return "1 minuutti sitten";
+      }
+      else{
+          return "$minutes minuuttia sitten";
+      }
+  }
+  // tunnit
+  else if($hours <=24){
+      if($hours==1){
+          return "1 tunti sitten";
+      }else{
+          return "$hours tuntia sitten";
+      }
+  }
+  // päivät
+  else if($days <= 7){
+      if($days==1){
+          return "1 päivä sitten";
+      }else{
+          return "$days päivää sitten";
+      }
+  }
+  // viikot
+  else if($weeks <= 4.3){
+      if($weeks==1){
+          return "1 viikko sitten";
+      }else{
+          return "$weeks viikkoa sitten";
+      }
+  }
+  // kuukaudet
+  else if($months <=12){
+      if($months==1){
+          return "1 kuukausi sitten";
+      }else{
+          return "$months kuukautta sitten";
+      }
+  }
+  // vuodet
+  else{
+      if($years==1){
+          return "1 vuosi sitten";
+      }else{
+          return "$years vuotta sitten";
+      }
+  }
 }
 
 
@@ -393,7 +460,7 @@ if (isset($_POST['comment'])) {
     } else {
       $output = "<div class='success-texti'><p>Kommenttisi on tallennettu</p></div>";
     }
-    $stmt = $user->connect()->prepare("SELECT
+      $stmt = $user->connect()->prepare("SELECT
                                         `c`.`user_id` AS `comment_owner`,
                                         `c`.`comment_id` AS `comment_id`,
                                         `c`.`post_id` AS `post_id`,
@@ -410,7 +477,7 @@ if (isset($_POST['comment'])) {
                                             (`c`.`user_id` = `u`.`user_id`)
                                         )
                                     ORDER BY
-                                    `c`.`comment_id`
+                                        `c`.`comment_id`
                                     DESC LIMIT 1");
 
     $stmt->execute();
@@ -576,25 +643,25 @@ if (isset($_POST['post_id'])) {
   $response = '';
   $output = '';
   $stmt = $user->connect()->prepare("SELECT
-                                      `c`.`user_id` AS `comment_owner`,
-                                      `c`.`comment_id` AS `comment_id`,
-                                      `c`.`post_id` AS `post_id`,
-                                      `c`.`content` AS `content`,
-                                      `c`.`date` AS `date`,
-                                      `u`.`user_id` AS `user_id`,
-                                      `u`.`name` AS `name`,
-                                      `u`.`image` AS `image`
-                                    FROM
-                                      (
-                                          `e2000693_harkka`.`comments` `c`
-                                      LEFT JOIN `e2000693_harkka`.`users` `u`
-                                      ON
-                                          (`c`.`user_id` = `u`.`user_id`)
-                                      )
-                                    WHERE post_id = ?
-                                    ORDER BY
-                                      `c`.`date`
-                                    DESC");
+                                    `c`.`user_id` AS `comment_owner`,
+                                    `c`.`comment_id` AS `comment_id`,
+                                    `c`.`post_id` AS `post_id`,
+                                    `c`.`content` AS `content`,
+                                    `c`.`date` AS `date`,
+                                    `u`.`user_id` AS `user_id`,
+                                    `u`.`name` AS `name`,
+                                    `u`.`image` AS `image`
+                                  FROM
+                                    (
+                                        `e2000693_harkka`.`comments` `c`
+                                    LEFT JOIN `e2000693_harkka`.`users` `u`
+                                    ON
+                                        (`c`.`user_id` = `u`.`user_id`)
+                                    )
+                                  WHERE post_id = ?
+                                  ORDER BY
+                                    `c`.`date`
+                                  DESC");
 
   if (!$stmt->execute(array($_POST['post_id']))) {
     $stmt = null;
