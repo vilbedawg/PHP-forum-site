@@ -1,15 +1,16 @@
 <?php
 //Rekisteröintisivu
-require_once "includes/header.php";
+require_once "./includes/header.php";
+
 if (isset($_POST['submit'])) {
     $name = $_POST["name"];
     $email = $_POST["email"];
     $pwd = $_POST["password"];
     $pwd2 = $_POST["password2"];
 
-    require_once "classes/database.php";
-    require_once 'includes/autoload-classes.php';
-    require_once "controllers/signup-contr.php";
+    require_once "./classes/database.php";
+    require_once './includes/autoload-classes.php';
+    require_once "./controllers/signup-contr.php";
     $signup = new SignupContr($name, $pwd, $pwd2, $email);
 
     $signup->signupUser();

@@ -1,9 +1,10 @@
 <?php
 // Kirjautumissivu
-require_once "includes/header.php";
-require_once "classes/database.php";
-require_once 'includes/autoload-classes.php';
-require_once "controllers/login-contr.php";
+require_once "./includes/header.php";
+require_once "./classes/database.php";
+require_once './includes/autoload-classes.php';
+require_once "./controllers/login-contr.php";
+
 
 if (isset($_POST['submit'])) {
     $name = $_POST["name"];

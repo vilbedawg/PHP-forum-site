@@ -1,17 +1,17 @@
 <?php
 session_start();
 // Kotisivu
-require_once 'classes/database.php';
-require_once 'includes/autoload-classes.php';
-require_once "includes/header.php";
-
+require_once './classes/database.php';
+require_once './includes/autoload-classes.php';
+require_once "./includes/header.php";
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 $objUser = new Users;
+$postObj = new PostedContent;
 $users = $objUser->GetAllUsers();
 
 $objUser->setloginStatus(1);
 $onliners = $objUser->GetAllOnliners();
-
-
 ?>
 
 <body>
@@ -59,7 +59,7 @@ $onliners = $objUser->GetAllOnliners();
 
             <?php
             if (isset($_POST['post'])) {
-                require_once "controllers/posts-contr.php";
+                require_once "./controllers/posts-contr.php";
                 $title = $_POST['subject'];
                 $topic = $_POST['topic'];
                 $category = $_POST['category'];
@@ -195,8 +195,7 @@ $onliners = $objUser->GetAllOnliners();
             </div>
             <?php
         
-            // GET parametrin avulla voidaan fillteröidä julkaisuja.
-            $postObj = new PostedContent;
+            //GET parametrin avulla voidaan fillteröidä julkaisuja.
             if (isset($_GET['sort'], $_GET['show']) && $_GET['show'] !== 'Etusivu') {
                 if ($_GET['sort'] == 'New') {
                     $posts = $postObj->getAllPostsByCategory($_GET['show']);

@@ -17,7 +17,11 @@ form {
     font-family: 'Open Sans', Arial, sans-serif;
 }
 
-body, html {
+html {
+    height: 100%;
+}
+
+body {
     background-color: #CEE3F8;
     height: 100%;
 }
@@ -897,7 +901,7 @@ iframe {
 .username {
     margin-right: 5px;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 14px;
     color: black;
     padding: 2px;
     border-radius: 3px;
@@ -2328,7 +2332,7 @@ iframe {
         font-size: 14px;
     }
     .username-users {
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .edit-post-btn, .delete-post-btn {
