@@ -1,5 +1,6 @@
 <?php
 
+
 class PostedContent extends Dbh
 {
     //$_GET paramaterilla haetaan julkaisun data
