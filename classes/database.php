@@ -4,11 +4,9 @@ class Dbh {
     
    
     public function connect() {
-        try {
-            $username = "root";
-            $password = "";
-             //tarkista, että osoite on oikein
-            $dbh = new PDO('mysql:host=localhost;dbname=e2000693_Harkka', $username, $password);
+        try {         
+            $dbh = new PDO("mysql:host=mysql.cc.puv.fi;dbname=e2000693_harkka",
+                    "e2000693", "h44awtyd3Fvx");
             $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $dbh;
         } catch(PDOException $e) {
