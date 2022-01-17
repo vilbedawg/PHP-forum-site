@@ -5,7 +5,7 @@
 Redditin inspiroima keskustelupalsta. Verkkosivusto toteutettu PHP:n olio-ohjelmoinnin periaatteita seuraten, sekä toimivat CRUD-operaatiot Ajax methodia käyttäen.
 Tietokantana käytetty MySQL-tietokantaa.
 
-## [MySQL](https://raw.githubusercontent.com/vilbedawg/PHP-forum-site/master/Database.sql)
+## [MySQL](https://raw.githubusercontent.com/vilbedawg/PHP-forum-site/master/e2000693_harkka.sql)
 
 
 ## Default login
